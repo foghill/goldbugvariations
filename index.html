@@ -1,0 +1,3673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Gold Bug Variations — A film by Mark Levinson</title>
+<meta name="description" content="A feature film from Mark A. Levinson, based on Richard Powers's prize-winning novel. A code, a fugue, and a love letter that arrives too late.">
+<meta name="theme-color" content="#F2EAD3">
+
+<!-- Mailing-list intake endpoint. Paste a Google Apps Script Web App
+     deployment URL here (see MAILING_LIST.md for setup). Leave empty
+     until deployed; the form will still animate the success state but
+     won't send anywhere. -->
+<meta name="signup-endpoint" content="">
+
+<!-- Open Graph -->
+<meta property="og:type" content="video.movie">
+<meta property="og:title" content="The Gold Bug Variations — A film by Mark Levinson">
+<meta property="og:description" content="A brilliant scientist on the brink of cracking the code for life is derailed by music, and by the search for the code for love. Adapted from Richard Powers's Pulitzer-winning novel. Shooting Q3 2026.">
+<meta property="og:site_name" content="The Gold Bug Variations">
+<meta property="og:locale" content="en_US">
+<meta property="video:director" content="Mark A. Levinson">
+<meta property="video:release_date" content="2027">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Gold Bug Variations">
+<meta name="twitter:description" content="A code, a fugue, and a love letter that arrives too late. A feature film from Mark A. Levinson, based on the Richard Powers novel.">
+
+<!-- Schema.org Movie markup for rich results -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Movie",
+  "name": "The Gold Bug Variations",
+  "alternativeHeadline": "A film by Mark Levinson",
+  "description": "A brilliant scientist on the brink of cracking the code for life is derailed by music, and by the search for the code for love. Adapted from Richard Powers's Pulitzer-winning novel.",
+  "director": { "@type": "Person", "name": "Mark A. Levinson" },
+  "productionCompany": [
+    { "@type": "Organization", "name": "Anonymous Content" },
+    { "@type": "Organization", "name": "Plan B Entertainment" }
+  ],
+  "isBasedOn": {
+    "@type": "Book",
+    "name": "The Gold Bug Variations",
+    "author": { "@type": "Person", "name": "Richard Powers" },
+    "datePublished": "1991",
+    "publisher": "William Morrow"
+  },
+  "actor": [
+    { "@type": "Person", "name": "Oscar Isaac" },
+    { "@type": "Person", "name": "Tessa Thompson" },
+    { "@type": "Person", "name": "Stephan James" },
+    { "@type": "Person", "name": "Vicky Krieps" },
+    { "@type": "Person", "name": "Stephen McKinley Henderson" }
+  ],
+  "genre": ["Drama", "Romance", "Science"],
+  "inLanguage": "en"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@500;700&family=Courier+Prime:wght@400;700&family=Caveat:wght@500&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23F2EAD3'/><text x='16' y='24' text-anchor='middle' font-family='monospace' font-weight='700' font-size='24' fill='%23B08D2E'>%E2%80%A1</text></svg>">
+
+<style>
+/* ============================================================
+   GOLD BUG VARIATIONS — combined site
+   §1  Tokens & globals (paper / ink palettes)
+   §2  Cipher cursor + cursor trail
+   §3  Hero (paper)
+   §4  Bridge (staff → helix scroll morph)
+   §5  Investigation (walnut desk + cards + beetle)
+   §6  Cipher key, footer, mobile
+   ============================================================ */
+
+/* ---------- §1 Tokens ---------- */
+:root {
+  --paper:       #F2EAD3;
+  --paper-2:     #E8DEC0;
+  --paper-rule:  #C8B98C;
+  --ink:         #0E1626;
+  --ink-2:       #1A2436;
+  --ink-rule:    #2A3A55;
+  --walnut:      #2B2620;
+  --walnut-2:    #1B1814;
+  --walnut-rule: #4a3d2a;
+  --gold:        #B08D2E;
+  --gold-warm:   #C9A227;
+  --gold-bright: #D4AF37;
+  --bone:        #F0E6D2;
+
+  --serif: "Cormorant Garamond", "Tiempos Text", Georgia, serif;
+  --grot:  "Archivo", "Söhne", Inter, system-ui, sans-serif;
+  --mono:  "JetBrains Mono", "Courier Prime", ui-monospace, Menlo, monospace;
+  --hand:  "Caveat", cursive;
+
+  --col-gap: 24px;
+  --margin: clamp(20px, 4vw, 80px);
+  --rail-inset: clamp(16px, 2.4vw, 44px);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--paper); }
+body {
+  background: var(--paper);
+  color: #14202E;
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+::selection { background: var(--gold); color: var(--paper); }
+
+/* ---------- §2 Cipher cursor + trail ---------- */
+body, .hero, .bridge {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%23B08D2E'>%E2%80%A1</text></svg>") 14 14, auto;
+}
+a, button, .toggle, .key, .word, summary, [role="button"], input[type="submit"], .audio-btn {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%23B08D2E'>%E2%80%A0</text></svg>") 14 14, pointer;
+}
+input[type="email"], input[type="text"], textarea {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='28' viewBox='0 0 12 28'><line x1='6' y1='2' x2='6' y2='26' stroke='%23B08D2E' stroke-width='2'/></svg>") 6 14, text;
+}
+.investigation, .investigation * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23F0E6D2' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,230,210,0.08)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23F0E6D2' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+}
+.trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 40;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.85;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* ---------- Cipher rendering ---------- */
+.cipher {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.ch { display: inline-block; transition: color 220ms ease; }
+.ch.solved { color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit; }
+.word { display: inline-block; }
+.word.solved:hover .ch { color: var(--gold); font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; }
+.sp { display: inline-block; width: 0.32em; }
+
+/* Card-back decoded state: keep the mono cipher typography (font / weight /
+   letter-spacing) but swap the color from gold to the surrounding body
+   colour, so the decoded text doesn't shrink back to small serif. */
+.decoded-mono { font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; }
+.decoded-mono .ch.solved {
+  color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit;
+}
+
+/* ---------- §3 Hero (paper) ---------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: var(--paper);
+  color: #14202E;
+  padding-bottom: clamp(60px, 14vh, 160px);
+  border-bottom: 1px solid var(--paper-rule);
+  z-index: 2;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(rgba(80,60,20,0.07) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+.topbar {
+  position: relative; z-index: 3;
+  padding: 22px var(--margin) 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.55);
+}
+.topbar .doc { display: flex; gap: 28px; flex-wrap: wrap; }
+.topbar .doc .gold { color: var(--gold); }
+
+.hero-grid {
+  position: relative; z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--col-gap);
+  padding: clamp(60px, 12vh, 140px) var(--margin) 0;
+}
+.eyebrow {
+  grid-column: 1 / span 4;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.55);
+  align-self: start;
+  padding-top: 14px;
+  padding-left: var(--rail-inset);
+  border-top: 1px solid var(--paper-rule);
+  line-height: 1.8;
+}
+.eyebrow b { color: var(--gold); font-weight: 500; }
+
+.title {
+  grid-column: 1 / span 12;
+  font-family: var(--grot);
+  font-weight: 700;
+  font-stretch: 125%;
+  font-size: clamp(56px, 11.4vw, 184px);
+  line-height: 0.86;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  margin: 28px 0 0;
+  color: #14202E;
+}
+.title .row {
+  display: block;
+  /* Hero entrance — each row fades up, slightly staggered. */
+  opacity: 0;
+  transform: translateY(18px);
+  animation: titleIn 900ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+.title .row.r1 { animation-delay: 120ms; }
+.title .row.r2 { animation-delay: 360ms; padding-left: 12vw; }
+.title .row.r3 { animation-delay: 600ms; text-align: right; padding-right: 0; }
+@keyframes titleIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.eyebrow, .credits, .logline-wrap, .scroll-cue, .topbar {
+  opacity: 0;
+  animation: heroFadeIn 800ms cubic-bezier(.2,.7,.2,1) 850ms forwards;
+}
+.scroll-cue { animation-delay: 1300ms; }
+@keyframes heroFadeIn { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .title .row, .eyebrow, .credits, .logline-wrap, .scroll-cue, .topbar {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+.title .amp {
+  color: var(--gold);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: 100%;
+  text-transform: lowercase;
+  letter-spacing: 0;
+}
+
+.logline-wrap {
+  grid-column: 4 / span 7;
+  margin-top: clamp(40px, 7vh, 88px);
+  font-family: var(--serif);
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.4;
+  color: #14202E;
+}
+.logline-wrap .label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.55);
+  margin-bottom: 16px;
+}
+
+.credits {
+  grid-column: 1 / span 3;
+  margin-top: clamp(40px, 7vh, 88px);
+  margin-left: var(--rail-inset);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.55);
+  line-height: 2;
+  border-left: 1px solid var(--paper-rule);
+  padding-left: 16px;
+}
+.credits b { color: #14202E; font-weight: 500; }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  z-index: 3;
+  text-align: center;
+  animation: cueBlink 2.4s ease-in-out infinite;
+}
+.scroll-cue .arrow { display: block; margin-top: 8px; font-size: 14px; }
+@keyframes cueBlink { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+/* ---------- §4 Bridge: staff → helix scroll morph ---------- */
+.bridge {
+  position: relative;
+  height: 260vh;          /* tall scroll lane: t = 0 → 1 across this section */
+  background: linear-gradient(
+    180deg,
+    var(--paper) 0%,
+    var(--paper) 8%,
+    #d6c9a4 35%,
+    #4a4035 70%,
+    var(--walnut-2) 96%,
+    var(--walnut) 100%
+  );
+  z-index: 2;
+}
+.bridge::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(80,60,20,0.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: .55;
+}
+.bridge-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 380px) 1fr;
+  /* Anchor content near the top of the viewport so it sits just below
+     the epigraph instead of floating in a half-screen empty band. */
+  align-items: start;
+  padding-top: clamp(40px, 6vh, 90px);
+  pointer-events: none;
+}
+.bridge-caption {
+  grid-column: 1;
+  padding: 0 clamp(20px, 4vw, 60px);
+  text-align: right;
+  pointer-events: auto;
+}
+.bridge-caption .cap-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 14px;
+}
+.bridge-caption .cap-head {
+  font-family: var(--grot);
+  font-weight: 700;
+  font-stretch: 125%;
+  font-size: clamp(28px, 3.4vw, 56px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--bridge-fg, #14202E);
+  margin: 0 0 18px;
+  transition: color 400ms ease;
+}
+.bridge-caption .cap-body {
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.3vw, 20px);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--bridge-fg-mute, #4B4334);
+  max-width: 32ch;
+  margin-left: auto;
+  transition: color 400ms ease;
+}
+.bridge-caption.right {
+  grid-column: 3;
+  text-align: left;
+}
+.bridge-caption.right .cap-body { margin-left: 0; }
+
+.bridge-svg-wrap {
+  grid-column: 2;
+  height: 80vh;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+}
+#morph {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bridge-aria {
+  position: fixed;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 55;
+  pointer-events: auto;
+  transition: opacity 0.4s ease;
+}
+body.is-investigation .bridge-aria {
+  /* Step out of the way of the featured envelope CTA — the canister
+     play button on the desk is the local audio control there. */
+  opacity: 0;
+  pointer-events: none;
+}
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  color: #14202E;
+  padding: 10px 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+body.is-investigation .audio-btn {
+  background: var(--walnut-2);
+  color: var(--bone);
+  border-color: var(--gold-bright);
+}
+.audio-btn .audio-label {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  gap: 3px; line-height: 1.1;
+}
+.audio-btn .audio-meta {
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+.audio-btn .audio-status {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.18em;
+  color: inherit;
+}
+body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
+.audio-btn .glyph {
+  display: inline-flex; align-items: end; gap: 2px;
+  height: 14px;
+}
+.audio-btn .bar {
+  display: inline-block;
+  width: 3px;
+  height: 100%;
+  background: var(--gold-bright);
+  transform-origin: bottom;
+  transform: scaleY(.4);
+}
+.audio-btn.playing .bar { animation: eq 1s ease-in-out infinite; }
+.audio-btn.playing .b1 { animation-delay: 0s; }
+.audio-btn.playing .b2 { animation-delay: .15s; }
+.audio-btn.playing .b3 { animation-delay: .35s; }
+.audio-btn.playing .b4 { animation-delay: .25s; }
+@keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
+
+/* ---------- §5 Investigation: walnut desk + cards + beetle ---------- */
+.investigation {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 35% 25%, #3a3128 0%, #2B2620 40%, #1B1814 100%),
+    var(--walnut);
+  color: var(--bone);
+  z-index: 2;
+  overflow: hidden;
+}
+.investigation::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.investigation::after {
+  /* warm spotlight */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 35% 25%, rgba(255,200,100,0.06) 0%, transparent 55%);
+}
+.desk {
+  position: relative;
+  z-index: 2;
+  min-height: 200vh;
+  padding: clamp(60px, 10vh, 100px) var(--margin) clamp(120px, 18vh, 220px);
+}
+.desk-head {
+  position: relative;
+  z-index: 3;
+  margin-bottom: clamp(40px, 6vh, 80px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: end;
+  padding-left: var(--rail-inset);
+  max-width: 1400px;
+}
+.desk-head .marque {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(240,230,210,0.55);
+  line-height: 2;
+}
+.desk-head .marque b { color: var(--gold-bright); font-weight: 500; }
+.desk-head h2 {
+  font-family: var(--grot);
+  font-weight: 700;
+  font-stretch: 125%;
+  font-size: clamp(32px, 5vw, 80px);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 12px 0 0;
+  color: var(--bone);
+}
+.desk-head .sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 22px);
+  color: rgba(240,230,210,0.7);
+  margin: 8px 0 0;
+}
+.desk-head .reset-btn {
+  background: transparent;
+  border: 1px solid rgba(240,230,210,0.3);
+  color: rgba(240,230,210,0.65);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 9px 14px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.desk-head .reset-btn:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+
+.case-board {
+  position: relative;
+  height: 2000px;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+.hint {
+  position: absolute;
+  top: 26px; right: 40%;
+  font-family: var(--hand);
+  font-size: 22px;
+  color: rgba(240,230,210,0.55);
+  z-index: 5;
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  transition: opacity 0.6s;
+}
+.hint.fade { opacity: 0; }
+
+.red-string-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.85;
+}
+
+/* Scattered ghost cipher symbols on the desk wood — only visible inside the
+   magnifying-glass cursor's radius. Z-index 1 so cards (10+) sit on top. */
+.desk-cipher {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.desk-cipher .ghost-ch {
+  position: absolute;
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ---------- Generic artifact ---------- */
+.artifact {
+  position: absolute;
+  perspective: 1200px;
+  z-index: 10;
+  transition: transform 0.3s cubic-bezier(.4,.1,.4,1), filter 0.3s;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55));
+}
+.artifact .face {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform 0.55s cubic-bezier(.4,.1,.4,1);
+  transform-style: preserve-3d;
+}
+.artifact.flipped .face { transform: rotateY(180deg); }
+.artifact .side {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.artifact .side.back { transform: rotateY(180deg); }
+.artifact.flipping .face { transform: scale(0.9); }
+.artifact.dragging { transition: none !important; filter: drop-shadow(0 22px 32px rgba(0,0,0,0.7)); }
+
+.paper-tex {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.04) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.3 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #e8d9b0;
+}
+
+/* 1) Notebook */
+.notebook { width: 480px; height: 620px; left: 2%; top: 20px; transform: rotate(-6deg); }
+.notebook .side {
+  padding: 38px 34px;
+  font-family: var(--serif);
+  color: #2a2218;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 36px, rgba(120,90,30,0.08) 36px 37px),
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.3 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #e8d9b0;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.18), inset 12px 0 0 -10px rgba(180,40,40,0.45);
+}
+.notebook .nb-title { font-family: var(--hand); font-size: 42px; color: #5a3a14; margin-bottom: 8px; }
+.notebook .nb-sub { font-family: var(--mono); font-size: 14px; letter-spacing: 0.18em; color: #6e5a32; margin-bottom: 26px; }
+.notebook .nb-line { font-size: 22px; line-height: 1.7; margin: 8px 0; }
+.notebook .nb-line.tilt { transform: rotate(-1.2deg) translateX(-2px); }
+.notebook .nb-line.indent { padding-left: 32px; }
+.notebook .nb-mono { font-family: var(--mono); font-size: 15px; letter-spacing: 0.16em; color: #2a1f10; margin: 8px 0; }
+.notebook .coffee-ring {
+  position: absolute;
+  right: 32px; bottom: 44px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 55%, rgba(120,70,20,0.18) 60%, rgba(120,70,20,0.08) 70%, transparent 78%);
+  pointer-events: none;
+}
+.notebook .nb-arrow { color: var(--gold); }
+.notebook .back { padding: 38px 34px; font-size: 19px; line-height: 1.6; overflow-y: auto; }
+.notebook .back h3 { font-family: var(--grot); font-stretch: 125%; font-weight: 700; font-size: 19px; text-transform: uppercase; letter-spacing: 0.1em; color: #5a3a14; margin: 0 0 18px; }
+
+/* 2) Polaroid (microscope) — taller so the director's note fits when
+   rendered as decoded mono on the back side. */
+.polaroid { width: 400px; height: 640px; right: 2%; top: 20px; transform: rotate(7deg); }
+.polaroid .side {
+  background: #fafaf2;
+  padding: 20px 20px 88px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+.polaroid .photo {
+  width: 100%; height: 500px;
+  background: linear-gradient(180deg, #2a2218, #0a0805);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.polaroid .photo svg { width: 100%; height: 100%; display: block; }
+.polaroid .pcap {
+  position: absolute;
+  bottom: 26px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--hand);
+  font-size: 30px;
+  color: #2a2218;
+}
+.polaroid .back { padding: 32px 28px; font-family: var(--serif); font-size: 17px; line-height: 1.55; color: #2a2218; background: #f4ecd6; }
+.polaroid .back h4 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.2em; color: #5a3a14; margin: 0 0 14px; }
+
+/* 3) Catalog card */
+.catalog { width: 540px; height: 360px; left: 38%; top: 80px; transform: rotate(2deg); }
+.catalog .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #ede2c4;
+  padding: 30px 36px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.07);
+}
+.catalog .cat-num {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.22em; color: #6e5a32;
+  text-transform: uppercase;
+  border-bottom: 1px solid #b3a371;
+  padding-bottom: 10px;
+}
+.catalog h4 {
+  font-family: var(--mono); font-size: 19px; font-weight: 700; letter-spacing: 0.06em;
+  color: #2a2218; margin: 22px 0 14px;
+}
+.catalog .cat-body {
+  font-family: var(--serif); font-size: 20px; line-height: 1.5; color: #3a2e1c;
+}
+.catalog .cat-body em { color: var(--gold); }
+.catalog .cat-stamp {
+  position: absolute;
+  right: 28px; bottom: 22px;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em;
+  color: rgba(140,40,30,0.55);
+  border: 1.5px solid rgba(140,40,30,0.55);
+  padding: 6px 12px;
+  transform: rotate(-8deg);
+}
+.catalog .back { padding: 34px 36px; font-family: var(--serif); font-size: 19px; line-height: 1.55; color: #2a2218; background: #e3d4ad; }
+.catalog .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.2em; color: #5a3a14; margin: 0 0 14px; }
+
+/* 4) Telegram — director profile.
+   Front: bio in readable serif, Particle Fever highlighted as a gold link.
+   Back:  Western Union "FROM THE DIRECTOR" telegram (mono, dramatic). */
+.telegram { width: 540px; height: 410px; right: 2%; top: 720px; transform: rotate(-3deg); }
+.telegram .side {
+  background: linear-gradient(180deg, #f5e8c5, #e3d2a5);
+  padding: 32px 36px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.18);
+}
+
+/* Front — director bio. Serif body, comfortable size, highlighted feature. */
+.telegram .side.front {
+  font-family: var(--serif);
+  display: flex; flex-direction: column;
+}
+.telegram .tg-bio-head {
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid rgba(120,90,40,0.32);
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+}
+.telegram .tg-bio-body {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.4vw, 21px);
+  font-weight: 500;
+  line-height: 1.55;
+  margin: 0 0 22px;
+  color: #2a2218;
+}
+.telegram .tg-feature {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold);
+  padding: 0 2px 1px;
+  transition: color 200ms, border-color 200ms, background 200ms;
+}
+.telegram .tg-feature:hover {
+  color: #14202E;
+  border-color: #14202E;
+  background: rgba(176,141,46,0.18);
+}
+.telegram .tg-bio-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.45;
+  margin: auto 0 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(176,141,46,0.5);
+  color: #5a3a14;
+}
+
+/* Back — Western Union telegram (the dramatic STOP-STOP-STOP version). */
+.telegram .side.back {
+  font-family: var(--mono);
+  background: #efe1bc;
+}
+.telegram .side.back .tg-head {
+  display: flex; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.2em;
+  border-bottom: 1px solid #b3a371;
+  padding-bottom: 12px;
+  margin-bottom: 22px;
+  color: #5a3a14;
+}
+.telegram .side.back .tg-head b { color: var(--gold); }
+.telegram .side.back h4 {
+  font-family: var(--mono); font-size: 15px;
+  letter-spacing: 0.2em; margin: 0 0 22px;
+}
+.telegram .side.back .tg-body {
+  font-size: 19px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+}
+.telegram .side.back .tg-body span { color: var(--gold); }
+.telegram .side.back .tg-sign { margin-top: 26px; font-size: 16px; }
+
+/* 5) Film canister + audio
+   Ring is a sibling of label-strip (was a parent) so it can spin on its own
+   while the label and play button stay put on top — like a record turning
+   under a fixed label. */
+.canister { width: 380px; height: 380px; left: 35%; top: 780px; transform: rotate(-4deg); }
+.canister .side {
+  background: radial-gradient(circle at 50% 50%, #5a4a30 0%, #3a2e1c 50%, #1a1410 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 6px rgba(0,0,0,0.4), inset 0 0 0 8px rgba(212,175,55,0.2);
+}
+.canister .ring {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 6px, rgba(212,175,55,0.07) 6px 7px, transparent 7px 14px),
+    radial-gradient(circle, #2a2218 30%, #4a3d2a 32%, #2a2218 34%, #4a3d2a 36%, #2a2218 38%, #4a3d2a 60%, #2a2218 62%);
+}
+.canister .label-strip {
+  position: absolute;
+  inset: 22% 9%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(43,38,32,0.94);
+  border-radius: 50%;
+  text-align: center;
+  padding: 20px;
+  z-index: 2;
+  box-shadow: inset 0 0 0 1.5px rgba(212,175,55,0.28), 0 4px 12px rgba(0,0,0,0.4);
+}
+.canister .label-strip .top {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.22em;
+  color: rgba(212,175,55,0.75);
+  margin-bottom: 8px;
+}
+.canister .label-strip .mid {
+  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
+  font-size: 30px; line-height: 1; text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.canister .label-strip .bot {
+  font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--bone);
+  margin-top: 8px;
+}
+.canister .play-indicator {
+  margin-top: 18px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 2px solid rgba(212,175,55,0.7);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-bright);
+  pointer-events: auto;
+  background: rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.canister .play-indicator:hover {
+  background: rgba(212,175,55,0.18);
+  border-color: var(--gold-bright);
+  transform: scale(1.08);
+}
+.canister .play-indicator svg { width: 24px; height: 24px; fill: var(--gold-bright); }
+.canister.playing .ring { animation: spinSlow 6s linear infinite; }
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.canister .back {
+  background: radial-gradient(circle at 50% 50%, #5a4a30 0%, #3a2e1c 50%, #1a1410 100%);
+  border-radius: 50%;
+  padding: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  color: var(--bone);
+}
+.canister .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.2em; color: var(--gold-bright); margin: 0 0 16px; }
+.canister .back p { font-family: var(--serif); font-size: 18px; font-style: italic; line-height: 1.5; margin: 0 0 14px; }
+
+/* 6) Cast list */
+.cast-card { width: 460px; height: 580px; left: 2%; top: 720px; transform: rotate(3deg); }
+.cast-card .side {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 38px, rgba(120,90,30,0.08) 38px 39px),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.3 0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #ddc99e;
+  padding: 36px 34px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.2);
+}
+.cast-card h4 {
+  font-family: var(--mono); font-size: 15px; letter-spacing: 0.22em;
+  margin: 0 0 10px; color: #5a3a14;
+}
+.cast-card .stamp {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.22em;
+  color: rgba(140,40,30,0.7);
+  border: 1.5px solid rgba(140,40,30,0.7);
+  display: inline-block; padding: 5px 12px;
+  margin-bottom: 26px;
+  transform: rotate(-2deg);
+}
+.cast-card ul { list-style: none; padding: 0; margin: 0; font-family: var(--serif); }
+.cast-card li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+  padding: 14px 0;
+  border-bottom: 1px dashed rgba(120,90,40,0.3);
+}
+.cast-card li b { font-family: var(--grot); font-stretch: 125%; font-weight: 600; font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em; color: #2a2218; display: block; }
+.cast-card li i { font-style: italic; color: #6e5a32; font-size: 17px; }
+.cast-card .back { padding: 36px 34px; font-family: var(--serif); font-size: 19px; color: #2a2218; background: #e6d6ab; line-height: 1.55; }
+.cast-card .back h4 { font-family: var(--mono); font-size: 14px; }
+
+/* 7) Punchcard — flex column so the punch-grid pins to the bottom edge */
+.punchcard { width: 600px; height: 410px; left: 14%; top: 1380px; transform: rotate(-2deg); }
+.punchcard .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.3 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #d9c79b;
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+  padding: 28px 36px 30px;
+  color: #2a2218;
+  font-family: var(--mono);
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.18);
+  display: flex;
+  flex-direction: column;
+}
+.punchcard .pc-row {
+  font-size: 13px; letter-spacing: 0.22em; color: #6e5a32;
+  display: flex; justify-content: space-between;
+  border-bottom: 1px solid rgba(120,90,40,0.25);
+  padding-bottom: 12px;
+}
+.punchcard h4 {
+  font-size: 17px; letter-spacing: 0.16em;
+  margin: 26px 0 16px;
+}
+.punchcard .partners {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 28px;
+  font-size: 17px;
+  margin-bottom: 26px;
+}
+.punchcard .partners b { color: #2a2218; font-weight: 700; }
+.punchcard .partners .role { display: block; font-size: 13px; letter-spacing: 0.18em; color: #6e5a32; margin-top: 6px; font-weight: 400; }
+.punchcard .punch-grid {
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
+  grid-template-rows: repeat(3, 11px);
+  gap: 2px;
+  margin-top: auto;
+}
+.punchcard .pc-cell { background: rgba(120,90,40,0.06); border-radius: 1px; }
+.punchcard .pc-cell.punched { background: #1a140c; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.6); }
+.punchcard .back { padding: 32px 36px; font-family: var(--serif); font-size: 19px; line-height: 1.55; color: #2a2218; background: #e0cea2; clip-path: inherit; }
+.punchcard .back h4 { font-family: var(--mono); font-size: 14px; }
+
+/* 8) Press clipping */
+.clipping { width: 400px; height: 480px; right: 14%; top: 1380px; transform: rotate(5deg); }
+.clipping .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.04)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.25 0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #d6c39a;
+  padding: 32px 36px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.18);
+}
+.clipping h4 {
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.22em;
+  margin: 0 0 14px; color: #5a3a14;
+  border-bottom: 1px solid rgba(120,90,40,0.4);
+  padding-bottom: 12px;
+}
+.clipping h2 {
+  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
+  font-size: 40px; line-height: 1; text-transform: uppercase;
+  margin: 0 0 22px;
+  letter-spacing: 0.005em;
+}
+.clipping blockquote {
+  margin: 0; padding: 0;
+  font-family: var(--serif); font-style: italic;
+  font-size: 20px; line-height: 1.5;
+  color: #3a2e1c;
+}
+.clipping cite {
+  display: block; margin-top: 22px;
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.2em; color: #6e5a32;
+  text-transform: uppercase;
+  font-style: normal;
+}
+.clipping .back { padding: 32px 36px; font-family: var(--serif); font-size: 17px; line-height: 1.55; color: #2a2218; background: #dcc99c; }
+.clipping .back h4 { font-family: var(--mono); font-size: 14px; }
+
+/* 9) Envelope / signup — featured CTA, big and centered at the bottom of the desk */
+.envelope {
+  width: min(900px, 94vw);
+  height: 440px;
+  left: 50%;
+  top: 80%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  z-index: 30;
+}
+.envelope .side {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,200,100,0.18) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.05)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.25 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #ddc99e;
+  padding: 52px 64px 46px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.25), 0 16px 28px rgba(0,0,0,0.4);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "eyebrow stamp"
+    "title   stamp"
+    "intro   intro"
+    "form    form";
+  column-gap: 36px;
+  row-gap: 6px;
+}
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(176,141,46,0.32);
+  pointer-events: none;
+}
+.envelope .eyebrow {
+  grid-area: eyebrow;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+.envelope h2 {
+  grid-area: title;
+  font-family: var(--grot);
+  font-stretch: 125%;
+  font-weight: 700;
+  font-size: clamp(46px, 5.8vw, 68px);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: #2a2218;
+  margin: 10px 0 20px;
+  max-width: 14ch;
+}
+.envelope h2 em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: 100%;
+  text-transform: lowercase;
+  color: var(--gold);
+  letter-spacing: 0;
+}
+.envelope p.intro {
+  grid-area: intro;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.5;
+  margin: 0 0 28px;
+  max-width: 56ch;
+  color: #3a2e1c;
+}
+.envelope p.intro em { color: var(--gold); font-style: italic; }
+.envelope form {
+  grid-area: form;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #2a2218;
+  padding: 0;
+  gap: 0;
+}
+.envelope input {
+  flex: 1;
+  background: transparent;
+  border: 0; outline: 0;
+  font-family: var(--serif);
+  font-size: 24px;
+  padding: 14px 0;
+  color: #2a2218;
+}
+.envelope input::placeholder { color: rgba(42,34,24,0.45); font-style: italic; }
+.envelope button {
+  background: transparent; border: 0;
+  font-family: var(--mono); font-size: 14px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold);
+  padding: 14px 0 14px 24px;
+  cursor: pointer;
+}
+.envelope button:hover { color: #2a2218; }
+.envelope .stamp {
+  grid-area: stamp;
+  position: relative; top: auto; right: auto;
+  width: 108px; height: 132px;
+  background:
+    radial-gradient(circle at 50% 38%, #b48030 0%, #b48030 28%, transparent 30%),
+    repeating-linear-gradient(45deg, transparent 0 5px, rgba(120,90,40,0.4) 5px 6px),
+    #d4c193;
+  border: 2.5px dashed #5a3a14;
+  align-self: start;
+  display: block;
+}
+.envelope .stamp::after {
+  content: "‡";
+  position: absolute;
+  top: 38%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 44px;
+  color: #f4ecd6;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+.envelope .ok {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  display: none;
+  font-family: var(--hand);
+  font-size: 36px;
+  color: #5a3a14;
+  align-self: center;
+}
+.envelope.success form { display: none; }
+.envelope.success .ok { display: block; }
+.envelope .back {
+  padding: 50px 56px;
+  background: #d8c697;
+  color: #2a2218;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.envelope .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.22em; color: #5a3a14; margin: 0 0 18px; }
+.envelope .back p { margin: 0 0 14px; }
+
+/* ---------- Beetle ---------- */
+.beetle {
+  position: fixed;
+  width: 30px; height: 40px;
+  z-index: 100;
+  pointer-events: none;
+  /* Position + rotation are driven per-frame in JS — no CSS transitions
+     here, otherwise small steps would visibly tween into a glide. */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.55));
+  will-change: left, top, transform;
+}
+.beetle.scurrying { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)) drop-shadow(0 0 6px rgba(212,175,55,0.35)); }
+
+/* ---------- §6 Cipher key, footer, mobile ---------- */
+.cipher-key {
+  position: fixed;
+  right: calc(24px + env(safe-area-inset-right, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  color: #14202E;
+  font-family: var(--mono);
+  transition: all 300ms ease;
+}
+body.is-investigation .cipher-key {
+  background: var(--walnut-2);
+  color: var(--bone);
+}
+.cipher-key.collapsed {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--gold);
+  font-weight: 700;
+}
+.cipher-key.collapsed::after {
+  content: "‡";
+  animation: cueBlink 1.6s ease-in-out infinite;
+}
+.cipher-key.expanded {
+  width: min(420px, 90vw);
+  padding: 18px 20px 20px;
+}
+.cipher-key .key-head {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.cipher-key .key-head b { color: var(--gold); font-weight: 500; opacity: 1; }
+.cipher-key .key-head .x { padding: 2px 6px; }
+.cipher-key .key-head .x:hover { color: var(--gold); }
+.cipher-key .key-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  font-size: 12px;
+}
+.cipher-key .key-cell {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 4px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+.cipher-key .key-cell .sym { color: var(--gold); font-weight: 700; font-size: 14px; line-height: 1; }
+.cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
+.cipher-key .key-foot { margin-top: 12px; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6; line-height: 1.6; }
+.cipher-key .key-decoder { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid currentColor; opacity: 0.95; }
+.cipher-key .key-decoder label {
+  display: block; font-family: var(--mono);
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 6px;
+}
+.cipher-key .key-decoder input {
+  width: 100%;
+  background: transparent;
+  border: 0; outline: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 6px 0;
+  font-family: var(--mono); font-size: 14px; font-weight: 500;
+  color: inherit;
+  caret-color: var(--gold);
+}
+.cipher-key .key-decoder input::placeholder { color: currentColor; opacity: 0.45; font-style: italic; }
+.cipher-key .key-decoder .key-output {
+  display: block; margin-top: 8px; min-height: 22px;
+  font-family: var(--mono); font-size: 15px; font-weight: 700;
+  color: var(--gold); letter-spacing: 0.04em; word-break: break-word;
+}
+
+footer {
+  position: relative; z-index: 3;
+  padding: clamp(60px, 10vh, 100px) var(--margin) 60px;
+  background: var(--walnut-2);
+  color: var(--bone);
+  border-top: 1px solid var(--walnut-rule);
+}
+.foot-press {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2vw, 40px);
+  margin: 0 0 clamp(40px, 6vh, 64px);
+  padding: clamp(24px, 4vh, 36px) 0;
+  border-top: 1px solid var(--walnut-rule);
+  border-bottom: 1px solid var(--walnut-rule);
+}
+.foot-press-item { display: flex; flex-direction: column; gap: 8px; }
+.foot-press-item .lbl {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.foot-press-item a {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(18px, 1.5vw, 22px);
+  color: var(--bone); text-decoration: none;
+  border-bottom: 1px solid rgba(212,175,55,0.32);
+  padding-bottom: 4px;
+  align-self: start;
+  transition: color 200ms, border-color 200ms;
+}
+.foot-press-item a:hover { color: var(--gold-bright); border-color: var(--gold-bright); }
+@media (max-width: 820px) {
+  .foot-press { grid-template-columns: 1fr; gap: 18px; }
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--col-gap);
+  margin-bottom: clamp(40px, 8vh, 80px);
+  padding-left: var(--rail-inset);
+}
+.foot-col {
+  grid-column: span 3;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,230,210,0.55);
+  line-height: 2;
+}
+.foot-col h4 {
+  margin: 0 0 14px;
+  color: var(--gold-bright);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  border-bottom: 1px solid var(--walnut-rule);
+  padding-bottom: 10px;
+}
+.foot-col a { color: var(--bone); text-decoration: none; }
+.foot-col a:hover { color: var(--gold-bright); }
+.foot-cipher {
+  font-family: var(--mono);
+  color: var(--gold-bright);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: clamp(13px, 1.1vw, 16px);
+  text-align: center;
+  line-height: 1.7;
+  word-break: break-word;
+  user-select: none;
+  padding: 0 clamp(20px, 6vw, 80px);
+}
+.foot-cipher::before, .foot-cipher::after {
+  content: "—————————";
+  display: block;
+  color: var(--walnut-rule);
+  margin: 18px 0;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+}
+.foot-cipher .ch { transition: color 220ms ease; }
+.foot-cipher .ch.peek { color: var(--bone); }
+.foot-cipher {
+  /* Magnifying-glass cursor over the buried message — invites probing. */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23D4AF37' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(212,175,55,0.08)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23D4AF37' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+}
+.foot-meta {
+  margin-top: 36px;
+  display: flex; justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(240,230,210,0.45);
+}
+
+/* ====================================================================
+   TYPOGRAPHY UPLIFT — bigger, bolder body & label text everywhere outside
+   the investigation cards (those were already bumped). Goes near the end of
+   the stylesheet so it overrides the section-specific rules above with the
+   same specificity.
+   ==================================================================== */
+
+/* Body serif a touch heavier so decrypted body text doesn't look thin. */
+body { font-weight: 500; font-size: 20px; }
+
+/* ---------- Hero ---------- */
+.topbar { font-size: 13px; font-weight: 500; color: rgba(20,32,46,0.7); }
+.eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(20,32,46,0.78);
+  line-height: 1.9;
+}
+.eyebrow b { color: var(--gold); font-weight: 600; }
+.logline-wrap {
+  font-size: clamp(24px, 2.2vw, 32px);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.logline-wrap .label { font-size: 13px; font-weight: 500; }
+.credits {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 2;
+  color: rgba(20,32,46,0.78);
+}
+.credits b { color: #14202E; font-weight: 600; }
+.scroll-cue { font-size: 12px; font-weight: 600; }
+
+/* ---------- Bridge ---------- */
+.bridge-caption .cap-num { font-size: 13px; font-weight: 600; }
+.bridge-caption .cap-head { font-size: clamp(34px, 4vw, 64px); }
+.bridge-caption .cap-body {
+  font-size: clamp(20px, 1.7vw, 26px);
+  font-weight: 500;
+  line-height: 1.45;
+}
+.audio-btn { font-size: 12px; font-weight: 600; padding: 12px 20px; }
+
+/* ---------- Investigation desk header ---------- */
+.desk-head .marque { font-size: 13px; font-weight: 500; line-height: 2; color: rgba(240,230,210,0.72); }
+.desk-head .marque b { color: var(--gold-bright); font-weight: 600; }
+.desk-head .sub { font-size: clamp(20px, 1.7vw, 26px); font-weight: 500; }
+.desk-head .reset-btn { font-size: 12px; font-weight: 600; }
+.hint { font-size: 26px; }
+
+/* ---------- Footer ---------- */
+.foot-col { font-size: 13px; font-weight: 500; line-height: 2.1; color: rgba(240,230,210,0.7); }
+.foot-col h4 { font-size: 13px; font-weight: 600; }
+.foot-col a { font-weight: 500; }
+.foot-cipher { font-size: clamp(15px, 1.2vw, 18px); }
+.foot-meta { font-size: 12px; font-weight: 500; }
+
+/* ---------- Epigraph blocks (Leibniz, Mencken) ---------- */
+.epigraph {
+  position: relative;
+  z-index: 2;
+  padding: clamp(40px, 6vh, 80px) var(--margin);
+  text-align: center;
+}
+.epigraph.paper { background: var(--paper); color: #14202E; }
+.epigraph.paper::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(rgba(80,60,20,0.07) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+.epigraph.walnut {
+  background: var(--walnut-2);
+  color: var(--bone);
+  border-top: 1px solid var(--walnut-rule);
+  border-bottom: 1px solid var(--walnut-rule);
+}
+.epigraph blockquote {
+  position: relative;
+  z-index: 2;
+  max-width: 28ch;
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 50px);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  padding: 0;
+}
+.epigraph blockquote p { margin: 0; max-width: 28ch; margin-left: auto; margin-right: auto; }
+.epigraph blockquote::before, .epigraph blockquote::after {
+  content: "";
+  display: block;
+  width: 80px; height: 1px;
+  background: var(--gold);
+  margin: 0 auto 40px;
+}
+.epigraph blockquote::after { margin: 40px auto 0; }
+.epigraph cite {
+  display: block;
+  margin-top: 30px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ---------- Source-material primer (between investigation and Mencken) ---------- */
+.primer {
+  position: relative; z-index: 2;
+  background: var(--walnut-2);
+  color: var(--bone);
+  padding: clamp(80px, 12vh, 160px) var(--margin);
+  border-top: 1px solid var(--walnut-rule);
+}
+.primer-head { max-width: 1200px; margin: 0 auto clamp(48px, 7vh, 96px); text-align: center; }
+.primer-num {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold-bright); display: block; margin-bottom: 16px;
+}
+.primer-head h2 {
+  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
+  font-size: clamp(36px, 5vw, 72px); line-height: 0.95;
+  text-transform: uppercase; letter-spacing: 0.005em;
+  margin: 0 0 18px;
+}
+.primer-head .primer-sub {
+  font-family: var(--serif); font-size: clamp(18px, 1.6vw, 24px);
+  font-style: italic; max-width: 56ch; margin: 0 auto;
+  color: rgba(240,230,210,0.8);
+}
+.primer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.primer-col {
+  background: var(--paper);
+  color: #14202E;
+  padding: clamp(28px, 3vw, 44px);
+  border: 1px solid rgba(176,141,46,0.32);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+  position: relative;
+}
+.primer-col header { margin-bottom: 22px; }
+.primer-col .primer-date {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.32em; color: var(--gold); display: block;
+}
+.primer-col h3 {
+  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
+  font-size: clamp(24px, 2.4vw, 34px); line-height: 1;
+  text-transform: uppercase; letter-spacing: 0.005em;
+  margin: 14px 0 6px;
+  color: #14202E;
+}
+.primer-col .primer-by {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(15px, 1.2vw, 18px); margin: 0;
+  color: #4B4334;
+}
+.primer-col > p {
+  font-family: var(--serif); font-size: clamp(16px, 1.2vw, 19px);
+  font-weight: 500; line-height: 1.55; margin: 0 0 22px;
+  color: #2a2218;
+}
+.primer-col blockquote {
+  font-family: var(--serif); font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.4vw, 21px); line-height: 1.5;
+  margin: 0; padding: 22px 0 0;
+  border-top: 1px solid rgba(176,141,46,0.45);
+  color: #3a2e1c;
+}
+@media (max-width: 820px) {
+  .primer-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Testimonials carousel (between primer and Mencken) ---------- */
+.testimonials {
+  position: relative; z-index: 2;
+  background: var(--walnut-2);
+  color: var(--bone);
+  padding: clamp(70px, 10vh, 140px) var(--margin);
+  border-top: 1px solid var(--walnut-rule);
+  text-align: center;
+}
+.testimonials-head { max-width: 800px; margin: 0 auto clamp(40px, 6vh, 64px); }
+.testimonials-head h2 {
+  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
+  font-size: clamp(28px, 4vw, 56px); line-height: 1;
+  text-transform: uppercase; letter-spacing: 0.005em;
+  margin: 12px 0 0;
+}
+.testimonials-stage {
+  position: relative;
+  max-width: 920px; margin: 0 auto;
+  min-height: 280px;
+}
+.testimonial {
+  position: absolute; inset: 0;
+  margin: 0; padding: 0 clamp(8px, 2vw, 32px);
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(28px, 3.4vw, 46px);
+  font-weight: 500; line-height: 1.3;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+}
+.testimonial.active { opacity: 1; }
+.testimonial p { margin: 0 0 24px; }
+.testimonial cite {
+  display: block;
+  font-family: var(--mono); font-style: normal;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.testimonial-dots {
+  display: flex; justify-content: center; gap: 12px;
+  margin-top: clamp(28px, 4vh, 48px);
+  position: relative; z-index: 2;
+}
+.testimonial-dots .dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(212,175,55,0.28);
+  border: 0; padding: 0; cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease;
+}
+.testimonial-dots .dot:hover { background: rgba(212,175,55,0.6); }
+.testimonial-dots .dot.active { background: var(--gold-bright); transform: scale(1.45); }
+
+/* ---------- Standalone signup section (static envelope above the footer) ----------
+   The envelope used to live on the investigation desk as a draggable card.
+   It now sits in its own section just above the footer's press strip,
+   re-using the .envelope visual styling but without the .artifact flip /
+   drag scaffolding. */
+.signup {
+  position: relative;
+  z-index: 2;
+  background: var(--walnut-2);
+  padding: clamp(70px, 9vh, 110px) var(--margin) clamp(50px, 7vh, 90px);
+  border-top: 1px solid var(--walnut-rule);
+}
+.signup .envelope {
+  position: relative;
+  left: auto; top: auto;
+  width: min(900px, 94vw);
+  height: auto;
+  margin: 0 auto;
+  transform: rotate(-1.2deg);
+  perspective: none;
+  z-index: 1;
+  filter: drop-shadow(0 24px 36px rgba(0,0,0,0.55));
+}
+.signup .envelope .side {
+  position: relative;
+  inset: auto;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* ---------- Easter-egg ‡ glyphs scattered through the page ---------- */
+.egg {
+  display: inline-block;
+  font-family: var(--mono); font-weight: 700;
+  color: var(--gold);
+  font-size: 13px;
+  background: transparent;
+  border: 0;
+  padding: 4px 6px;
+  margin: 0 2px;
+  vertical-align: baseline;
+  line-height: 1;
+  opacity: 0.42;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 240ms ease, transform 240ms ease, color 240ms ease, text-shadow 240ms ease;
+}
+.egg:hover { opacity: 1; transform: translateY(-1px) scale(1.18); }
+.egg:focus-visible { opacity: 1; outline: 1px solid var(--gold); outline-offset: 2px; }
+.egg.found {
+  color: var(--gold-bright);
+  opacity: 1;
+  cursor: default;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(212,175,55,0.7);
+  animation: eggFlash 800ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes eggFlash {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.9); text-shadow: 0 0 22px var(--gold-bright); }
+  100% { transform: scale(1.15); }
+}
+
+.egg-modal {
+  position: fixed; inset: 0;
+  z-index: 9000;
+  display: none;
+  align-items: center; justify-content: center;
+  background: rgba(11, 11, 14, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: var(--margin);
+}
+.egg-modal.show { display: flex; animation: eggModalIn 700ms cubic-bezier(.2,.7,.2,1); }
+@keyframes eggModalIn { from { opacity: 0; } to { opacity: 1; } }
+.egg-modal .panel {
+  position: relative;
+  max-width: 640px;
+  background: var(--paper);
+  color: #14202E;
+  padding: clamp(48px, 6vw, 72px) clamp(32px, 5vw, 64px);
+  border: 1px solid var(--gold);
+  text-align: center;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.6);
+}
+.egg-modal .panel::before, .egg-modal .panel::after {
+  content: ""; display: block; width: 60px; height: 1px;
+  background: var(--gold); margin: 0 auto 28px;
+}
+.egg-modal .panel::after { margin: 28px auto 0; }
+.egg-modal .panel .label {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 18px;
+}
+.egg-modal .panel blockquote {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 500; line-height: 1.35;
+  margin: 0;
+}
+.egg-modal .panel cite {
+  display: block; margin-top: 24px;
+  font-family: var(--mono); font-style: normal;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--gold);
+}
+.egg-modal .panel .close {
+  position: absolute; top: 14px; right: 16px;
+  background: transparent; border: 0;
+  font-family: var(--mono); font-size: 28px;
+  color: var(--gold); cursor: pointer; padding: 4px 10px;
+}
+.egg-modal .panel .close:hover { color: #14202E; }
+.egg-progress {
+  /* Bottom-left so it doesn't collide with the topbar on the right
+     ("SHOOTING · Q3 2026") or the audio pill / cipher key at the bottom.
+     Styled to match the floating cipher-key panel: paper / walnut bg with
+     a thin gold rule, no grey. */
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left:   calc(24px + env(safe-area-inset-left,   0px));
+  z-index: 9001;
+  display: flex; gap: 6px; align-items: baseline;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold);
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid var(--gold);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 320ms ease, background 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+body.is-investigation .egg-progress {
+  background: var(--walnut-2);
+  color: var(--gold-bright);
+  border-color: var(--gold-bright);
+}
+.egg-progress.visible { opacity: 1; }
+
+/* ---------- Color contrast pass: scoped --gold override on paper sections ----------
+   The default --gold (#B08D2E) sits at ~2.5:1 against paper, well below the
+   WCAG AA threshold of 4.5:1 for small text. Reassign --gold inside paper
+   contexts to a darker gold (#7C5F18, ~4.9:1) so the small mono labels
+   ("A FILM IN DEVELOPMENT", "FOLIO 01 / IV", attributions, dates, etc.)
+   meet AA without changing the brand. Walnut sections keep the original
+   bright gold which already has good contrast there. */
+.hero,
+.epigraph.paper,
+.primer-col,
+.journal,
+.notebook .side, .polaroid .side, .catalog .side, .telegram .side,
+.cast-card .side, .punchcard .side, .clipping .side, .envelope .side {
+  --gold: #7C5F18;
+}
+
+/* ---------- Accessibility — skip link + focus rings ---------- */
+.skip-link {
+  position: absolute;
+  top: -40px; left: 8px;
+  background: var(--paper);
+  color: #14202E;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 14px;
+  border: 2px solid var(--gold);
+  z-index: 9999;
+  transition: top 160ms ease;
+}
+.skip-link:focus { top: 8px; outline: none; }
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.artifact:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 6px;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55))
+          drop-shadow(0 0 14px rgba(212,175,55,0.4));
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 820px) {
+  :root { --margin: 18px; --col-gap: 14px; }
+  body { font-size: 17px; cursor: auto; }
+  .topbar .doc { gap: 14px; font-size: 9px; }
+  .hero-grid { grid-template-columns: repeat(6, 1fr); }
+  .eyebrow, .credits, .logline-wrap { grid-column: 1 / -1; padding-left: 0; border: 0; margin-left: 0; }
+  .credits { border-left: 1px solid var(--paper-rule); padding-left: 16px; margin-left: 0; }
+  .title { font-size: 68px; }
+  .title .row.r2 { padding-left: 0; }
+  .title .row.r3 { text-align: left; }
+  .bridge { height: 220vh; }
+  .bridge-stage { grid-template-columns: 1fr; padding: 0 24px; }
+  .bridge-caption, .bridge-caption.right { grid-column: 1; text-align: center; padding: 0; }
+  .bridge-caption .cap-body { margin: 0 auto; }
+  .bridge-svg-wrap { grid-column: 1; height: 60vh; }
+  .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
+  .case-board .artifact {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important; right: auto !important; top: auto !important;
+    margin: 0 auto;
+    width: min(360px, 92vw);
+  }
+  .red-string-svg, .beetle, .hint { display: none; }
+  .foot-col { grid-column: span 6; margin-bottom: 18px; }
+  .cipher-key { right: 12px; bottom: 12px; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#bridge">Skip to film</a>
+
+<!-- ============================================================
+     §3  HERO
+     ============================================================ -->
+<header class="hero">
+
+  <div class="topbar">
+    <div class="doc">
+      <span>FOLIO 01 / IV</span>
+      <span class="gold">● TRANSMISSION ENCRYPTED</span>
+      <span>POE SUBSTITUTION · 1843</span>
+    </div>
+    <div class="doc">
+      <span>SHOOTING · Q3 2026</span>
+    </div>
+  </div>
+
+  <div class="hero-grid">
+
+    <div class="eyebrow">
+      <b>A FILM IN DEVELOPMENT</b><br>
+      DIRECTED BY MARK A. LEVINSON<br>
+      ADAPTED FROM THE NOVEL BY RICHARD POWERS
+    </div>
+
+    <h1 class="title" aria-label="The Gold Bug Variations">
+      <span class="row r1">THE&nbsp;GOLD</span>
+      <span class="row r2">BUG</span>
+      <span class="row r3">VARIATIONS</span>
+    </h1>
+
+    <div class="logline-wrap">
+      <span class="label">— Logline · decrypts on entry —</span>
+      <p class="decrypt" data-text="A brilliant scientist on the brink of cracking the code for life is derailed by music, and by the search for the code for love."></p>
+    </div>
+
+    <div class="credits">
+      <b>BASED ON</b><br>
+      The Pulitzer Prize-<br>
+      winning novel by<br>
+      Richard Powers<br><br>
+      <b>FROM THE DIRECTOR OF</b><br>
+      Particle Fever<br><br>
+      <b>HONORS</b><br>
+      Sundance Lab<br>
+      IFP Fast Track<br>
+      Three Sloan Grants
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    Scroll to follow
+    <span class="arrow">↓</span>
+  </div>
+</header>
+
+
+<!-- ============================================================
+     EPIGRAPH — Leibniz, between hero and bridge
+     (music, math — sets up the staff → helix transition)
+     ============================================================ -->
+<section class="epigraph paper" aria-label="Epigraph by Gottfried Leibniz">
+  <blockquote>
+    <p>Music is the pleasure the human mind experiences from counting without being aware that it is counting.</p>
+    <cite>— Gottfried Leibniz</cite>
+  </blockquote>
+</section>
+
+
+<!-- ============================================================
+     §4  BRIDGE — staff → helix scroll morph
+     ============================================================ -->
+<section class="bridge" id="bridge" aria-label="Music staff morphing into DNA helix">
+  <div class="bridge-stage">
+
+    <div class="bridge-caption">
+      <span class="cap-num">§ 02 · The Bridge</span>
+      <h3 class="cap-head decrypt-head" data-text="Music becomes a strand."></h3>
+      <p class="cap-body decrypt" data-text="Bach wrote thirty variations on a single bass line. Crick and Watson read four letters into the spine of a cell. The film listens, patiently, while the staff turns into the helix it always was."></p>
+    </div>
+
+    <div class="bridge-svg-wrap">
+      <svg id="morph" viewBox="0 0 280 1000" preserveAspectRatio="none" aria-hidden="true">
+        <g id="lines" stroke="var(--bridge-fg, #14202E)" stroke-width="1" fill="none" stroke-linecap="round"></g>
+        <g id="goldStrand" stroke="#D4AF37" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
+        <g id="rungs" stroke="var(--bridge-fg, #14202E)" stroke-width="1" opacity="0"></g>
+        <g id="notes" fill="var(--bridge-fg, #14202E)"></g>
+      </svg>
+    </div>
+
+    <div class="bridge-caption right">
+      <span class="cap-num">A · T · G · C</span>
+      <h3 class="cap-head decrypt-head" data-text="Four bases. Four voices."></h3>
+      <p class="cap-body decrypt" data-text="Stuart Ressler, Jan O'Deigh, Franklin Todd, Jeannette Koss — like the four nucleotides, like the four bass notes — twist around each other in mirrored patterns, twenty-eight years apart."></p>
+    </div>
+  </div>
+
+  <div class="bridge-aria">
+    <button class="audio-btn" id="ariaBtn" aria-pressed="false" aria-label="Toggle Bach Goldberg Aria, BWV 988">
+      <span class="glyph" aria-hidden="true">
+        <span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="bar b4"></span>
+      </span>
+      <span class="audio-label">
+        <span class="audio-meta">J.S. Bach · BWV 988</span>
+        <span class="audio-status" id="ariaLabel">Aria · off</span>
+      </span>
+    </button>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §5  INVESTIGATION — walnut desk
+     ============================================================ -->
+<section class="investigation" id="investigation">
+  <div class="desk">
+
+    <div class="desk-head">
+      <div>
+        <div class="marque">
+          <b>§ 03 · CASE FILE</b><br>
+          JAN O'DEIGH — PERSONAL DESK · BROOKLYN PUBLIC LIBRARY
+        </div>
+        <h2 class="decrypt-head" data-text="A quiet detective story without a crime."></h2>
+        <p class="sub decrypt" data-text="Three readers. One vanished life. A handful of artifacts laid out on a desk at three in the morning. — drag to move, click to flip."></p>
+      </div>
+      <button class="reset-btn" id="resetBtn" aria-label="Reset desk">↺ Reset desk</button>
+    </div>
+
+    <div class="case-board" id="caseBoard">
+
+      <div class="hint" id="hint">click to flip · drag to move</div>
+      <svg class="red-string-svg" id="redString" width="100%" height="100%"></svg>
+
+      <!-- 1 · Notebook -->
+      <div class="artifact notebook" data-art="notebook">
+        <div class="face">
+          <div class="side front">
+            <div class="coffee-ring"></div>
+            <div class="nb-title">The Gold Bug Variations</div>
+            <div class="nb-sub">— lab journal · S.R. · Aug. 1957 —</div>
+            <p class="nb-line tilt">A — T &nbsp;·&nbsp; G — C</p>
+            <p class="nb-mono">5'&nbsp;A T G C T A G G T C A A G&nbsp;3'</p>
+            <p class="nb-mono" style="color:#6e5a32;">3'&nbsp;T A C G A T C C A G T T C&nbsp;5'</p>
+            <p class="nb-line indent">codon &nbsp;<span class="nb-arrow">→</span>&nbsp; amino acid?</p>
+            <p class="nb-line">if 4³ = 64, only 20 a.a.…</p>
+            <p class="nb-line tilt indent">— the cipher must be <u>degenerate</u></p>
+            <p class="nb-line">Goldberg playing again. Glenn G.</p>
+            <p class="nb-line tilt">— 30 variations on one bass.</p>
+            <p class="nb-line">life · music · the <u>same</u> trick.</p>
+          </div>
+          <div class="side back">
+            <h3>Synopsis</h3>
+            <p>1957. <em>Stuart Ressler</em> arrives at Illinois on a fellowship to crack the four-letter alphabet of life. By 1985 he is loading magnetic tapes on a Brooklyn graveyard shift, anonymous, brilliant, and unaccountably lost.</p>
+            <p>When research librarian <em>Jan O'Deigh</em> receives a single reference question about Ressler's vanished career, she begins an investigation that rhymes — in fugue and counterpoint — with the work he abandoned.</p>
+            <p>A four-handed study of two romances divided by a quarter century, structured like a Bach fugue: thirty variations on a single, recursive theme.</p>
+            <p style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;margin-top:14px;color:#6B1410;">FEATURE FILM · 132 MIN · IN PRE-PRODUCTION</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 · Polaroid microscope -->
+      <div class="artifact polaroid" data-art="polaroid">
+        <div class="face">
+          <div class="side front">
+            <div class="photo">
+              <svg viewBox="0 0 240 260" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <radialGradient id="lens" cx="0.5" cy="0.4" r="0.5">
+                    <stop offset="0%" stop-color="#d8d2c4"/><stop offset="60%" stop-color="#605648"/><stop offset="100%" stop-color="#1a1612"/>
+                  </radialGradient>
+                  <linearGradient id="brass" x1="0" x2="1">
+                    <stop offset="0" stop-color="#5a4a30"/><stop offset="0.5" stop-color="#9a7a40"/><stop offset="1" stop-color="#3a2e1c"/>
+                  </linearGradient>
+                </defs>
+                <ellipse cx="120" cy="240" rx="80" ry="10" fill="#0a0805" opacity="0.7"/>
+                <rect x="50" y="215" width="140" height="22" rx="4" fill="url(#brass)"/>
+                <rect x="100" y="120" width="40" height="100" fill="url(#brass)"/>
+                <rect x="60" y="195" width="120" height="22" rx="3" fill="url(#brass)"/>
+                <rect x="78" y="180" width="84" height="8" fill="#2a2218"/>
+                <rect x="106" y="40" width="28" height="120" rx="6" fill="url(#brass)"/>
+                <rect x="102" y="20" width="36" height="22" rx="3" fill="#3a2e1c"/>
+                <circle cx="120" cy="20" r="9" fill="url(#lens)"/>
+                <circle cx="106" cy="170" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
+                <circle cx="120" cy="174" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
+                <circle cx="134" cy="170" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
+                <text x="120" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#d8d2c4" opacity="0.6">E. coli — plate 17</text>
+              </svg>
+            </div>
+            <div class="pcap">— Urbana, Aug 1957 —</div>
+          </div>
+          <div class="side back">
+            <h4>FROM THE DIRECTOR'S NOTE</h4>
+            <p><em>Particle Fever</em> taught me that science, properly framed, is the most cinematic subject we have. It is people staring at a wall, willing it to speak, and occasionally being answered.</p>
+            <p>The conceit of this site — that the document arrives encrypted and resolves only as you attend to it — is the conceit of the film.</p>
+            <p style="margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:#6e5a32;">— M.A. LEVINSON</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 · Catalog card -->
+      <div class="artifact catalog" data-art="catalog">
+        <div class="face">
+          <div class="side front">
+            <div class="cat-num">813.54&nbsp;&nbsp;·&nbsp;&nbsp;P.O.WERS, R.</div>
+            <h4>POWERS, RICHARD · b. 1957</h4>
+            <p class="cat-body"><em>The Gold Bug Variations</em> : a novel / by Richard Powers. — New York : William Morrow, 1991. — 639 p. ; 24 cm.</p>
+            <p class="cat-body" style="font-size:12px;margin-top:6px;">Time Magazine "Book of the Year" · National Book Critics Circle Award · "A formidable masterpiece" — Kirkus.</p>
+            <div class="cat-stamp">PROPERTY · BPL</div>
+          </div>
+          <div class="side back">
+            <h4>SOURCE MATERIAL</h4>
+            <p>Powers's third novel braids two love stories — one in 1957, one in 1985 — around three substitutions: the genetic code, Bach's Goldberg Variations, and Edgar Allan Poe's 1843 short story <em>The Gold-Bug</em>.</p>
+            <p>This site uses Poe's published twenty-six glyphs verbatim.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 · Telegram from director -->
+      <div class="artifact telegram" data-art="telegram">
+        <div class="face">
+          <div class="side front">
+            <div class="tg-bio-head">Bio · Mark A. Levinson</div>
+            <p class="tg-bio-body">Director of <a class="tg-feature" href="https://en.wikipedia.org/wiki/Particle_Fever" target="_blank" rel="noopener">Particle Fever</a> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
+            <blockquote class="tg-bio-quote">"Films and formulas — both are theories about how the universe operates."</blockquote>
+          </div>
+          <div class="side back">
+            <div class="tg-head"><span>WESTERN UNION</span><b>· URGENT ·</b><span>NY → BERKELEY</span></div>
+            <h4>FROM THE DIRECTOR</h4>
+            <p class="tg-body">CAME TO POWERS NOVEL THE WAY MOST PEOPLE DO <span>—</span> BY BEING TOLD IT WAS IMPOSSIBLE TO FILM, AND THEN REFUSING TO BELIEVE IT.</p>
+            <div class="tg-sign">— M.A. LEVINSON</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 · Film canister -->
+      <div class="artifact canister" data-art="canister">
+        <div class="face">
+          <div class="side front">
+            <div class="ring"></div>
+            <div class="label-strip">
+              <div class="top">REEL · 01</div>
+              <div class="mid">Aria<br>BWV 988</div>
+              <div class="bot">— J.S. Bach —</div>
+              <button class="play-indicator" id="playInd" aria-label="Play / pause Aria">
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <polygon class="icon-play" points="7,4 21,12 7,20"></polygon>
+                  <g class="icon-pause" style="display:none">
+                    <rect x="6" y="4" width="5" height="16" rx="0.5"></rect>
+                    <rect x="13" y="4" width="5" height="16" rx="0.5"></rect>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="side back">
+            <h4>· THE SCORE ·</h4>
+            <p><em>The Goldbergs are not score. They are the spine.</em></p>
+            <p>The opening Aria, then thirty variations, then the Aria again — transformed by what has been heard between.</p>
+            <p>To watch the film is to learn, twice, what one note can mean.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 · Cast list -->
+      <div class="artifact cast-card" data-art="cast">
+        <div class="face">
+          <div class="side front">
+            <h4>CAST · CONFIDENTIAL</h4>
+            <div class="stamp">DRAFT — IN ATTACHMENT</div>
+            <ul>
+              <li><b>Oscar Isaac</b><i>· Dr. Stuart Ressler</i></li>
+              <li><b>Tessa Thompson</b><i>· Jan O'Deigh</i></li>
+              <li><b>Stephan James</b><i>· Franklin Todd</i></li>
+              <li><b>Vicky Krieps</b><i>· Jeannette Koss</i></li>
+              <li><b>S.M. Henderson</b><i>· Dr. Cyfer</i></li>
+            </ul>
+          </div>
+          <div class="side back">
+            <h4>FOUR VOICES, TWO CENTURIES</h4>
+            <p>The pairing is not chronological. It is musical: a question in 1957 is answered, fifteen years of plot later, by a gesture in 1985. The audience learns to listen for the rhyme.</p>
+            <p style="margin-top:10px;font-style:italic;">The third act is the moment the two voices land on the same chord — the screen becomes one image, briefly, before parting again.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 · Punchcard -->
+      <div class="artifact punchcard" data-art="punchcard">
+        <div class="face">
+          <div class="side front">
+            <div class="pc-row"><span>// CARD 0042 ·· DEV.PARTNERS</span><span>RUN: 1991→2026</span></div>
+            <h4>// DEVELOPMENT PARTNERS</h4>
+            <div class="partners">
+              <div><b>Sundance Institute</b><span class="role">Screenwriters &amp; Directors Lab</span></div>
+              <div><b>Film Independent</b><span class="role">Fast Track · Producers Lab</span></div>
+              <div><b>Sloan Foundation</b><span class="role">Three Science-in-Fiction grants</span></div>
+              <div><b>Gotham (IFP)</b><span class="role">No-Borders International</span></div>
+            </div>
+            <div class="punch-grid" id="punchGrid"></div>
+          </div>
+          <div class="side back">
+            <h4>SHOOTING IN 2026</h4>
+            <p>Principal photography slated for Q3 2026 across <em>New York, Illinois, and Leipzig</em>. Looking for financial partners passionate about science, music, love, and the way they intertwine.</p>
+            <p style="margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:#6B1410;">CONTACT: goldbugmovie@gmail.com</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8 · Press clipping -->
+      <div class="artifact clipping" data-art="clipping">
+        <div class="face">
+          <div class="side front">
+            <h4>EARLY PRESS · NOTICES</h4>
+            <h2>"Has everything"</h2>
+            <blockquote>"Penetrating so many secrets, we cease to believe in the unknowable. But there it sits nevertheless, calmly licking its chops."</blockquote>
+            <cite>— H.L. Mencken (epigraph)</cite>
+          </div>
+          <div class="side back">
+            <h4>NOTICES</h4>
+            <p><em>"Book of the Year"</em> — Time Magazine</p>
+            <p><em>"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story."</em> — Kirkus</p>
+            <p><em>"This amazing book deals with nearly all of life's larger questions."</em> — Magill Book Reviews</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Beetle anchored to investigation but positioned fixed -->
+  <div class="beetle" id="beetle" aria-hidden="true">
+    <svg viewBox="0 0 28 38" width="28" height="38">
+      <defs>
+        <radialGradient id="bg" cx="0.5" cy="0.35" r="0.6">
+          <stop offset="0%" stop-color="#F5D060"/><stop offset="40%" stop-color="#C9A227"/><stop offset="100%" stop-color="#6B5210"/>
+        </radialGradient>
+      </defs>
+      <g stroke="#2a1f10" stroke-width="1.2" fill="none" stroke-linecap="round">
+        <path d="M 8 14 L 2 11"/><path d="M 8 19 L 1 19"/><path d="M 8 24 L 2 28"/>
+        <path d="M 20 14 L 26 11"/><path d="M 20 19 L 27 19"/><path d="M 20 24 L 26 28"/>
+      </g>
+      <path d="M 11 5 Q 8 1 5 2" stroke="#2a1f10" stroke-width="1" fill="none"/>
+      <path d="M 17 5 Q 20 1 23 2" stroke="#2a1f10" stroke-width="1" fill="none"/>
+      <ellipse cx="14" cy="7" rx="5" ry="4" fill="#3a2e1c"/>
+      <ellipse cx="14" cy="22" rx="8" ry="13" fill="url(#bg)" stroke="#6B5210" stroke-width="0.8"/>
+      <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
+      <ellipse cx="11" cy="17" rx="2" ry="5" fill="#fff" opacity="0.25"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §4  SOURCE-MATERIAL PRIMER — Poe / Bach / Powers
+     ============================================================ -->
+<section class="primer" id="source" aria-label="Source material — Poe, Bach, Powers">
+  <div class="primer-head">
+    <span class="primer-num">§ 04 · Source material</span>
+    <h2>Three codes, one score.</h2>
+    <p class="primer-sub">The film braids three substitutions. Here is the lineage.</p>
+  </div>
+  <div class="primer-grid">
+
+    <article class="primer-col">
+      <header>
+        <span class="primer-date">1843</span>
+        <h3>The Gold-Bug</h3>
+        <p class="primer-by">Edgar Allan Poe · Dollar Newspaper, Philadelphia</p>
+      </header>
+      <p>A short story about a coded message and buried treasure on a small island off the Carolina coast. Its 26-glyph substitution cipher — a child's secret handshake — taught a generation of American readers what cryptography even <em>was</em>. The cipher used throughout this site is Poe's, verbatim.</p>
+      <blockquote>"A perfect cryptograph is one which the message can be read only by him for whom it is intended."</blockquote>
+    </article>
+
+    <article class="primer-col">
+      <header>
+        <span class="primer-date">1741</span>
+        <h3>Goldberg Variations</h3>
+        <p class="primer-by">J.S. Bach · BWV 988</p>
+      </header>
+      <p>An aria followed by thirty variations on a single bass line, returning at the end to the same aria — changed only by everything that has been heard between. Named for the harpsichordist who reportedly played them at night to soothe an insomniac count. Glenn Gould's 1955 recording made the work modern.</p>
+      <blockquote>"Bach ends where he began. The same melody, transformed by what has been heard between."</blockquote>
+    </article>
+
+    <article class="primer-col">
+      <header>
+        <span class="primer-date">1991</span>
+        <h3>The Gold Bug Variations</h3>
+        <p class="primer-by">Richard Powers · William Morrow · 639 pp.</p>
+      </header>
+      <p>Powers's third novel braids Poe's cipher and Bach's variations through a love story about the genetic code: 1957 in an Illinois lab, 1985 in a Brooklyn library, the same human question in both rooms. National Book Critics Circle Award. Time's Book of the Year. Structured, like Bach's, in four voices and thirty parts.</p>
+      <blockquote>"The genetic code is not a metaphor for music. It is music."</blockquote>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §5  TESTIMONIALS — auto-rotating carousel of notices for the novel
+     ============================================================ -->
+<section class="testimonials" aria-label="Praise for the source novel">
+  <div class="testimonials-head">
+    <span class="primer-num">§ 05 · Praise for the source</span>
+  </div>
+  <div class="testimonials-stage" id="testimonials">
+    <blockquote class="testimonial active">
+      <p>"Book of the Year."</p>
+      <cite>— Time Magazine</cite>
+    </blockquote>
+    <blockquote class="testimonial">
+      <p>"The Gold Bug Variations has everything."</p>
+      <cite>— New York Times Book Review</cite>
+    </blockquote>
+    <blockquote class="testimonial">
+      <p>"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story."</p>
+      <cite>— Kirkus</cite>
+    </blockquote>
+    <blockquote class="testimonial">
+      <p>"This amazing book deals with nearly all of life's larger questions."</p>
+      <cite>— Magill Book Reviews</cite>
+    </blockquote>
+  </div>
+  <div class="testimonial-dots" id="testimonialDots">
+    <button class="dot active" data-idx="0" aria-label="Quote 1 of 4"></button>
+    <button class="dot" data-idx="1" aria-label="Quote 2 of 4"></button>
+    <button class="dot" data-idx="2" aria-label="Quote 3 of 4"></button>
+    <button class="dot" data-idx="3" aria-label="Quote 4 of 4"></button>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     EPIGRAPH — Mencken, closing thought before the footer
+     (penetrating secrets — the case file's last line)
+     ============================================================ -->
+<section class="epigraph walnut" aria-label="Epigraph by H.L. Mencken">
+  <blockquote>
+    <p>Penetrating so many secrets, we cease to believe in the unknowable. But there it sits nevertheless, calmly licking its chops.</p>
+    <cite>— H.L. Mencken</cite>
+  </blockquote>
+</section>
+
+
+<!-- ============================================================
+     §7  SIGNUP — featured envelope CTA, just above the footer press strip
+     ============================================================ -->
+<section class="signup" id="signup" aria-label="Join the correspondence">
+  <div class="envelope" id="envelopeArt">
+    <div class="side front">
+      <div class="eyebrow">Folio II · in the post</div>
+      <div class="stamp" aria-hidden="true"></div>
+      <h2>Join the <em>correspondence</em></h2>
+      <p class="intro">One transmission per quarter. Production notes, set photography from Urbana and Brooklyn, an occasional <em>cipher</em>. We will not write to you for any other reason.</p>
+      <form id="signupForm" novalidate>
+        <input type="email" required placeholder="your.address@correspondent.com" id="emailInput" autocomplete="email">
+        <button type="submit">Send ↗</button>
+      </form>
+      <div class="ok" id="envOk">Thank you. The next folio is in the post.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §8  FOOTER (encrypted message never decrypts)
+     ============================================================ -->
+<footer>
+  <div class="foot-press">
+    <div class="foot-press-item">
+      <span class="lbl">Press kit</span>
+      <a href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Download (PDF)</a>
+    </div>
+    <div class="foot-press-item">
+      <span class="lbl">Festival programmers</span>
+      <a href="mailto:fest@goldbugmovie.com">fest@goldbugmovie.com</a>
+    </div>
+    <div class="foot-press-item">
+      <span class="lbl">Financing &amp; co-pro</span>
+      <a href="mailto:invest@goldbugmovie.com">Request the deck</a>
+    </div>
+  </div>
+
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>The Film</h4>
+      <a href="#bridge">Synopsis</a><br>
+      <a href="#investigation">Director's Note</a><br>
+      <a href="#investigation">Cast</a><br>
+      <a href="#source">Source Material</a>
+    </div>
+    <div class="foot-col">
+      <h4>Source</h4>
+      <a href="#source">Richard Powers · 1991</a><br>
+      <a href="#source">Poe — "The Gold-Bug"</a><br>
+      <a href="#source">Bach — Goldberg Variations</a><br>
+      <a href="#bridge">The cipher key</a>
+    </div>
+    <div class="foot-col">
+      <h4>Contact</h4>
+      <a href="mailto:goldbugmovie@gmail.com">General — goldbugmovie@gmail.com</a><br>
+      <a href="mailto:press@goldbugmovie.com">Press inquiries</a><br>
+      <a href="mailto:fest@goldbugmovie.com">Festival programmers</a><br>
+      <a href="mailto:dist@goldbugmovie.com">Distribution</a>
+    </div>
+    <div class="foot-col">
+      <h4>Honors</h4>
+      Sundance Lab<br>
+      Film Independent<br>
+      Sloan Foundation ×3<br>
+      Gotham (IFP) No Borders
+    </div>
+  </div>
+
+  <div class="foot-cipher" id="footCipher" aria-label="Encrypted message"></div>
+
+  <div class="foot-meta">
+    <span>© MMXXVI · ALL RIGHTS RESERVED</span>
+    <span>SITE NO. 0001 · FOLIO I OF IV</span>
+  </div>
+</footer>
+
+
+<!-- Floating cipher key (collapsible) -->
+<div class="cipher-key collapsed" id="cipherKey" role="button" aria-label="Open cipher key" tabindex="0"></div>
+
+<!-- Easter-egg progress badge + unlock modal -->
+<div class="egg-progress" id="eggProgress" aria-hidden="true">Glyphs · <span id="eggCount">0</span>/5</div>
+<div class="egg-modal" id="eggModal" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="eggLabel">
+    <button class="close" aria-label="Close" id="eggClose">×</button>
+    <div class="label" id="eggLabel">Five glyphs · one message</div>
+    <blockquote>Every code is a love letter waiting for someone patient enough to read it.</blockquote>
+    <cite>— from the screenplay</cite>
+  </div>
+</div>
+
+<!-- Hidden YouTube IFrame player (the actual music source — controlled by the
+     bridge "Aria" button and the film-canister play indicator). -->
+<div id="ytWrap" aria-hidden="true" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;">
+  <div id="ytPlayer"></div>
+</div>
+<script src="https://www.youtube.com/iframe_api" async></script>
+
+
+<script>
+/* ============================================================
+   GBV — combined behavior
+   §A  Cipher (Poe substitution + decrypt animations + cursor)
+   §B  Helix morph (scroll-driven SVG)
+   §C  Aria audio toggle
+   §D  Investigation: card drag/flip, beetle, red string, signup
+   §E  Section observer (mode tinting), boot
+   ============================================================ */
+(function(){
+'use strict';
+
+/* =========== §A  CIPHER =========== */
+
+// Poe's published substitutions, extended to a full alphabet.
+const CIPHER = {
+  A:'5',  B:'2',  C:'—', D:'†', E:'8',
+  F:'¶',  G:'.',  H:'‡', I:'(', J:')',
+  K:';',  L:'?',  M:']', N:'¢', O:':',
+  P:'[',  Q:'*',  R:'0', S:'1', T:'3',
+  U:'4',  V:'6',  W:'7', X:'9', Y:'$',
+  Z:'/'
+};
+const ALPHABET = Object.keys(CIPHER);
+const SYMBOLS  = Object.values(CIPHER);
+
+function encChar(ch){
+  const u = ch.toUpperCase();
+  return CIPHER[u] || ch;
+}
+
+function buildCipher(target, text){
+  target.classList.add('cipher');
+  target.innerHTML = '';
+  const chars = [...text];
+  chars.forEach((c, i) => {
+    if (c === ' '){
+      const sp = document.createElement('span');
+      sp.className = 'sp';
+      sp.textContent = ' ';
+      target.appendChild(sp);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'ch';
+    span.dataset.target = c;
+    span.dataset.idx = i;
+    span.textContent = encChar(c);
+    target.appendChild(span);
+  });
+  return target.querySelectorAll('.ch');
+}
+
+function decryptElement(el){
+  if (el.dataset.decrypted === '1' || el.dataset.decrypting === '1') return;
+  el.dataset.decrypting = '1';
+  if (!el.dataset.built){
+    buildCipher(el, el.dataset.text);
+    el.dataset.built = '1';
+  }
+  const chars = el.querySelectorAll('.ch');
+  const perChar = 40;
+
+  chars.forEach((ch, i) => {
+    const target = ch.dataset.target;
+    const isLetter = !!CIPHER[target.toUpperCase()];
+    const startDelay = i * 12;
+
+    if (!isLetter){
+      setTimeout(() => { ch.classList.add('solved'); ch.textContent = target; }, startDelay);
+      return;
+    }
+    let cycles = 6 + Math.floor(Math.random() * 5);
+    let n = 0;
+    const tick = () => {
+      if (n < cycles){
+        ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        n++;
+        setTimeout(tick, perChar);
+      } else {
+        ch.textContent = target;
+        ch.classList.add('solved');
+      }
+    };
+    setTimeout(tick, startDelay);
+  });
+
+  setTimeout(() => {
+    el.dataset.decrypted = '1';
+    el.dataset.decrypting = '';
+    el.classList.remove('cipher');           // restore inherited typography
+    wrapWords(el);
+  }, perChar * 12 + chars.length * 12 + 80);
+}
+
+function wrapWords(el){
+  const nodes = [...el.childNodes];
+  const items = [];
+  let buf = [];
+  nodes.forEach(node => {
+    if (node.nodeType === 1 && node.classList && node.classList.contains('sp')){
+      if (buf.length){ items.push({kind:'word', nodes: buf}); buf = []; }
+      items.push({kind:'sp', node});
+    } else {
+      buf.push(node);
+    }
+  });
+  if (buf.length) items.push({kind:'word', nodes: buf});
+  el.innerHTML = '';
+  items.forEach(item => {
+    if (item.kind === 'sp'){ el.appendChild(item.node); return; }
+    const w = document.createElement('span');
+    w.className = 'word solved';
+    item.nodes.forEach(n => w.appendChild(n));
+    w.addEventListener('mouseenter', () => reEncryptWord(w));
+    el.appendChild(w);
+  });
+}
+
+function reEncryptWord(w){
+  if (w.dataset.busy === '1') return;
+  w.dataset.busy = '1';
+  const chars = w.querySelectorAll('.ch');
+  chars.forEach(ch => {
+    const tU = ch.dataset.target.toUpperCase();
+    if (!CIPHER[tU]) return;
+    ch.classList.remove('solved');
+    ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+  });
+  let n = 0;
+  const cycles = 5;
+  const tick = () => {
+    if (n < cycles){
+      chars.forEach(ch => {
+        const tU = ch.dataset.target.toUpperCase();
+        if (!CIPHER[tU]) return;
+        ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+      });
+      n++;
+      setTimeout(tick, 40);
+    } else {
+      chars.forEach(ch => {
+        ch.textContent = ch.dataset.target;
+        ch.classList.add('solved');
+      });
+      w.dataset.busy = '';
+    }
+  };
+  setTimeout(tick, 80);
+}
+
+function initCipherTargets(){
+  document.querySelectorAll('.decrypt, .decrypt-head').forEach(el => {
+    const text = el.dataset.text || el.textContent;
+    el.dataset.text = text;
+    el.textContent = '';
+    buildCipher(el, text);
+    el.dataset.built = '1';
+  });
+}
+
+function setupDecryptObserver(){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) decryptElement(e.target); });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.15 });
+  document.querySelectorAll('.decrypt, .decrypt-head').forEach(el => io.observe(el));
+}
+
+/* Like decryptElement, but the final state keeps the mono cipher styling
+   (font / weight / letter-spacing) and just swaps the gold color back to the
+   surrounding body color via .decoded-mono. Used on card backs so the decoded
+   text doesn't visually shrink back to small serif. */
+function decryptCardElement(el){
+  if (el.dataset.decrypted === '1' || el.dataset.decrypting === '1') return;
+  el.dataset.decrypting = '1';
+  if (!el.dataset.built){
+    buildCipher(el, el.dataset.text);
+    el.dataset.built = '1';
+  }
+  const chars = el.querySelectorAll('.ch');
+  const perChar = 40;
+
+  chars.forEach((ch, i) => {
+    const target = ch.dataset.target;
+    const isLetter = !!CIPHER[target.toUpperCase()];
+    const startDelay = i * 12;
+
+    if (!isLetter){
+      setTimeout(() => { ch.classList.add('solved'); ch.textContent = target; }, startDelay);
+      return;
+    }
+    let cycles = 6 + Math.floor(Math.random() * 5);
+    let n = 0;
+    const tick = () => {
+      if (n < cycles){
+        ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        n++;
+        setTimeout(tick, perChar);
+      } else {
+        ch.textContent = target;
+        ch.classList.add('solved');
+      }
+    };
+    setTimeout(tick, startDelay);
+  });
+
+  setTimeout(() => {
+    el.dataset.decrypted = '1';
+    el.dataset.decrypting = '';
+    el.classList.remove('cipher');     // strip gold
+    el.classList.add('decoded-mono');  // keep mono / 700 / tracking, body color
+    wrapWords(el);
+  }, perChar * 12 + chars.length * 12 + 80);
+}
+
+/* Decrypt-on-flip — every time a card is flipped to its back face, run the
+   same Poe-cipher reveal on each text block inside the back. Inline emphasis
+   (<em>) is flattened in the process; the cipher animation is the new
+   emphasis. Re-runs on every flip-to-back, not just the first.
+   Two-phase: render the cipher state immediately so the back face rotates
+   into view fully encrypted, then start the cascade once the flip has
+   settled so the user actually watches the glyphs unspool into prose. */
+function decryptCardBack(back){
+  if (!back) return;
+  const targets = back.querySelectorAll('h3, h4, h5, p, blockquote, cite');
+  const built = [];
+  targets.forEach(el => {
+    if (!el.dataset.cipherInit){
+      const text = el.textContent.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      el.dataset.text = text;
+      el.dataset.cipherInit = '1';
+    }
+    if (!el.dataset.text) return;
+    el.dataset.decrypted = '';
+    el.dataset.decrypting = '';
+    el.dataset.built = '';
+    el.classList.remove('decoded-mono');  // reset so re-flip restarts the reveal
+    el.innerHTML = '';
+    buildCipher(el, el.dataset.text);
+    el.dataset.built = '1';
+    built.push(el);
+  });
+  // The face takes ~550 ms to flip; the back becomes visible around 275 ms
+  // in. Hold the static cipher for a beat so it's clearly seen before the
+  // decode begins.
+  setTimeout(() => {
+    built.forEach(el => decryptCardElement(el));
+  }, 480);
+}
+
+function buildFooterCipher(){
+  const msg = "THE TREASURE WAS NEVER WHAT WE WERE LOOKING FOR. WE WERE LOOKING FOR A WAY TO STAY UP LATE TOGETHER, READING.";
+  const el = document.getElementById('footCipher');
+  el.innerHTML = '';
+  [...msg].forEach(c => {
+    if (c === ' '){
+      const sp = document.createElement('span');
+      sp.className = 'sp';
+      sp.textContent = ' ';
+      el.appendChild(sp);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'ch';
+    span.dataset.target = c;
+    span.textContent = encChar(c);
+    el.appendChild(span);
+  });
+
+  // Cursor-radius decode: chars within ~110 px of the pointer briefly resolve
+  // to plaintext, then re-scramble as the cursor leaves their orbit. The
+  // buried message is meant to be earned, not handed over — drag the cursor
+  // along it and the words appear under your hand.
+  const chars = el.querySelectorAll('.ch');
+  let raf = 0, cx = -1e6, cy = -1e6;
+  const update = () => {
+    raf = 0;
+    chars.forEach(ch => {
+      const r = ch.getBoundingClientRect();
+      const mx = r.left + r.width / 2;
+      const my = r.top  + r.height / 2;
+      const dist = Math.hypot(cx - mx, cy - my);
+      const peek = dist < 110;
+      const isPeek = ch.classList.contains('peek');
+      if (peek && !isPeek){
+        ch.textContent = ch.dataset.target;
+        ch.classList.add('peek');
+      } else if (!peek && isPeek){
+        ch.textContent = encChar(ch.dataset.target);
+        ch.classList.remove('peek');
+      }
+    });
+  };
+  el.addEventListener('mousemove', (e) => {
+    cx = e.clientX; cy = e.clientY;
+    if (!raf) raf = requestAnimationFrame(update);
+  });
+  el.addEventListener('mouseleave', () => {
+    cx = -1e6; cy = -1e6;
+    if (!raf) raf = requestAnimationFrame(update);
+  });
+}
+
+function buildKey(){
+  const key = document.getElementById('cipherKey');
+  function expand(){
+    key.classList.remove('collapsed'); key.classList.add('expanded');
+    const cells = ALPHABET.map(L =>
+      `<div class="key-cell"><div class="sym">${CIPHER[L]}</div><div class="let">${L}</div></div>`
+    ).join('');
+    key.innerHTML = `
+      <div class="key-head">
+        <span>POE · <b>SUBSTITUTION KEY</b></span>
+        <span class="x" aria-label="Close">×</span>
+      </div>
+      <div class="key-decoder">
+        <label for="keyDecode">Try it — encode a message</label>
+        <input id="keyDecode" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="your message">
+        <output class="key-output" aria-live="polite"></output>
+      </div>
+      <div class="key-grid">${cells}</div>
+      <div class="key-foot">After E. A. Poe — "The Gold-Bug" — Dollar Newspaper, Philadelphia, 21 June 1843. Twenty-six glyphs · twenty-six letters · one buried thing.</div>`;
+    key.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); collapse(); });
+    const input = key.querySelector('#keyDecode');
+    const output = key.querySelector('.key-output');
+    const renderOutput = () => {
+      const text = input.value;
+      output.textContent = [...text].map(c => c === ' ' ? ' ' : encChar(c)).join('');
+    };
+    input.addEventListener('input', renderOutput);
+    // Stop bubbling so the panel's outer click-to-collapse handler doesn't
+    // fire when interacting with the input.
+    ['click','pointerdown','keydown'].forEach(ev =>
+      input.addEventListener(ev, e => e.stopPropagation())
+    );
+    setTimeout(() => input.focus(), 50);
+  }
+  function collapse(){
+    key.classList.remove('expanded'); key.classList.add('collapsed');
+    key.innerHTML = '';
+  }
+  key.addEventListener('click', () => key.classList.contains('collapsed') ? expand() : collapse());
+  key.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); key.click(); }
+  });
+}
+
+function setupCursorTrail(){
+  if (matchMedia('(pointer: coarse)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let last = 0;
+  document.addEventListener('mousemove', (e) => {
+    const now = performance.now();
+    if (now - last < 55) return;
+    last = now;
+    const t = document.createElement('span');
+    t.className = 'trail';
+    t.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    const jx = (Math.random() - 0.5) * 14;
+    const jy = (Math.random() - 0.5) * 14;
+    t.style.left = (e.clientX + jx) + 'px';
+    t.style.top  = (e.clientY + jy) + 'px';
+    t.style.fontSize = (10 + Math.random() * 6) + 'px';
+    // tint trail color based on which section we're over
+    if (document.body.classList.contains('is-investigation')) t.style.color = '#D4AF37';
+    document.body.appendChild(t);
+    const dx = (Math.random() - 0.5) * 30;
+    const dy = -10 - Math.random() * 18;
+    t.animate(
+      [{ transform: 'translate(0,0)', opacity: 0.85 },
+       { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }],
+      { duration: 900 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.3,1)' }
+    ).onfinish = () => t.remove();
+  });
+}
+
+/* =========== §B  HELIX MORPH =========== */
+
+function setupHelixMorph(){
+  const svg = document.getElementById('morph');
+  const linesG = document.getElementById('lines');
+  const goldG = document.getElementById('goldStrand');
+  const rungsG = document.getElementById('rungs');
+  const notesG = document.getElementById('notes');
+
+  const W = 280, H = 1000;
+  const STRANDS = 5;
+  const SAMPLES = 220;
+  const HELIX_AMP = 70;
+  const HELIX_FREQ = 9;
+  const STAFF_GAP = 18;
+  const CX = W/2;
+
+  // Breathing — once the helix is fully formed, slowly phase-shift the wave
+  // so the strand bands appear to slide along the helix axis (simulating a
+  // gentle 3D rotation), and modulate amplitude ±5% so the helix breathes.
+  let breathePhase = 0;
+
+  function ampAt(t){
+    const breath = (t > 0.7) ? Math.sin(breathePhase * 0.6) * 0.05 : 0;
+    return HELIX_AMP * (1 + breath);
+  }
+
+  function strandPath(k, t){
+    const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
+    const helixPhase = (k === 0) ? 0 : (k === STRANDS-1 ? Math.PI : (k * Math.PI / (STRANDS-1)));
+    const driftPhase = (t > 0.7) ? breathePhase * (t - 0.7) / 0.3 : 0;
+    const amp = ampAt(t);
+    let d = '';
+    for(let i=0; i<=SAMPLES; i++){
+      const u = i / SAMPLES;
+      const y = u * H;
+      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + helixPhase + driftPhase );
+      const helixX = CX + wave * amp;
+      const staffY = (H/2) + staffY0;
+      const x0 = u * W;
+      const y0 = staffY;
+      const x1 = helixX;
+      const y1 = y;
+      const x = x0 + (x1 - x0) * t;
+      const yy = y0 + (y1 - y0) * t;
+      d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + yy.toFixed(2) + ' ';
+    }
+    return d;
+  }
+
+  // strand paths
+  const strandPaths = [];
+  for(let k=0;k<STRANDS;k++){
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    linesG.appendChild(p);
+    strandPaths.push(p);
+  }
+  const goldPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  goldG.appendChild(goldPath);
+
+  // 14 note heads with stems
+  const NOTE_COUNT = 14;
+  const notes = [];
+  for(let i=0;i<NOTE_COUNT;i++){
+    const c = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    c.setAttribute('rx','7'); c.setAttribute('ry','5');
+    notesG.appendChild(c);
+    const s = document.createElementNS('http://www.w3.org/2000/svg','line');
+    s.setAttribute('stroke', 'currentColor');
+    s.setAttribute('stroke-width','1.4');
+    notesG.appendChild(s);
+    notes.push({head:c, stem:s});
+  }
+
+  // Rungs (DNA "ladder" — the shape alone reads as base-pairing,
+  // so we don't draw A/T/G/C glyphs that would clash with the strands).
+  const RUNG_COUNT = 11;
+  const rungs = [];
+  for(let i=0;i<RUNG_COUNT;i++){
+    const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
+    rungsG.appendChild(ln);
+    rungs.push(ln);
+  }
+
+  function render(t){
+    // strands
+    for(let k=0;k<STRANDS;k++){
+      const path = strandPaths[k];
+      path.setAttribute('d', strandPath(k, t));
+      let op;
+      if (k === 0 || k === STRANDS-1) op = 1;
+      else op = 1 - Math.min(1, t * 1.6);
+      path.setAttribute('opacity', op.toFixed(3));
+      if (k === STRANDS-1)
+        path.setAttribute('opacity', (1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35))).toFixed(3));
+    }
+    goldPath.setAttribute('d', strandPath(STRANDS-1, t));
+    const goldOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
+    goldG.setAttribute('opacity', goldOp.toFixed(3));
+
+    // notes
+    const drift = (t > 0.7) ? breathePhase * (t - 0.7) / 0.3 : 0;
+    const amp = ampAt(t);
+    const noteOp = 1 - Math.min(1, t * 1.8);
+    notesG.setAttribute('opacity', Math.max(0, noteOp).toFixed(3));
+    for(let i=0;i<NOTE_COUNT;i++){
+      const u = (i + 0.5) / NOTE_COUNT;
+      const y = u * H;
+      const k = 1 + (i % 3);
+      const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
+      const staffY = H/2 + staffY0;
+      const xStaff = u * W;
+      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + (k === 1 ? 0 : Math.PI) + drift );
+      const xHel = CX + wave * amp;
+      const x = xStaff + (xHel - xStaff) * t;
+      const yy = staffY + (y - staffY) * t;
+      const n = notes[i];
+      n.head.setAttribute('cx', x.toFixed(2));
+      n.head.setAttribute('cy', yy.toFixed(2));
+      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${yy.toFixed(2)})`);
+      n.stem.setAttribute('x1', (x + 6.2).toFixed(2));
+      n.stem.setAttribute('y1', (yy - 2).toFixed(2));
+      n.stem.setAttribute('x2', (x + 6.2).toFixed(2));
+      n.stem.setAttribute('y2', (yy - 28).toFixed(2));
+      n.stem.setAttribute('opacity', (i % 4 === 3) ? 0 : 1);
+    }
+
+    // Rungs only — placed where the helix is at its widest so they read as
+    // proper base-pair bars; gold every other one. Fades in past t≈0.35.
+    const rungOp = Math.max(0, Math.min(1, (t - 0.35) / 0.4));
+    rungsG.setAttribute('opacity', rungOp.toFixed(3));
+    for(let i=0;i<RUNG_COUNT;i++){
+      // Place each rung at a quarter-cycle offset so x1/x2 are at the
+      // strands' max separation — keeps rungs from collapsing visually.
+      const phase = (i + 0.5) / RUNG_COUNT;
+      const y = phase * H;
+      const wave  = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + 0 + drift );
+      const wave2 = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI + drift );
+      const x1 = CX + wave  * amp;
+      const x2 = CX + wave2 * amp;
+      const ln = rungs[i];
+      ln.setAttribute('x1', x1.toFixed(2));
+      ln.setAttribute('y1', y.toFixed(2));
+      ln.setAttribute('x2', x2.toFixed(2));
+      ln.setAttribute('y2', y.toFixed(2));
+      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
+      ln.setAttribute('stroke-width', '1');
+      ln.setAttribute('opacity', '0.65');
+    }
+  }
+
+  // Drive `t` from scroll position relative to bridge section
+  const bridge = document.getElementById('bridge');
+  function getT(){
+    const r = bridge.getBoundingClientRect();
+    const total = bridge.offsetHeight - window.innerHeight;
+    if (total <= 0) return 0;
+    const scrolled = -r.top;
+    return Math.max(0, Math.min(1, scrolled / total));
+  }
+
+  // Tinting: as t increases, the bridge fg shifts from ink (paper) → bone (walnut)
+  function tintBridge(t){
+    const inkR = 0x14, inkG = 0x20, inkB = 0x2E;
+    const boneR = 0xF0, boneG = 0xE6, boneB = 0xD2;
+    const r = Math.round(inkR + (boneR - inkR) * t);
+    const g = Math.round(inkG + (boneG - inkG) * t);
+    const b = Math.round(inkB + (boneB - inkB) * t);
+    const c = `rgb(${r},${g},${b})`;
+    bridge.style.setProperty('--bridge-fg', c);
+    bridge.style.setProperty('--bridge-fg-mute', `rgba(${r},${g},${b},0.7)`);
+  }
+
+  let raf = false;
+  function onScroll(){
+    if (raf) return;
+    raf = true;
+    requestAnimationFrame(() => {
+      raf = false;
+      const t = getT();
+      render(t);
+      tintBridge(t);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  // Continuous breath loop — only re-renders while the helix is mostly
+  // formed (t > 0.7) and the bridge is on-screen. Pauses when the tab is
+  // hidden so it doesn't burn CPU in the background.
+  let breathRaf = 0;
+  let inViewport = true;
+  function breath(){
+    breathRaf = 0;
+    if (!inViewport || document.hidden) return;
+    breathePhase += 0.012;
+    const t = getT();
+    if (t > 0.7) render(t);
+    if (t > 0.5) breathRaf = requestAnimationFrame(breath);
+  }
+  function startBreath(){
+    if (!breathRaf) breathRaf = requestAnimationFrame(breath);
+  }
+  // Use IO so we don't run when the bridge is far off-screen.
+  const breathIo = new IntersectionObserver((ents) => {
+    inViewport = ents.some(e => e.isIntersecting);
+    if (inViewport) startBreath();
+  }, { rootMargin: '20% 0px 20% 0px' });
+  breathIo.observe(bridge);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) startBreath();
+  });
+  startBreath();
+  render(0);
+  tintBridge(0);
+}
+
+/* =========== §C  ARIA AUDIO (YouTube IFrame Player + fallback) =========== */
+
+let ytPlayer = null;
+let ytReady  = false;
+let ytFailed = false;             // set true if YT can't initialise (e.g. CSP-sandboxed preview)
+let fallbackAudio = null;
+const YT_VIDEO_ID = '15ezpwCHtJs';
+const YT_START_S  = 1;
+const YT_VOLUME   = 28;           // 0..100
+
+// YouTube IFrame API calls this global when the script finishes loading.
+window.onYouTubeIframeAPIReady = function(){
+  try {
+    ytPlayer = new YT.Player('ytPlayer', {
+      width: 200, height: 120,
+      videoId: YT_VIDEO_ID,
+      playerVars: {
+        start: YT_START_S, autoplay: 0, controls: 0,
+        modestbranding: 1, playsinline: 1, rel: 0, iv_load_policy: 3
+      },
+      events: {
+        onReady: () => {
+          ytReady = true; ytFailed = false;
+          try { ytPlayer.setVolume(YT_VOLUME); } catch(e) {}
+        },
+        onError: () => { ytFailed = true; },
+        onStateChange: (e) => {
+          const S = (window.YT && YT.PlayerState) || {};
+          if (e.data === S.PLAYING)  setUiPlaying(true);
+          if (e.data === S.PAUSED)   setUiPlaying(false);
+          if (e.data === S.ENDED)    { try { ytPlayer.seekTo(YT_START_S); ytPlayer.playVideo(); } catch(_) {} }
+        }
+      }
+    });
+  } catch(err){ ytFailed = true; }
+};
+
+function setUiPlaying(on){
+  const btn = document.getElementById('ariaBtn');
+  const lbl = document.getElementById('ariaLabel');
+  const canister = document.querySelector('.canister');
+  const iconPlay  = document.querySelector('.canister .icon-play');
+  const iconPause = document.querySelector('.canister .icon-pause');
+  if (btn) {
+    btn.classList.toggle('playing', on);
+    btn.setAttribute('aria-pressed', String(on));
+  }
+  if (lbl) lbl.textContent = on ? 'Aria · on' : 'Aria · off';
+  if (canister) canister.classList.toggle('playing', on);
+  // Swap the visible icon: triangle ▶ when stopped, two bars ‖ when playing.
+  if (iconPlay)  iconPlay.style.display  = on ? 'none' : '';
+  if (iconPause) iconPause.style.display = on ? '' : 'none';
+}
+
+function ensureFallback(){
+  if (fallbackAudio) return fallbackAudio;
+  fallbackAudio = new Audio();
+  // Public-domain Aria from Open Goldberg Variations (Kimiko Ishizaka, CC0).
+  fallbackAudio.src = 'https://archive.org/download/OpenGoldbergVariations/Kimiko%20Ishizaka%20-%20J.S.%20Bach-%20-Open-%20Goldberg%20Variations%2C%20BWV%20988%20%28Piano%29%20-%2001%20Aria.mp3';
+  fallbackAudio.loop = true;
+  fallbackAudio.volume = 0.10;
+  fallbackAudio.crossOrigin = 'anonymous';
+  fallbackAudio.addEventListener('play',  () => setUiPlaying(true));
+  fallbackAudio.addEventListener('pause', () => setUiPlaying(false));
+  return fallbackAudio;
+}
+
+function ytAvailable(){
+  return ytReady && !ytFailed && ytPlayer && typeof ytPlayer.playVideo === 'function';
+}
+
+function playMusic(){
+  if (ytAvailable()){
+    try { ytPlayer.unMute(); ytPlayer.setVolume(YT_VOLUME); ytPlayer.playVideo(); } catch(_) {}
+    return;
+  }
+  // YouTube isn't ready / is blocked — use the archive.org Aria.
+  const a = ensureFallback();
+  const p = a.play();
+  if (p && p.then) p.catch((err) => {
+    console.warn('[GBV] audio fallback blocked:', err);
+    const lbl = document.getElementById('ariaLabel');
+    if (lbl) lbl.textContent = 'Aria · blocked';
+    setUiPlaying(false);
+  });
+}
+function pauseMusic(){
+  if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+    try { ytPlayer.pauseVideo(); } catch(_) {}
+  }
+  if (fallbackAudio){ try { fallbackAudio.pause(); } catch(_) {} }
+}
+function isMusicPlaying(){
+  if (ytAvailable()){
+    try {
+      const S = (window.YT && YT.PlayerState) || {};
+      if (ytPlayer.getPlayerState() === S.PLAYING) return true;
+    } catch(_) {}
+  }
+  return !!(fallbackAudio && !fallbackAudio.paused && !fallbackAudio.ended);
+}
+
+function setupAriaAudio(){
+  const btn = document.getElementById('ariaBtn');
+  const playInd = document.getElementById('playInd');
+  function toggle(e){
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (isMusicPlaying()) { pauseMusic(); setUiPlaying(false); }
+    else                  { playMusic(); }
+  }
+  if (btn) btn.addEventListener('click', toggle);
+  if (playInd) {
+    // The canister's ▶ button mirrors the bridge audio toggle.
+    playInd.addEventListener('pointerdown', (e) => e.stopPropagation());
+    playInd.addEventListener('click', toggle);
+  }
+
+  // If the YouTube IFrame API never initialises (CSP block, sandboxed
+  // preview, network), mark it failed so subsequent clicks immediately
+  // use the archive.org Aria fallback.
+  setTimeout(() => { if (!ytReady) ytFailed = true; }, 3500);
+}
+
+/* =========== §D  INVESTIGATION =========== */
+
+function setupPunchcard(){
+  const grid = document.getElementById('punchGrid');
+  if (!grid) return;
+  const ROWS = 4, COLS = 40;
+  const seed = [3,7,2,9,1,4,8,5,2,6,3,7,1,9,4,2,8,5,3,7,1,6,9,4,2,5,8,3,7,1,4,9,6,2,5,8,3,7,1,4];
+  for (let r = 0; r < ROWS; r++){
+    for (let c = 0; c < COLS; c++){
+      const cell = document.createElement('div');
+      cell.className = 'pc-cell';
+      const v = (seed[c] + r * 7 + c * 3) % 11;
+      if (v < 4 && (r === seed[c] % ROWS || (r + c) % 5 === 0)) cell.classList.add('punched');
+      if (r === 0 && c % 4 === 1) cell.classList.add('punched');
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function setupCards(){
+  const board = document.getElementById('caseBoard');
+  const hint = document.getElementById('hint');
+  const artifacts = board.querySelectorAll('.artifact');
+  let zCounter = 10;
+  const initial = new Map();
+
+  function flipCard(a){
+    const back = a.querySelector('.side.back');
+    a.classList.add('flipping');
+    sfxRustle();
+    setTimeout(() => {
+      a.classList.toggle('flipped');
+      if (back && a.classList.contains('flipped')){
+        back.scrollTop = 0;
+        decryptCardBack(back);
+      }
+      a.classList.remove('flipping');
+    }, 220);
+  }
+
+  artifacts.forEach(a => {
+    a.style.zIndex = ++zCounter;
+    initial.set(a, {
+      left: a.style.left, right: a.style.right,
+      top: a.style.top, transform: a.style.transform
+    });
+    // Make each artifact keyboard-focusable + flippable with Enter / Space.
+    a.setAttribute('tabindex', '0');
+    a.setAttribute('role', 'button');
+    a.setAttribute('aria-label', 'Artifact card — press Enter to flip');
+    a.addEventListener('keydown', (e) => {
+      if (e.target !== a) return;
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        flipCard(a);
+      }
+    });
+    let pendingDrag = false, dragging = false, captured = false, moved = false;
+    let startX = 0, startY = 0, origX = 0, origY = 0, origRot = 0;
+
+    a.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('input, button, .play-indicator')) return;
+      if (e.button !== undefined && e.button !== 0) return;
+      pendingDrag = true; dragging = false; captured = false; moved = false;
+      startX = e.clientX; startY = e.clientY;
+      const rect = a.getBoundingClientRect();
+      const boardRect = board.getBoundingClientRect();
+      origX = rect.left - boardRect.left;
+      origY = rect.top - boardRect.top;
+      const m = (a.style.transform || '').match(/rotate\(([-\d.]+)deg\)/);
+      origRot = m ? parseFloat(m[1]) : 0;
+      if (hint) hint.classList.add('fade');
+    });
+
+    a.addEventListener('pointermove', (e) => {
+      if (!pendingDrag) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (!dragging){
+        if (Math.hypot(dx, dy) <= 6) return;
+        dragging = true; moved = true;
+        try { a.setPointerCapture(e.pointerId); captured = true; } catch(_) {}
+        a.style.right = 'auto';
+        a.style.left = origX + 'px';
+        a.style.top  = origY + 'px';
+        a.style.transform = `rotate(${origRot}deg)`;
+        a.style.zIndex = ++zCounter;
+        a.classList.add('dragging');
+      }
+      a.style.left = (origX + dx) + 'px';
+      a.style.top  = (origY + dy) + 'px';
+      a.style.transform = `rotate(${origRot}deg) translateZ(0)`;
+    });
+
+    const endDrag = (e) => {
+      if (!pendingDrag) return;
+      pendingDrag = false;
+      const wasDragging = dragging;
+      dragging = false;
+      a.classList.remove('dragging');
+      if (captured) { try { a.releasePointerCapture(e.pointerId); } catch(_) {} }
+      captured = false;
+      if (!moved && !wasDragging){
+        flipCard(a);
+      }
+    };
+    a.addEventListener('pointerup', endDrag);
+    a.addEventListener('pointercancel', endDrag);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    artifacts.forEach(a => {
+      const init = initial.get(a);
+      a.style.left = init.left;
+      a.style.right = init.right;
+      a.style.top = init.top;
+      a.style.transform = init.transform;
+      a.classList.remove('flipped');
+    });
+  });
+}
+
+function setupBeetle(){
+  const beetle = document.getElementById('beetle');
+  if (!beetle) return;
+  if (matchMedia('(pointer: coarse)').matches)            { beetle.style.display = 'none'; return; }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { beetle.style.display = 'none'; return; }
+
+  /* Continuous physics-style motion. Each frame we advance position
+     by `speed * dt` along `heading`, lerp the visual rotation toward
+     the heading, and apply tiny noise so the path isn't sterile. */
+
+  // Position (viewport coords — beetle is position:fixed)
+  let x = Math.min(window.innerWidth  - 60, window.innerWidth  * 0.82);
+  let y = Math.min(window.innerHeight - 100, window.innerHeight * 0.78);
+
+  // Angles in radians; 0 = +x (right), -π/2 = up
+  let heading       = -Math.PI / 2;
+  let targetHeading = heading;
+  let visualDeg     = -90;          // SVG is drawn head-up, so head-up = -90deg
+  let speed         = 0;            // px / second, smoothed toward targetSpeed
+
+  // Cursor tracking
+  let mouseX = -9999, mouseY = -9999;
+  document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  // State machine — 'walking' | 'pausing' | 'startled'
+  let state = 'walking';
+  let stateUntil = performance.now() + 3500;
+  let nextTurnAt = performance.now() + 1800 + Math.random() * 2200;
+
+  function setState(s, dur){
+    state = s;
+    stateUntil = performance.now() + dur;
+  }
+  function angleDelta(target, current){
+    let d = target - current;
+    while (d >  Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    return d;
+  }
+  function place(){
+    beetle.style.left = x.toFixed(1) + 'px';
+    beetle.style.top  = y.toFixed(1) + 'px';
+    beetle.style.transform = 'rotate(' + visualDeg.toFixed(2) + 'deg)';
+  }
+  place();
+
+  let rafId = 0;
+  let lastT = performance.now();
+
+  function tick(now){
+    const dt = Math.min(0.05, (now - lastT) / 1000);   // clamp big gaps
+    lastT = now;
+
+    /* — State transitions — */
+    if (now > stateUntil){
+      if (state === 'walking'){
+        // Roughly 30% of the time pause (antennae sensing); otherwise keep walking
+        if (Math.random() < 0.30) setState('pausing',  700 + Math.random() * 1500);
+        else                       setState('walking', 3500 + Math.random() * 4000);
+      } else if (state === 'pausing'){
+        setState('walking', 3500 + Math.random() * 4000);
+        nextTurnAt = now + 600 + Math.random() * 1500;
+      } else if (state === 'startled'){
+        // Brief freeze after scurry, then resume
+        setState('pausing', 250 + Math.random() * 400);
+      }
+    }
+
+    /* — Cursor proximity → startle (only if cursor is genuinely close) — */
+    const dxm = mouseX - x, dym = mouseY - y;
+    const distM = Math.hypot(dxm, dym);
+    if (distM < 75 && state !== 'startled' && mouseX > 0){
+      targetHeading = Math.atan2(y - mouseY, x - mouseX);   // away from cursor
+      setState('startled', 550 + Math.random() * 450);
+      sfxScuttle();
+    }
+
+    /* — Occasional deliberate turn while walking — */
+    if (state === 'walking' && now > nextTurnAt){
+      const big = Math.random() < 0.10;
+      const turn = (Math.random() - 0.5) * (big ? Math.PI : Math.PI / 3);
+      targetHeading = heading + turn;
+      nextTurnAt = now + 1800 + Math.random() * 2400;
+    }
+
+    /* — Edge avoidance: bias target heading back toward viewport interior — */
+    const m = 70;
+    if (x < m || x > window.innerWidth  - m ||
+        y < m || y > window.innerHeight - m){
+      const cx = window.innerWidth  * 0.5;
+      const cy = window.innerHeight * 0.5;
+      const toCenter = Math.atan2(cy - y, cx - x);
+      targetHeading += angleDelta(toCenter, targetHeading) * 0.5;
+    }
+
+    /* — Smoothly turn toward target heading — */
+    const turnRate = (state === 'startled') ? 6.0 : 2.2;   // rad/sec
+    const ha = angleDelta(targetHeading, heading);
+    heading += Math.sign(ha) * Math.min(Math.abs(ha), turnRate * dt);
+    // Tiny natural wobble while walking
+    if (state === 'walking') heading += (Math.random() - 0.5) * 0.45 * dt;
+
+    /* — Speed by state, smoothed — */
+    let targetSpeed;
+    if      (state === 'walking')  targetSpeed = 50;       // ~50 px/s — beetle pace
+    else if (state === 'pausing')  targetSpeed = 0;
+    else                            targetSpeed = 230;     // scurry
+    speed += (targetSpeed - speed) * Math.min(1, dt * 5);
+
+    /* — Step forward — */
+    x += Math.cos(heading) * speed * dt;
+    y += Math.sin(heading) * speed * dt;
+    x = Math.max(18, Math.min(window.innerWidth  - 18, x));
+    y = Math.max(18, Math.min(window.innerHeight - 18, y));
+
+    /* — Lerp the SVG rotation along shortest arc — */
+    const targetVis = (heading * 180 / Math.PI) + 90;
+    let vd = targetVis - visualDeg;
+    while (vd >  180) vd -= 360;
+    while (vd < -180) vd += 360;
+    visualDeg += vd * Math.min(1, dt * 9);
+
+    place();
+    beetle.classList.toggle('scurrying', state === 'startled');
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame((t) => { lastT = t; tick(t); });
+
+  // Pause the loop when the tab isn't visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden){
+      if (rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+    } else if (!rafId){
+      lastT = performance.now();
+      rafId = requestAnimationFrame(tick);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    x = Math.min(x, window.innerWidth  - 30);
+    y = Math.min(y, window.innerHeight - 30);
+  });
+}
+
+function setupSignup(){
+  const form = document.getElementById('signupForm');
+  const env = document.getElementById('envelopeArt');
+  if (!form) return;
+  // Endpoint is a Google Apps Script Web App URL configured via
+  // <meta name="signup-endpoint">. See MAILING_LIST.md for setup.
+  const meta = document.querySelector('meta[name="signup-endpoint"]');
+  const ENDPOINT = meta ? (meta.content || '').trim() : '';
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = document.getElementById('emailInput').value.trim();
+    if (!v || !/^\S+@\S+\.\S+$/.test(v)) return;
+
+    // Optimistic success — Apps Script web apps don't return CORS headers,
+    // so we can't read the response anyway. Show the success state and
+    // fire-and-forget the POST.
+    env.classList.add('success');
+
+    if (!ENDPOINT) return;   // not deployed yet — design-only success
+
+    const fd = new FormData();
+    fd.append('email', v);
+    fd.append('source', location.href);
+    fd.append('userAgent', navigator.userAgent);
+    fetch(ENDPOINT, { method: 'POST', body: fd, mode: 'no-cors' })
+      .catch(err => console.warn('[GBV] Signup POST failed:', err));
+  });
+}
+
+/* =========== §E  Section observer (mode tinting) + boot =========== */
+
+/* =========== Testimonials carousel =========== */
+function setupTestimonials(){
+  const stage = document.getElementById('testimonials');
+  const dotsEl = document.getElementById('testimonialDots');
+  if (!stage || !dotsEl) return;
+  const slides = stage.querySelectorAll('.testimonial');
+  const dots = dotsEl.querySelectorAll('.dot');
+  let idx = 0, timer = 0;
+  function show(n){
+    idx = (n + slides.length) % slides.length;
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+  function start(){ if (!timer) timer = setInterval(() => show(idx + 1), 6500); }
+  function stop(){ if (timer){ clearInterval(timer); timer = 0; } }
+  dots.forEach(d => d.addEventListener('click', (e) => {
+    show(parseInt(e.currentTarget.dataset.idx, 10));
+    stop(); start();
+  }));
+  // Pause on hover/focus, resume on leave/blur.
+  stage.addEventListener('mouseenter', stop);
+  stage.addEventListener('mouseleave', start);
+  stage.addEventListener('focusin',  stop);
+  stage.addEventListener('focusout', start);
+  // Honor reduced motion: don't auto-rotate.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) start();
+}
+
+/* =========== Sound design — Web Audio synth (paper / chime / scuttle) ===========
+   Lazy AudioContext, unlocked on the first user click. All effects are
+   tiny and high-pass filtered so they sit under the visuals rather than
+   announce themselves. Respects prefers-reduced-motion. */
+let __sfxCtx = null;
+const __sfxQuiet = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sfxCtx(){
+  if (__sfxQuiet) return null;
+  if (!__sfxCtx){
+    try { __sfxCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(_) { return null; }
+  }
+  if (__sfxCtx.state === 'suspended'){
+    try { __sfxCtx.resume(); } catch(_){}
+  }
+  return __sfxCtx;
+}
+function sfxChime(){
+  const ctx = sfxCtx(); if (!ctx) return;
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(1320, t);
+  osc.frequency.exponentialRampToValueAtTime(880, t + 0.55);
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(0.035, t + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(t); osc.stop(t + 0.65);
+}
+function sfxRustle(){
+  // A real paper rustle is many tiny crackles in fast succession, not one
+  // long noise burst. Synthesize 3–5 short bandpass-filtered ticks 20–60 ms
+  // apart so it reads as actual paper movement, then keep gain very low.
+  const ctx = sfxCtx(); if (!ctx) return;
+  const t0 = ctx.currentTime;
+  const crackleCount = 3 + Math.floor(Math.random() * 3);
+  for (let n = 0; n < crackleCount; n++){
+    const start = t0 + n * (0.022 + Math.random() * 0.04);
+    const dur = 0.018 + Math.random() * 0.028;
+    const buf = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * dur)), ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++){
+      const env = Math.pow(1 - i / data.length, 1.6);
+      data[i] = (Math.random() * 2 - 1) * env;
+    }
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 3200 + (Math.random() - 0.5) * 2000;
+    bp.Q.value = 1.4;
+    const gain = ctx.createGain();
+    gain.gain.value = 0.012 + Math.random() * 0.008;
+    src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
+    src.start(start); src.stop(start + dur + 0.01);
+  }
+}
+function sfxScuttle(){
+  const ctx = sfxCtx(); if (!ctx) return;
+  const t = ctx.currentTime;
+  const dur = 0.06;
+  const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++){
+    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 4);
+  }
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 2400;
+  const gain = ctx.createGain(); gain.gain.value = 0.025;
+  src.connect(hp); hp.connect(gain); gain.connect(ctx.destination);
+  src.start(t); src.stop(t + dur + 0.02);
+}
+function setupSoundFx(){
+  // First click anywhere unlocks the AudioContext (autoplay policy).
+  document.addEventListener('click', () => sfxCtx(), { once: true });
+}
+
+/* =========== Desk-surface ghost cipher (magnified-on-hover) =========== */
+function setupDeskCipher(){
+  if (matchMedia('(pointer: coarse)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const desk = document.getElementById('caseBoard');
+  if (!desk) return;
+
+  const layer = document.createElement('div');
+  layer.className = 'desk-cipher';
+  layer.setAttribute('aria-hidden', 'true');
+  desk.insertBefore(layer, desk.firstChild);
+
+  // Sprinkle ~70 ghost glyphs across the wood, sized 11–22 px and
+  // randomly rotated. They live behind the cards (z-index: 1) so they
+  // only appear in the gaps when the cursor is close.
+  const COUNT = 70;
+  const ghosts = [];
+  for (let i = 0; i < COUNT; i++){
+    const g = document.createElement('span');
+    g.className = 'ghost-ch';
+    g.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    g.style.left = (Math.random() * 100) + '%';
+    g.style.top  = (Math.random() * 100) + '%';
+    g.style.fontSize = (11 + Math.random() * 11).toFixed(1) + 'px';
+    g.style.transform = `translate(-50%, -50%) rotate(${((Math.random()-0.5)*36).toFixed(1)}deg)`;
+    layer.appendChild(g);
+    ghosts.push(g);
+  }
+
+  let raf = 0, mx = -1e6, my = -1e6;
+  const RADIUS = 170;
+  function update(){
+    raf = 0;
+    const rect = desk.getBoundingClientRect();
+    const lx = mx - rect.left;
+    const ly = my - rect.top;
+    ghosts.forEach(g => {
+      const gx = g.offsetLeft;
+      const gy = g.offsetTop;
+      const dist = Math.hypot(lx - gx, ly - gy);
+      const op = Math.max(0, Math.min(0.55, (RADIUS - dist) / RADIUS * 0.55));
+      g.style.opacity = op.toFixed(3);
+    });
+  }
+  desk.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    if (!raf) raf = requestAnimationFrame(update);
+  });
+  desk.addEventListener('mouseleave', () => {
+    mx = -1e6; my = -1e6;
+    if (!raf) raf = requestAnimationFrame(update);
+  });
+}
+
+/* =========== Easter-egg ‡ glyph hunt =========== */
+function setupEasterEggs(){
+  // Five anchor selectors — one per "act" of the page. Each gets a small
+  // gold ‡ injected at the end. Find all five → unlock the screenplay line.
+  const ANCHORS = [
+    '.hero .credits',
+    '.epigraph.paper blockquote',
+    '.bridge-aria',
+    '.desk-head .marque',
+    '.epigraph.walnut blockquote'
+  ];
+  const STORAGE = 'gbv-eggs-v2';
+  let found;
+  try { found = new Set(JSON.parse(localStorage.getItem(STORAGE) || '[]')); }
+  catch(_) { found = new Set(); }
+
+  const badge = document.getElementById('eggProgress');
+  const count = document.getElementById('eggCount');
+  const modal = document.getElementById('eggModal');
+  const closeBtn = document.getElementById('eggClose');
+
+  function refreshBadge(){
+    if (!badge) return;
+    if (count) count.textContent = found.size;
+    badge.classList.toggle('visible', found.size > 0 && found.size < 5);
+  }
+
+  function showModal(){
+    if (!modal) return;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  function hideModal(){
+    if (!modal) return;
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  ANCHORS.forEach((sel, i) => {
+    const anchor = document.querySelector(sel);
+    if (!anchor) return;
+    const egg = document.createElement('button');
+    egg.className = 'egg';
+    egg.type = 'button';
+    egg.dataset.egg = String(i + 1);
+    egg.setAttribute('aria-label', `Hidden glyph ${i + 1} of 5`);
+    egg.textContent = '‡';
+    if (found.has(i)) egg.classList.add('found');
+    egg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (egg.classList.contains('found')) return;
+      egg.classList.add('found');
+      found.add(i);
+      try { localStorage.setItem(STORAGE, JSON.stringify([...found])); } catch(_) {}
+      refreshBadge();
+      if (found.size === 5) setTimeout(showModal, 700);
+    });
+    anchor.appendChild(egg);
+  });
+
+  if (modal){
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) hideModal();
+    });
+  }
+  if (closeBtn) closeBtn.addEventListener('click', hideModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && modal.classList.contains('show')) hideModal();
+  });
+  refreshBadge();
+}
+
+function setupSectionObserver(){
+  const investigation = document.getElementById('investigation');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.target === investigation){
+        document.body.classList.toggle('is-investigation', e.isIntersecting && e.intersectionRatio > 0.15);
+      }
+    });
+  }, { threshold: [0, 0.15, 0.3, 0.6] });
+  io.observe(investigation);
+}
+
+function boot(){
+  initCipherTargets();
+  setupDecryptObserver();
+  buildFooterCipher();
+  buildKey();
+  setupCursorTrail();
+  setupHelixMorph();
+  setupAriaAudio();
+  setupPunchcard();
+  setupCards();
+  setupBeetle();
+  setupSignup();
+  setupSectionObserver();
+  setupEasterEggs();
+  setupSoundFx();
+  setupDeskCipher();
+  setupTestimonials();
+}
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+
+})();
+</script>
+
+</body>
+</html>

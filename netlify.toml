@@ -1,0 +1,28 @@
+# Netlify config for The Gold Bug Variations site.
+# Deploy this `dist/` folder via drag-and-drop to netlify.com,
+# `netlify deploy --dir=dist --prod`, or a connected git repo.
+
+[build]
+  publish = "."
+
+# Long-cache static assets, never-cache HTML so updates ship instantly.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/press-kit.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Disposition = "attachment; filename=\"The-Gold-Bug-Variations-Press-Kit.pdf\""
+
+# Modest security headers (no inline-script CSP yet — the site uses inline
+# JS for the cipher / helix animations, so leaving CSP unset until/unless
+# you migrate scripts to external files).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "interest-cohort=()"
