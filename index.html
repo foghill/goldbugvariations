@@ -3211,8 +3211,11 @@ function isMusicPlaying(){
 function setupAriaAudio(){
   const btn = document.getElementById('ariaBtn');
   const playInd = document.getElementById('playInd');
+  let userToggled = false;     // set true once the user has explicitly used a play/pause control
+
   function toggle(e){
     if (e) { e.preventDefault(); e.stopPropagation(); }
+    userToggled = true;        // explicit control — disable autoplay-on-gesture from here on
     if (isMusicPlaying()) { pauseMusic(); setUiPlaying(false); }
     else                  { playMusic(); }
   }
@@ -3227,6 +3230,21 @@ function setupAriaAudio(){
   // preview, network), mark it failed so subsequent clicks immediately
   // use the archive.org Aria fallback.
   setTimeout(() => { if (!ytReady) ytFailed = true; }, 3500);
+
+  // Autoplay-on-first-gesture. Browsers block straight autoplay until the
+  // page has had a user interaction, but the moment any gesture happens —
+  // a click anywhere, a scroll, a keystroke, a touch — that gesture
+  // satisfies the policy and we can start the Aria. If the user has
+  // already toggled the button explicitly we skip; their choice wins.
+  const evs = ['click', 'keydown', 'scroll', 'touchstart', 'pointerdown'];
+  let autoplayDone = false;
+  const onFirstGesture = () => {
+    if (autoplayDone || userToggled) return;
+    autoplayDone = true;
+    if (!isMusicPlaying()) playMusic();
+    evs.forEach(ev => window.removeEventListener(ev, onFirstGesture, true));
+  };
+  evs.forEach(ev => window.addEventListener(ev, onFirstGesture, { passive: true, capture: true }));
 }
 
 /* =========== §D  INVESTIGATION =========== */
