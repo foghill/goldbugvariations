@@ -1746,20 +1746,26 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   display: inline-block;
   font-family: var(--mono); font-weight: 700;
   color: var(--gold);
-  font-size: 13px;
+  font-size: 14px;
   background: transparent;
   border: 0;
   padding: 4px 6px;
   margin: 0 2px;
   vertical-align: baseline;
   line-height: 1;
-  opacity: 0.42;
   cursor: pointer;
   user-select: none;
-  transition: opacity 240ms ease, transform 240ms ease, color 240ms ease, text-shadow 240ms ease;
+  transition: transform 240ms ease, color 240ms ease, text-shadow 240ms ease;
+  /* Gentle pulse so unfound glyphs catch the eye occasionally without
+     announcing themselves. Found glyphs override this animation. */
+  animation: eggPulse 3.6s ease-in-out infinite;
 }
-.egg:hover { opacity: 1; transform: translateY(-1px) scale(1.18); }
-.egg:focus-visible { opacity: 1; outline: 1px solid var(--gold); outline-offset: 2px; }
+@keyframes eggPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.9; }
+}
+.egg:hover { opacity: 1 !important; transform: translateY(-1px) scale(1.2); animation-play-state: paused; }
+.egg:focus-visible { opacity: 1 !important; outline: 1px solid var(--gold); outline-offset: 2px; animation-play-state: paused; }
 .egg.found {
   color: var(--gold-bright);
   opacity: 1;
@@ -1772,6 +1778,9 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   0%   { transform: scale(1); }
   40%  { transform: scale(1.9); text-shadow: 0 0 22px var(--gold-bright); }
   100% { transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg { animation: none; opacity: 0.7; }
 }
 
 .egg-modal {
@@ -3655,7 +3664,7 @@ function setupEasterEggs(){
   const ANCHORS = [
     '.hero .credits',
     '.epigraph.paper blockquote',
-    '.bridge-aria',
+    '.bridge-caption .cap-num',
     '.desk-head .marque',
     '.signup .envelope .eyebrow'
   ];
