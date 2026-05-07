@@ -16,3 +16,6 @@ node_modules/
 # local-only experiments / scratch
 scratch/
 *.local.html
+
+# Local Netlify folder
+.netlify
