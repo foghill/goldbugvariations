@@ -834,6 +834,20 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   inset: 7%;
   border-radius: 50%;
   background:
+    /* Asymmetric "light sweep" — breaks the radial symmetry of the
+       grooves below so when the ring spins, the highlight visibly
+       rotates around the disc (the spinning vinyl effect). */
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255,215,140,0.10) 25deg,
+      rgba(255,215,140,0.20) 55deg,
+      rgba(255,215,140,0.10) 85deg,
+      transparent 130deg,
+      transparent 200deg,
+      rgba(255,215,140,0.06) 240deg,
+      transparent 280deg
+    ),
     repeating-radial-gradient(circle at 50% 50%, transparent 0 6px, rgba(212,175,55,0.07) 6px 7px, transparent 7px 14px),
     radial-gradient(circle, #2a2218 30%, #4a3d2a 32%, #2a2218 34%, #4a3d2a 36%, #2a2218 38%, #4a3d2a 60%, #2a2218 62%);
 }
