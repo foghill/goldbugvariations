@@ -2595,7 +2595,7 @@ function staffToHelix(opts){
     helixFreq:  opts.helixFreq  || 11,
     staffGap:   opts.staffGap   || 9,
     noteCount:  opts.noteCount  || 14,
-    baseCount:  opts.baseCount  || 14,
+    baseCount:  (opts.baseCount === 0 ? 0 : (opts.baseCount || 14)),
     rungCount:  opts.rungCount  || 14,
     baseChars:  opts.baseChars  || ['A','T','G','C','A','C','G','T','C','G','A','T','G','A'],
     inkColor:   opts.inkColor   || '#1A1A1A',
@@ -2662,13 +2662,13 @@ function staffToHelix(opts){
   const notes = [];
   for(let i=0; i<cfg.noteCount; i++){
     const head = document.createElementNS(SVGNS, 'ellipse');
-    head.setAttribute('rx','3.6');
-    head.setAttribute('ry','2.6');
-    head.setAttribute('transform','rotate(-18)');
+    head.setAttribute('rx','2.4');
+    head.setAttribute('ry','5.5');
+    head.setAttribute('transform','rotate(-22)');
     notesG.appendChild(head);
     const stem = document.createElementNS(SVGNS, 'line');
     stem.setAttribute('stroke', cfg.inkColor);
-    stem.setAttribute('stroke-width','1');
+    stem.setAttribute('stroke-width','1.4');
     notesG.appendChild(stem);
     notes.push({ head, stem });
   }
@@ -2735,11 +2735,11 @@ function staffToHelix(opts){
       const n = notes[i];
       n.head.setAttribute('cx', x.toFixed(2));
       n.head.setAttribute('cy', yy.toFixed(2));
-      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${yy.toFixed(2)})`);
-      n.stem.setAttribute('x1', (x + 3.4).toFixed(2));
+      n.head.setAttribute('transform', `rotate(-22 ${x.toFixed(2)} ${yy.toFixed(2)})`);
+      n.stem.setAttribute('x1', (x + 2.2).toFixed(2));
       n.stem.setAttribute('y1', (yy - 1).toFixed(2));
-      n.stem.setAttribute('x2', (x + 3.4).toFixed(2));
-      n.stem.setAttribute('y2', (yy - 16).toFixed(2));
+      n.stem.setAttribute('x2', (x + 2.2).toFixed(2));
+      n.stem.setAttribute('y2', (yy - 28).toFixed(2));
       n.stem.setAttribute('opacity', (i % 4 === 3) ? 0 : 1);
     }
 
@@ -2779,7 +2779,9 @@ function setupHelixMorph(){
   // the bridge's tint (which interpolates ink → bone as t scrolls).
   const morph = staffToHelix({
     inkColor: 'currentColor',
-    goldColor: '#D4AF37'
+    goldColor: '#D4AF37',
+    baseCount: 0,
+    staffGap: 22
   });
 
   function getT(){
