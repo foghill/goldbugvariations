@@ -897,8 +897,8 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   padding: 14px 0;
   border-bottom: 1px dashed rgba(120,90,40,0.3);
 }
-.cast-card li b { font-family: var(--grot); font-stretch: 125%; font-weight: 600; font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em; color: #2a2218; display: block; }
-.cast-card li i { font-style: italic; color: #6e5a32; font-size: 17px; }
+.cast-card li i { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 22px; letter-spacing: 0.01em; color: #2a2218; display: block; }
+.cast-card li span { font-family: var(--mono); font-style: normal; color: #6e5a32; font-size: 13px; letter-spacing: 0.08em; display: block; margin-top: 2px; }
 .cast-card .back { padding: 36px 34px; font-family: var(--serif); font-size: 19px; color: #2a2218; background: #e6d6ab; line-height: 1.55; }
 .cast-card .back h4 { font-family: var(--mono); font-size: 14px; }
 
@@ -1487,8 +1487,8 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 
 .cast-card h4 { font-size: 15px; font-weight: 600; }
 .cast-card .stamp { font-size: 13px; font-weight: 600; }
-.cast-card li b { font-size: 22px; font-weight: 700; }
-.cast-card li i { font-size: 17px; font-weight: 500; }
+.cast-card li i { font-size: 22px; font-weight: 600; }
+.cast-card li span { font-size: 13px; font-weight: 500; }
 .cast-card .back { font-size: 19px; line-height: 1.6; font-weight: 500; }
 .cast-card .back h4 { font-size: 14px; font-weight: 600; }
 
@@ -2146,11 +2146,11 @@ body.is-investigation .egg-progress {
     <div class="desk-head">
       <div>
         <div class="marque">
-          <b>§ 03 · CASE FILE</b><br>
-          JAN O'DEIGH — PERSONAL DESK · BROOKLYN PUBLIC LIBRARY
+          <b>§ 05 · The case file</b><br>
+          Jan O'Deigh's desk · Brooklyn Public Library · 1985
         </div>
-        <h2 class="decrypt-head" data-text="A quiet detective story without a crime."></h2>
-        <p class="sub decrypt" data-text="Three readers. One vanished life. A handful of artifacts laid out on a desk at three in the morning. — drag to move, click to flip."></p>
+        <h2>A quiet detective story without a crime.</h2>
+        <p class="sub">Three readers. One vanished life. A handful of artifacts laid out on a desk at three in the morning.</p>
       </div>
       <button class="reset-btn" id="resetBtn" aria-label="Reset desk">↺ Reset desk</button>
     </div>
@@ -2244,23 +2244,6 @@ body.is-investigation .egg-progress {
         </div>
       </div>
 
-      <!-- 4 · Telegram from director -->
-      <div class="artifact telegram" data-art="telegram">
-        <div class="face">
-          <div class="side front">
-            <div class="tg-bio-head">Bio · Mark A. Levinson</div>
-            <p class="tg-bio-body">Director of <a class="tg-feature" href="https://en.wikipedia.org/wiki/Particle_Fever" target="_blank" rel="noopener">Particle Fever</a> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
-            <blockquote class="tg-bio-quote">"Films and formulas — both are theories about how the universe operates."</blockquote>
-          </div>
-          <div class="side back">
-            <div class="tg-head"><span>WESTERN UNION</span><b>· URGENT ·</b><span>NY → BERKELEY</span></div>
-            <h4>FROM THE DIRECTOR</h4>
-            <p class="tg-body">CAME TO POWERS NOVEL THE WAY MOST PEOPLE DO <span>—</span> BY BEING TOLD IT WAS IMPOSSIBLE TO FILM, AND THEN REFUSING TO BELIEVE IT.</p>
-            <div class="tg-sign">— M.A. LEVINSON</div>
-          </div>
-        </div>
-      </div>
-
       <!-- 5 · Film canister -->
       <div class="artifact canister" data-art="canister">
         <div class="face">
@@ -2294,59 +2277,20 @@ body.is-investigation .egg-progress {
       <div class="artifact cast-card" data-art="cast">
         <div class="face">
           <div class="side front">
-            <h4>CAST · CONFIDENTIAL</h4>
-            <div class="stamp">DRAFT — IN ATTACHMENT</div>
+            <h4>The four voices</h4>
+            <div class="stamp">DRAMATIS PERSONAE</div>
             <ul>
-              <li><b>Oscar Isaac</b><i>· Dr. Stuart Ressler</i></li>
-              <li><b>Tessa Thompson</b><i>· Jan O'Deigh</i></li>
-              <li><b>Stephan James</b><i>· Franklin Todd</i></li>
-              <li><b>Vicky Krieps</b><i>· Jeannette Koss</i></li>
-              <li><b>S.M. Henderson</b><i>· Dr. Cyfer</i></li>
+              <li><i>Dr. Stuart Ressler</i><span>· molecular geneticist, vanished</span></li>
+              <li><i>Jan O'Deigh</i><span>· research librarian, Brooklyn</span></li>
+              <li><i>Franklin Todd</i><span>· graduate student, art historian</span></li>
+              <li><i>Jeannette Koss</i><span>· mathematician, Urbana 1957</span></li>
+              <li><i>Dr. Cyfer</i><span>· head of the Cyfer lab</span></li>
             </ul>
           </div>
           <div class="side back">
             <h4>FOUR VOICES, TWO CENTURIES</h4>
             <p>The pairing is not chronological. It is musical: a question in 1957 is answered, fifteen years of plot later, by a gesture in 1985. The audience learns to listen for the rhyme.</p>
             <p style="margin-top:10px;font-style:italic;">The third act is the moment the two voices land on the same chord — the screen becomes one image, briefly, before parting again.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7 · Punchcard -->
-      <div class="artifact punchcard" data-art="punchcard">
-        <div class="face">
-          <div class="side front">
-            <div class="pc-row"><span>// CARD 0042 ·· DEV.PARTNERS</span><span>RUN: 1991→2026</span></div>
-            <h4>// DEVELOPMENT PARTNERS</h4>
-            <div class="partners">
-              <div><b>Sundance Institute</b><span class="role">Screenwriters &amp; Directors Lab</span></div>
-              <div><b>Film Independent</b><span class="role">Fast Track · Producers Lab</span></div>
-              <div><b>Sloan Foundation</b><span class="role">Three Science-in-Fiction grants</span></div>
-              <div><b>Gotham (IFP)</b><span class="role">No-Borders International</span></div>
-            </div>
-            <div class="punch-grid" id="punchGrid"></div>
-          </div>
-          <div class="side back">
-            <h4>SHOOTING IN 2026</h4>
-            <p>Principal photography slated for Q3 2026 across <em>New York, Illinois, and Leipzig</em>. Looking for financial partners passionate about science, music, love, and the way they intertwine.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8 · Press clipping -->
-      <div class="artifact clipping" data-art="clipping">
-        <div class="face">
-          <div class="side front">
-            <h4>EARLY PRESS · NOTICES</h4>
-            <h2>"Has everything"</h2>
-            <blockquote>"Penetrating so many secrets, we cease to believe in the unknowable. But there it sits nevertheless, calmly licking its chops."</blockquote>
-            <cite>— H.L. Mencken (epigraph)</cite>
-          </div>
-          <div class="side back">
-            <h4>NOTICES</h4>
-            <p><em>"Book of the Year"</em> — Time Magazine</p>
-            <p><em>"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story."</em> — Kirkus</p>
-            <p><em>"This amazing book deals with nearly all of life's larger questions."</em> — Magill Book Reviews</p>
           </div>
         </div>
       </div>
