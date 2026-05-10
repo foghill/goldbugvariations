@@ -1211,6 +1211,23 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   .thematic-grid { grid-template-columns: 1fr; }
 }
 
+/* ---------- §4 Mystery hook ---------- */
+.hook {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  padding: clamp(80px, 16vh, 180px) var(--margin);
+  text-align: center;
+}
+.hook-text {
+  max-width: 880px;
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1.3;
+  color: #14202E;
+}
+
 /* ---------- §6 Cipher key, footer, mobile ---------- */
 .cipher-key {
   position: fixed;
@@ -2109,6 +2126,14 @@ body.is-investigation .egg-progress {
     </article>
 
   </div>
+</section>
+
+
+<!-- ============================================================
+     §4  MYSTERY HOOK — single caption setting up the case
+     ============================================================ -->
+<section class="hook" aria-label="The mystery">
+  <p class="hook-text">The mystery of the disappearance of a brilliant scientist poised to discover the ultimate code for life.</p>
 </section>
 
 
