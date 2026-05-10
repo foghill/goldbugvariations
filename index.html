@@ -2814,10 +2814,13 @@ function bridgeMorph(opts){
   const HELIX_AMP  = opts.helixAmp  || 64;  // helix half-width (viewBox px)
   const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
   const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
-  const STEM_W    = 3.0;           // thick, iconic — not a notation hairline
-  const HEAD_RX   = 8.5;           // long axis of the tilted oval head
-  const HEAD_RY   = 5.5;           // short axis — clearly oval, not round
-  const HEAD_TILT = -22;           // degrees — proper notation tilt, lower-left to upper-right
+  const STEM_W    = 3.6;           // thick, iconic — matched to the heavy reference style
+  // Reference-style notes have ROUND, heavy filled heads roughly the size of a
+  // staff space (gap = 26 ≈ diameter 24). We render as a circle (rx = ry) with
+  // no tilt — the reference heads do not read as engraved-notation ovals.
+  const HEAD_RX   = 12.0;
+  const HEAD_RY   = 12.0;
+  const HEAD_TILT = 0;
 
   const clefG   = document.getElementById('clef');
   const linesG  = document.getElementById('lines');
@@ -3054,13 +3057,11 @@ function bridgeMorph(opts){
     // Stem geometry helper. Returns the head-attachment x and the stem-tip y
     // for a note at position p with the group-shared stem direction.
     function stemGeom(p, stemDown){
-      // Visual horizontal half-extent of the tilted oval head: combines the
-      // projections of both axes onto the screen-x axis. For a -22° tilt with
-      // rx=8.5, ry=5.5 this is ~9.9 — the stem sits flush with the visible
-      // side of the head.
+      // Round head: the stem joins flush with the head's side, slightly tucked
+      // in so the stem reads as embedded in (not floating off) the head.
       const tiltRad = HEAD_TILT * Math.PI / 180;
       const HEAD_EDGE = Math.abs(HEAD_RX * Math.cos(tiltRad)) +
-                        Math.abs(HEAD_RY * Math.sin(tiltRad)) - 0.5;
+                        Math.abs(HEAD_RY * Math.sin(tiltRad)) - 1.5;
       const attachX = stemDown ? (p.x - HEAD_EDGE) : (p.x + HEAD_EDGE);
       const tipY    = stemDown ? (p.y + STEM_LEN) : (p.y - STEM_LEN);
       return { attachX, tipY };
@@ -3095,7 +3096,7 @@ function bridgeMorph(opts){
         const pn = positions[i + 1];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(pn, stemDown);
-        const BT = 6.5; // beam thickness — thick filled bar for iconic weight
+        const BT = 8.5; // beam thickness — heavy filled bar matching the reference style
         // Beam sits AWAY from the heads — for stem-up, beam extends below tip;
         // for stem-down, beam extends above tip. Either way, we draw a thick
         // parallelogram from one tip to the other; the sign accounts for the
@@ -3115,8 +3116,8 @@ function bridgeMorph(opts){
         const p2 = positions[i + 2];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(p2, stemDown);
-        const BT  = 5.0;     // beam thickness — bold bars, not engraver thin
-        const BS  = 3.0;     // separation between the two beams
+        const BT  = 6.5;     // beam thickness — heavy bars matching reference style
+        const BS  = 4.0;     // separation between the two beams
         const sign = stemDown ? -1 : 1;
         const y1 = g1.tipY, y2 = g2.tipY;
         // First beam at stem tips.
@@ -3136,41 +3137,57 @@ function bridgeMorph(opts){
         beam.setAttribute('fill-rule', 'evenodd');
       }
 
-      // Flag (lone eighths only). A tapered, brushstroke-style curved flag
-      // that starts narrow at the stem tip, swells slightly mid-curve, and
-      // tapers to a point at the far tip — the classical notation look.
+      // Flag (lone eighths only). Reference-style "scimitar": starts at the
+      // stem tip, sweeps OUT (right) and DOWN, then curls back UP and BACK
+      // over the stem-tip area. Closed filled shape with a tapered tip at
+      // both ends and a heavy belly mid-curve. Total span ~36 (~½ stem),
+      // belly width ~12 (~head diameter).
       const flag = flags[i];
       flag.setAttribute('d', '');
       if (note.kind === 'e'){
         const gf = stemGeom(p, stemDown);
         const fx = gf.attachX;
         const fy = gf.tipY;
-        // dir: stem-up tip is above the head, so flag flows DOWN toward the
-        // head — dir=+1. stem-down tip is below the head, so flag flows UP
-        // toward the head — dir=-1.
+        // dir: stem-up tip is above the head → flag swoops DOWN toward head
+        // (dir=+1). stem-down → flag swoops UP toward head (dir=-1).
         const dir = stemDown ? -1 : 1;
-        // Flag is a closed thin tapered shape:
-        //   - Origin point at the stem tip (narrow start, on-stem).
-        //   - Outer (spine) curve sweeps right and along the stem, hooking
-        //     down at the far end to a point ~22 px from the stem tip.
-        //   - Inner curve returns just inside the spine, back to a point
-        //     barely below the origin — keeping the base pointed.
-        // Max width is ~6 px across, ~1/3 of the way down.
+        // Geometry, in stem-local coords (origin = stem tip, +x = outward
+        // from head along stem-side, +y = dir = down for stem-up):
+        //
+        //   START (stem tip): narrow point on the stem.
+        //   OUTER SPINE: arcs out-and-away then drops, peaking at
+        //     (+22, +20·dir) — the "elbow" of the scimitar.
+        //   FAR TIP: (+10, +34·dir) — the curling-back tip, BACK toward
+        //     the stem axis, a touch beyond the elbow vertically.
+        //   INNER CURVE: returns up-and-in along the inside of the curl,
+        //     back toward a point ~3px below origin on the stem.
+        //
+        // The result reads as a thick "comma" / "scimitar" silhouette
+        // — out, down, curling back up-and-in over the stem tip.
         flag.setAttribute('d',
-          // Start at the stem tip — pointed origin.
+          // Pointed origin on the stem at the tip.
           `M ${fx.toFixed(2)} ${fy.toFixed(2)} ` +
-          // Outer (spine) curve: out-and-down to the flag's far tip.
-          `C ${(fx + 14).toFixed(2)} ${(fy + dir * 3).toFixed(2)}, ` +
-          `${(fx + 21).toFixed(2)} ${(fy + dir * 12).toFixed(2)}, ` +
-          `${(fx + 15).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
-          // Sharp point at the flag's far tip — single L for a crisp taper.
-          `L ${(fx + 13).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
-          // Inner curve: back along the inside of the brushstroke, narrowing
-          // toward the stem. Returns to a point just below the origin.
-          `C ${(fx + 15).toFixed(2)} ${(fy + dir * 16).toFixed(2)}, ` +
-          `${(fx + 10).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
-          `${(fx + 1).toFixed(2)} ${(fy + dir * 5).toFixed(2)} ` +
-          // Close back to the origin — pointed base.
+          // Outer spine: out-and-down sweep to the elbow, then curling
+          // BACK toward the stem axis to the far tip.
+          `C ${(fx + 16).toFixed(2)} ${(fy + dir * 2).toFixed(2)}, ` +
+          `${(fx + 26).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
+          `${(fx + 22).toFixed(2)} ${(fy + dir * 22).toFixed(2)} ` +
+          // Continue the curl: out-elbow to far-tip, scooping back toward stem.
+          `C ${(fx + 19).toFixed(2)} ${(fy + dir * 30).toFixed(2)}, ` +
+          `${(fx + 13).toFixed(2)} ${(fy + dir * 34).toFixed(2)}, ` +
+          `${(fx + 9).toFixed(2)} ${(fy + dir * 33).toFixed(2)} ` +
+          // Crisp inner tip at the far end (the "point" of the comma).
+          `L ${(fx + 8).toFixed(2)} ${(fy + dir * 31).toFixed(2)} ` +
+          // Inner curve back: rides the inside of the curl, narrowing as it
+          // returns toward the stem near the origin.
+          `C ${(fx + 13).toFixed(2)} ${(fy + dir * 27).toFixed(2)}, ` +
+          `${(fx + 18).toFixed(2)} ${(fy + dir * 20).toFixed(2)}, ` +
+          `${(fx + 15).toFixed(2)} ${(fy + dir * 12).toFixed(2)} ` +
+          // Inner spine continues back toward the stem at the origin.
+          `C ${(fx + 12).toFixed(2)} ${(fy + dir * 7).toFixed(2)}, ` +
+          `${(fx + 6).toFixed(2)} ${(fy + dir * 4).toFixed(2)}, ` +
+          `${(fx + 0.5).toFixed(2)} ${(fy + dir * 3).toFixed(2)} ` +
+          // Close back to the origin — pointed base on the stem.
           `Z`);
         flag.setAttribute('fill', 'currentColor');
       }
