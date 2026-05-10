@@ -361,6 +361,12 @@ body.is-investigation .bridge-aria {
   opacity: 0;
   pointer-events: none;
 }
+body.is-hero .bridge-aria {
+  /* The Aria toggle is for the bridge — hide it on the landing so it
+     doesn't overlay the hero tagline on initial load. */
+  opacity: 0;
+  pointer-events: none;
+}
 .audio-btn {
   display: inline-flex;
   align-items: center;
@@ -1702,7 +1708,7 @@ body.is-investigation .egg-progress {
 }
 </style>
 </head>
-<body>
+<body class="is-hero">
 
 <a class="skip-link" href="#bridge">Skip to film</a>
 
@@ -3518,14 +3524,19 @@ function setupEasterEggs(){
 
 function setupSectionObserver(){
   const investigation = document.getElementById('investigation');
+  const hero = document.querySelector('header.hero');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.target === investigation){
         document.body.classList.toggle('is-investigation', e.isIntersecting && e.intersectionRatio > 0.15);
       }
+      if (e.target === hero){
+        document.body.classList.toggle('is-hero', e.isIntersecting && e.intersectionRatio > 0.5);
+      }
     });
-  }, { threshold: [0, 0.15, 0.3, 0.6] });
+  }, { threshold: [0, 0.15, 0.3, 0.5, 0.6] });
   io.observe(investigation);
+  if (hero) io.observe(hero);
 }
 
 function boot(){
