@@ -1152,6 +1152,65 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 }
 .beetle.scurrying { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)) drop-shadow(0 0 6px rgba(212,175,55,0.35)); }
 
+/* ---------- §3 Thematic cards (simple → complex motif) ---------- */
+.thematic {
+  background: var(--paper);
+  color: #14202E;
+  padding: clamp(80px, 14vh, 160px) var(--margin);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.thematic-head { max-width: 720px; margin: 0 auto clamp(40px, 7vh, 80px); text-align: center; }
+.thematic-lede {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 34px);
+  line-height: 1.35;
+  color: rgba(20,32,46,0.85);
+  margin: 0;
+}
+.thematic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.thematic-card {
+  background: var(--paper-2);
+  border: 1px solid var(--paper-rule);
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: 2px;
+}
+.thematic-num {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.thematic-card h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.25;
+  margin: 0 0 14px;
+  color: #14202E;
+}
+.thematic-card p {
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.55;
+  color: rgba(20,32,46,0.78);
+  margin: 0;
+}
+@media (max-width: 760px){
+  .thematic-grid { grid-template-columns: 1fr; }
+}
+
 /* ---------- §6 Cipher key, footer, mobile ---------- */
 .cipher-key {
   position: fixed;
@@ -2018,6 +2077,37 @@ body.is-investigation .egg-progress {
         <span class="audio-status" id="ariaLabel">Aria · off</span>
       </span>
     </button>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §3  THEMATIC CARDS — three simple-elements that make the film
+     ============================================================ -->
+<section class="thematic" id="thematic" aria-label="Three simple elements">
+  <div class="thematic-head">
+    <p class="thematic-lede">Complexity, from a few simple things.</p>
+  </div>
+  <div class="thematic-grid">
+
+    <article class="thematic-card">
+      <span class="thematic-num">Four</span>
+      <h3>Bass notes of music.</h3>
+      <p>Bach builds thirty variations — and the architecture of the Western canon — on a handful of repeating tones.</p>
+    </article>
+
+    <article class="thematic-card">
+      <span class="thematic-num">Four</span>
+      <h3>Base molecules of DNA.</h3>
+      <p>A · T · G · C. From four letters, every living thing is spelled out, line after recursive line.</p>
+    </article>
+
+    <article class="thematic-card">
+      <span class="thematic-num">Two</span>
+      <h3>Intertwined love stories.</h3>
+      <p>One in 1957, one in 1985 — separate, mirrored, eventually rhymed. The film's two voices, twenty-eight years apart.</p>
+    </article>
+
   </div>
 </section>
 
