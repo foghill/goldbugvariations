@@ -1066,6 +1066,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .hook-text .ch {
   display: inline-block;
   position: relative;
+  transition: color 240ms ease-out;
 }
 .hook-text .ch.cipher {
   font-family: var(--mono);
@@ -1084,37 +1085,66 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 /* The magnifying glass lens */
 .hook-lens {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   pointer-events: none;
-  border: 2px solid rgba(176,141,46,0.85); /* gold rim */
+  /* Brass rim — layered box-shadows simulate metallic bevel */
+  border: 6px solid #b08d2e;
   box-shadow:
-    inset 0 0 24px rgba(176,141,46,0.18),
-    0 4px 16px rgba(0,0,0,0.20);
-  background: radial-gradient(
-    circle at 38% 28%,
-    rgba(255,255,255,0.18) 0%,
-    rgba(255,255,255,0.06) 35%,
-    transparent 70%
-  );
+    inset 0 0 0 1px rgba(255,234,170,0.35),       /* inner bright edge */
+    inset 0 0 0 2px rgba(120,88,20,0.55) 1px 1px, /* inner dark edge below the bright one */
+    inset 0 6px 18px rgba(255,234,170,0.18),      /* glass top highlight */
+    inset 0 -6px 18px rgba(80,60,20,0.18),        /* glass bottom soft shadow */
+    0 1px 0 rgba(255,234,170,0.6),                /* outer top edge highlight */
+    0 6px 24px rgba(0,0,0,0.32);                  /* drop shadow */
+  background:
+    radial-gradient(
+      circle at 36% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.12) 22%,
+      rgba(255,255,255,0.04) 46%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 70% 78%,
+      rgba(80,60,20,0.10) 0%,
+      transparent 50%
+    );
   transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity 200ms ease-out;
   z-index: 2;
 }
-.hook-lens::after {
-  /* Lens handle — small angled stick at lower-right */
+.hook-lens::before {
+  /* Bezel ferrule connecting the rim to the handle — small brass collar */
   content: "";
   position: absolute;
-  bottom: -22px;
-  right: -22px;
-  width: 36px;
-  height: 8px;
-  background: rgba(176,141,46,0.85);
+  bottom: -16px; right: -16px;
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, #d8b65a 0%, #b08d2e 50%, #6e5618 100%);
   border-radius: 4px;
   transform: rotate(45deg);
   transform-origin: top left;
+  box-shadow:
+    inset 0 1px 0 rgba(255,234,170,0.6),
+    inset 0 -1px 0 rgba(80,60,20,0.5),
+    0 2px 4px rgba(0,0,0,0.25);
+}
+.hook-lens::after {
+  /* Wooden handle */
+  content: "";
+  position: absolute;
+  bottom: -78px; right: -78px;
+  width: 78px; height: 14px;
+  background: linear-gradient(180deg, #6b4a2a 0%, #4a311a 50%, #2e1f10 100%);
+  border-radius: 4px;
+  transform: rotate(45deg);
+  transform-origin: top left;
+  box-shadow:
+    inset 0 1px 0 rgba(190,140,80,0.45),
+    inset 0 -1px 0 rgba(20,12,4,0.55),
+    0 4px 10px rgba(0,0,0,0.30);
 }
 .hook-stage.lens-active .hook-lens { opacity: 1; }
 
@@ -3652,8 +3682,8 @@ function setupHookReveal(){
   hookText.textContent = '';
   hookText.appendChild(frag);
 
-  const LENS_RADIUS = 90;       // px — half of CSS lens diameter
-  const REVEAL_RADIUS = 80;     // px — slightly inside the rim for a snug feel
+  const LENS_RADIUS = 100;      // px — half of CSS lens diameter
+  const REVEAL_RADIUS = 88;     // px — slightly inside the rim for a snug feel
 
   let raf = 0;
   let mouseX = 0, mouseY = 0;
@@ -3668,15 +3698,16 @@ function setupHookReveal(){
     lens.style.top  = localY + 'px';
 
     for (const span of charSpans){
+      // Once revealed, stay revealed.
+      if (span.classList.contains('revealed')) continue;
       const r = span.getBoundingClientRect();
       const cx = r.left + r.width  / 2 - stageRect.left;
       const cy = r.top  + r.height / 2 - stageRect.top;
       const dx = cx - localX, dy = cy - localY;
       const inside = (dx*dx + dy*dy) < (REVEAL_RADIUS * REVEAL_RADIUS);
-      const wantClass = inside ? 'ch revealed' : 'ch cipher';
-      if (span.className !== wantClass){
-        span.className = wantClass;
-        span.textContent = inside ? span.dataset.plain : span.dataset.cipher;
+      if (inside){
+        span.className = 'ch revealed';
+        span.textContent = span.dataset.plain;
       }
     }
   }
@@ -3692,11 +3723,7 @@ function setupHookReveal(){
   }
   function onLeave(){
     stage.classList.remove('lens-active');
-    // Re-cipher all characters when leaving the stage.
-    for (const span of charSpans){
-      span.className = 'ch cipher';
-      span.textContent = span.dataset.cipher;
-    }
+    // Revealed characters persist — leave them as-is.
   }
 
   stage.addEventListener('mousemove', onMove);
