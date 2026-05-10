@@ -1970,12 +1970,15 @@ body.is-investigation .egg-progress {
 
     <div class="bridge-svg-wrap">
       <svg id="morph" viewBox="0 0 280 1000" preserveAspectRatio="none" aria-hidden="true">
-        <!-- Treble clef — Unicode glyph U+1D11E, scaled large.
-             Falls back to plain serif rendering if the music symbol font is absent.
-             Sits at the left of the staff between y=300 and y=500. -->
-        <text id="trebleClef" x="38" y="500"
-              font-family="'Bravura Text', 'Noto Music', 'Apple Symbols', serif"
-              font-size="200"
+        <!-- Treble clef — Unicode glyph U+1D11E, scaled and anchored to the
+             LEFT edge of the staff so the clef's loop wraps around the
+             second-from-bottom (G) line at y=520, as in real notation.
+             Apple Symbols / Segoe UI Symbol carry the glyph on macOS / Windows;
+             Bravura Text and Noto Music are nicer fallbacks if installed. -->
+        <text id="trebleClef" x="8" y="572"
+              text-anchor="start"
+              font-family="'Bravura Text', 'Noto Music', 'Apple Symbols', 'Segoe UI Symbol', serif"
+              font-size="180"
               fill="var(--bridge-fg, #14202E)"
               opacity="1">&#x1D11E;</text>
         <!-- 5-line musical staff (lines bend into helix curves over scroll). -->
@@ -2836,10 +2839,13 @@ function setupHelixMorph(){
   const SAMPLES = 220;
   const HELIX_AMP = 78;
   const HELIX_FREQ = 5;          // 5 turns over the lane — calm, readable
-  const STAFF_GAP = 22;          // px between staff lines (in viewBox units)
-  const STAFF_CY = 400;          // staff vertically centered around y=400 (room for clef)
+  const STAFF_GAP = 20;          // px between staff lines (in viewBox units)
+  const STAFF_CY = 500;          // staff vertically centered around y=500 (mid-canvas)
   const STRAND_COUNT = 5;
   const CX = W/2;
+  // SVG renders with preserveAspectRatio="none" so it stretches horizontally
+  // to fill the wrap (≈1.36× on desktop). Note ellipses are tightened in rx
+  // to compensate so heads read as tilted ovals rather than flat pancakes.
 
   // -------- Staff lines: 5 horizontal at t=0, bend into helix curves at t=1.
   // Each line interpolates from y=staffY to a sinusoid with helixPhase.
@@ -2871,18 +2877,29 @@ function setupHelixMorph(){
   }
 
   // -------- Notes: 12 musical notes (heads + stems) scattered on the staff.
-  // Each note has a fixed (u, k) — its horizontal slot along the staff and
-  // which staff line it sits on. As t→1 the note drifts onto the helix.
+  // Each note has a fixed (u, kSlot) — its horizontal slot along the staff and
+  // which of the 9 vertical positions (5 lines + 4 spaces) it sits on.
+  // As t→1 the note drifts onto the helix. Note-head rx is tightened (2.6)
+  // to counteract the SVG's horizontal stretch — visually the head reads as
+  // a properly proportioned tilted oval, not a flat pancake.
   const NOTE_COUNT = 12;
   const notes = [];
+  // 9 slots: 0=top space (above line k=0), 1=line k=0, 2=space, 3=line k=1, …, 8=line k=4.
+  // We map slot → y offset relative to STAFF_CY so notes sit on lines AND between them.
+  function slotY(slot){
+    // slot 0 → y = STAFF_CY - 4*(GAP/2); slot 8 → y = STAFF_CY + 4*(GAP/2)
+    return STAFF_CY + (slot - 4) * (STAFF_GAP / 2);
+  }
+  // Hand-picked slot pattern — varied across all 9 positions, nothing too clustered.
+  const slotPattern = [6, 3, 7, 2, 5, 4, 8, 1, 6, 3, 7, 2];
   for (let i = 0; i < NOTE_COUNT; i++){
     const head = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
-    head.setAttribute('rx','7');
-    head.setAttribute('ry','5');
+    head.setAttribute('rx','2.6');
+    head.setAttribute('ry','2.4');
     notesG.appendChild(head);
     const stem = document.createElementNS('http://www.w3.org/2000/svg','line');
     stem.setAttribute('stroke', 'currentColor');
-    stem.setAttribute('stroke-width','1.6');
+    stem.setAttribute('stroke-width','1.2');
     stem.setAttribute('stroke-linecap','round');
     notesG.appendChild(stem);
     // optional flag for ~1/3 of notes — gives variety, reads as eighth-notes
@@ -2890,16 +2907,15 @@ function setupHelixMorph(){
     if (i % 3 === 1){
       flag = document.createElementNS('http://www.w3.org/2000/svg','path');
       flag.setAttribute('stroke', 'currentColor');
-      flag.setAttribute('stroke-width','1.4');
+      flag.setAttribute('stroke-width','1.2');
       flag.setAttribute('fill','none');
       flag.setAttribute('stroke-linecap','round');
       notesG.appendChild(flag);
     }
-    // Spread notes evenly along x, choose a staff line k (0..4),
-    // bias toward inner lines so the staff looks composed, not random.
-    const u = (i + 0.5) / NOTE_COUNT;
-    const k = (i * 7 + 2) % STRAND_COUNT; // pseudo-random spread, stable
-    notes.push({ head, stem, flag, u, k });
+    // Spread notes evenly along x, leaving room at the left for the clef.
+    const u = 0.18 + (i + 0.5) / NOTE_COUNT * 0.78;
+    const slot = slotPattern[i];
+    notes.push({ head, stem, flag, u, slot });
   }
 
   // -------- Rungs: 11 base-pair bars connecting front & back strand.
@@ -2952,36 +2968,31 @@ function setupHelixMorph(){
   }
 
   function render(t){
-    // 1. Treble clef — visible at t<0.3, fades by t≈0.5.
+    // 1. Treble clef — visible at t<0.4, fully gone by t=0.4.
     if (clef){
-      const clefOp = Math.max(0, Math.min(1, (0.5 - t) / 0.3));
+      const clefOp = Math.max(0, 1 - t / 0.4);
       clef.setAttribute('opacity', clefOp.toFixed(3));
     }
 
-    // 2. Staff lines — bend into helix curves; middle 3 fade as helix forms.
-    const staffOp = Math.max(0, Math.min(1, (0.55 - t) / 0.25));
+    // 2. Staff lines — bend into helix curves; ALL fully gone by t=0.55,
+    //    so no horizontal-line debris lingers into the late helix state.
+    const staffOp = Math.max(0, 1 - t / 0.55);
     for (let k = 0; k < STRAND_COUNT; k++){
       const p = staffPaths[k];
       p.setAttribute('d', strandPath(k, t));
-      // Outer strands (front/back of helix) survive longer than inner ones;
-      // they will be replaced by the gold front + muted back strand by t≈0.7.
-      let op;
-      if (k === 0 || k === STRAND_COUNT - 1){
-        op = Math.max(0, Math.min(1, (0.65 - t) / 0.2));
-      } else {
-        op = staffOp;
-      }
-      p.setAttribute('opacity', op.toFixed(3));
+      p.setAttribute('opacity', staffOp.toFixed(3));
     }
 
-    // 3. Notes — interpolate from staff position to helix position; fade by t≈0.65.
-    const noteOp = Math.max(0, Math.min(1, (0.7 - t) / 0.25));
+    // 3. Notes — interpolate from staff position to helix position; fully
+    //    gone by t=0.6 so they don't co-exist with rungs/back-strand.
+    const noteOp = Math.max(0, 1 - t / 0.6);
     notesG.setAttribute('opacity', noteOp.toFixed(3));
     const amp = ampAt(t);
+    const middleY = STAFF_CY; // y of the middle line
     for (let i = 0; i < NOTE_COUNT; i++){
       const n = notes[i];
       const yEnd = n.u * H;
-      const staffY = STAFF_CY + (n.k - (STRAND_COUNT - 1)/2) * STAFF_GAP;
+      const staffY = slotY(n.slot);
       const xStaff = n.u * W;
       // Note migrates onto the front-strand curve.
       const wave = Math.sin((yEnd / H) * HELIX_FREQ * Math.PI * 2);
@@ -2990,27 +3001,40 @@ function setupHelixMorph(){
       const y = staffY + (yEnd - staffY) * t;
       n.head.setAttribute('cx', x.toFixed(2));
       n.head.setAttribute('cy', y.toFixed(2));
-      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${y.toFixed(2)})`);
-      // Stem on the right side of the head, going up.
-      const stemX = x + 6.2;
+      // Tilted oval — long axis at +25° from horizontal (rotate -25 in SVG y-down).
+      n.head.setAttribute('transform', `rotate(-25 ${x.toFixed(2)} ${y.toFixed(2)})`);
+      // Stem direction: notes BELOW the middle line get stems UP on the right;
+      // notes ABOVE the middle line get stems DOWN on the left. Standard notation.
+      const stemUp = staffY > middleY;
+      const stemX = x + (stemUp ? 2.4 : -2.4);
+      const stemTipY = stemUp ? (y - 26) : (y + 26);
       n.stem.setAttribute('x1', stemX.toFixed(2));
-      n.stem.setAttribute('y1', (y - 2).toFixed(2));
+      n.stem.setAttribute('y1', y.toFixed(2));
       n.stem.setAttribute('x2', stemX.toFixed(2));
-      n.stem.setAttribute('y2', (y - 28).toFixed(2));
+      n.stem.setAttribute('y2', stemTipY.toFixed(2));
       if (n.flag){
-        // Eighth-note flag — small curl off the top of the stem.
-        const fx = stemX, fy = y - 28;
-        n.flag.setAttribute('d',
-          `M${fx.toFixed(2)} ${fy.toFixed(2)} ` +
-          `C${(fx+10).toFixed(2)} ${(fy+4).toFixed(2)}, ` +
-          `${(fx+12).toFixed(2)} ${(fy+12).toFixed(2)}, ` +
-          `${(fx+4).toFixed(2)} ${(fy+18).toFixed(2)}`);
+        // Eighth-note flag — small curl off the tip of the stem, in the
+        // appropriate direction for stem-up vs stem-down.
+        const fx = stemX, fy = stemTipY;
+        if (stemUp){
+          n.flag.setAttribute('d',
+            `M${fx.toFixed(2)} ${fy.toFixed(2)} ` +
+            `C${(fx+5).toFixed(2)} ${(fy+3).toFixed(2)}, ` +
+            `${(fx+6).toFixed(2)} ${(fy+9).toFixed(2)}, ` +
+            `${(fx+2).toFixed(2)} ${(fy+14).toFixed(2)}`);
+        } else {
+          n.flag.setAttribute('d',
+            `M${fx.toFixed(2)} ${fy.toFixed(2)} ` +
+            `C${(fx+5).toFixed(2)} ${(fy-3).toFixed(2)}, ` +
+            `${(fx+6).toFixed(2)} ${(fy-9).toFixed(2)}, ` +
+            `${(fx+2).toFixed(2)} ${(fy-14).toFixed(2)}`);
+        }
       }
     }
 
-    // 4. Front (gold) strand — fade in from t≈0.3, fully visible by t≈0.7.
+    // 4. Front (gold) strand — fade in 0.35 → 0.7.
     goldPath.setAttribute('d', strandPath(0, t));
-    const goldOp = Math.max(0, Math.min(1, (t - 0.3) / 0.4));
+    const goldOp = Math.max(0, Math.min(1, (t - 0.35) / 0.35));
     goldG.setAttribute('opacity', goldOp.toFixed(3));
 
     // 5. Back strand — broken into HELIX_FREQ*2 segments. We model the helix
@@ -3021,7 +3045,7 @@ function setupHelixMorph(){
     // i.e. cos(ω·y) > 0. We render those segments at low opacity / thinner
     // stroke; segments where z_back > 0 (back is closer to viewer) are nearly
     // fully visible. This gives the strand a real "twisting around" feel.
-    const backOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
+    const backOp = Math.max(0, Math.min(1, (t - 0.45) / 0.35));
     backG.setAttribute('opacity', backOp.toFixed(3));
     const segLen = H / BACK_SEGS;
     const staffYBack = STAFF_CY + ((STRAND_COUNT-1) - (STRAND_COUNT-1)/2) * STAFF_GAP;
@@ -3056,8 +3080,9 @@ function setupHelixMorph(){
       bp.setAttribute('stroke-width', sw.toFixed(2));
     }
 
-    // 6. Rungs — fade in starting at t≈0.6, full by t≈0.95.
-    const rungOp = Math.max(0, Math.min(1, (t - 0.6) / 0.35));
+    // 6. Rungs — fade in starting at t=0.7, full by t=0.95. Holding rungs
+    //    until staff/notes are completely gone keeps the mid-morph clean.
+    const rungOp = Math.max(0, Math.min(1, (t - 0.7) / 0.25));
     rungsG.setAttribute('opacity', rungOp.toFixed(3));
     for (let i = 0; i < RUNG_COUNT; i++){
       const phase = (i + 0.5) / RUNG_COUNT;
