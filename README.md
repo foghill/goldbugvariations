@@ -34,24 +34,28 @@ npx serve .          # quick local server on port 3000
 
 …or any static server you prefer.
 
-## Three sections of the page
+## Sections of the page
 
-1. **Hero (paper)** — title set "THE GOLD / BUG / VARIATIONS", custom
-   Poe-cipher cursor + cipher-symbol trail, encrypted logline that
-   decrypts on entry, floating Poe substitution-key panel with a built-in
-   live encoder.
+1. **Hero (paper)** — title set "THE GOLD / BUG / VARIATIONS" with a
+   warm Lora-italic tagline. Custom Poe-cipher cursor + symbol trail.
 2. **Bridge (paper → walnut)** — sticky scroll-driven SVG that morphs a
-   Bach music staff with note-heads into a DNA double-helix with rungs.
-   Goldberg Aria audio toggle (YouTube IFrame API + archive.org
-   fallback).
-3. **Investigation (walnut)** — 8 draggable, flippable artifact cards on
-   a dark desk, gold beetle that crawls naturally and flees from the
-   cursor, ghost cipher symbols revealed by the magnifying-glass cursor.
+   Bach music staff with note-heads into a DNA double helix. Goldberg
+   Aria audio toggle (YouTube IFrame API + archive.org fallback).
+3. **Thematic cards** — four notes, four bases, two love stories.
+4. **Mystery hook** — a single caption setting up the case.
+5. **Detective board (walnut)** — five draggable, flippable artifact
+   cards on a dark desk; gold beetle that crawls naturally and flees
+   from the cursor; ghost cipher symbols revealed by the magnifying-glass
+   cursor.
+6. **Tools** — director bio, development partners, production note, and
+   a Kirkus pull quote (with the Leibniz epigraph at the section head).
+7. **Signup** — "Join the search" envelope CTA.
+8. **Footer** — press kit, festival programmers, financing &amp; co-pro,
+   honors, link grid, and the never-decrypting cipher line.
 
-Plus: Leibniz / Mencken epigraphs, Poe / Bach / Powers source primer,
-testimonials carousel, signup envelope above a press-kit / festival /
-financing footer strip. Easter-egg ‡ glyph hunt across five locations
-unlocks a screenplay quote.
+Plus: floating Poe substitution-key panel with a built-in live encoder,
+and an easter-egg ‡ glyph hunt across five hidden locations that unlocks
+a screenplay quote.
 
 ## Deploys
 
