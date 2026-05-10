@@ -277,7 +277,7 @@ input[type="email"], input[type="text"], textarea {
 /* ---------- §4 Bridge: staff → helix scroll morph ---------- */
 .bridge {
   position: relative;
-  height: 260vh;          /* tall scroll lane: t = 0 → 1 across this section */
+  height: 180vh;          /* tall scroll lane: t = 0 → 1 across this section */
   background: linear-gradient(
     180deg,
     var(--paper) 0%,
@@ -311,53 +311,37 @@ input[type="email"], input[type="text"], textarea {
   pointer-events: none;
 }
 .bridge-caption {
-  grid-column: 1;
-  padding: 0 clamp(20px, 4vw, 60px);
-  text-align: right;
-  pointer-events: auto;
-}
-.bridge-caption .cap-num {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 14px;
-}
-.bridge-caption .cap-head {
-  font-family: var(--grot);
-  font-weight: 700;
-  font-stretch: 125%;
-  font-size: clamp(28px, 3.4vw, 56px);
-  line-height: 1;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: var(--bridge-fg, #14202E);
-  margin: 0 0 18px;
-  transition: color 400ms ease;
-}
-.bridge-caption .cap-body {
+  position: sticky;
+  top: 24vh;
   font-family: var(--serif);
-  font-size: clamp(16px, 1.3vw, 20px);
   font-style: italic;
+  font-size: clamp(18px, 1.6vw, 22px);
   line-height: 1.5;
-  color: var(--bridge-fg-mute, #4B4334);
-  max-width: 32ch;
-  margin-left: auto;
-  transition: color 400ms ease;
+  color: var(--bridge-fg, #14202E);
+  max-width: 520px;
+  padding: 0 var(--margin);
+  margin: 0 auto;
+  text-align: center;
 }
-.bridge-caption.right {
-  grid-column: 3;
-  text-align: left;
+.bridge-caption .cap-body { margin: 0; }
+
+.strand-bug {
+  position: absolute;
+  width: 28px; height: 38px;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform, top, left;
+  opacity: 0;
+  transition: opacity 400ms ease-out;
 }
-.bridge-caption.right .cap-body { margin-left: 0; }
+.bridge.bug-active .strand-bug { opacity: 1; }
 
 .bridge-svg-wrap {
   grid-column: 2;
   height: 80vh;
   display: flex; align-items: center; justify-content: center;
   pointer-events: auto;
+  position: relative;
 }
 #morph {
   width: 100%;
@@ -1347,12 +1331,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .scroll-cue { font-size: 13px; font-weight: 600; }
 
 /* ---------- Bridge ---------- */
-.bridge-caption .cap-num { font-size: 14px; font-weight: 600; }
-.bridge-caption .cap-head { font-size: clamp(36px, 4.2vw, 68px); }
-.bridge-caption .cap-body {
+.bridge-caption {
   font-size: clamp(20px, 1.7vw, 26px);
   font-weight: 500;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .audio-btn { font-size: 12px; font-weight: 600; padding: 12px 20px; }
 .audio-btn .audio-meta { font-size: 10px; font-weight: 600; }
@@ -1892,10 +1874,9 @@ body.is-investigation .egg-progress {
   .title { font-size: 68px; }
   .title .row.r2 { padding-left: 0; }
   .title .row.r3 { text-align: left; }
-  .bridge { height: 220vh; }
+  .bridge { height: 160vh; }
   .bridge-stage { grid-template-columns: 1fr; padding: 0 24px; }
-  .bridge-caption, .bridge-caption.right { grid-column: 1; text-align: center; padding: 0; }
-  .bridge-caption .cap-body { margin: 0 auto; }
+  .bridge-caption { padding: 0; max-width: 100%; }
   .bridge-svg-wrap { grid-column: 1; height: 60vh; }
   .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
   .case-board .artifact {
@@ -1960,28 +1941,32 @@ body.is-investigation .egg-progress {
 <!-- ============================================================
      §4  BRIDGE — staff → helix scroll morph
      ============================================================ -->
-<section class="bridge" id="bridge" aria-label="Music staff morphing into DNA helix">
+<section class="bridge" id="bridge" aria-label="A spiral strand connecting music, code, and love">
   <div class="bridge-stage">
 
-    <div class="bridge-caption">
-      <span class="cap-num">§ 02 · The Bridge</span>
-      <h3 class="cap-head decrypt-head" data-text="Music becomes a strand."></h3>
-      <p class="cap-body decrypt" data-text="Bach wrote thirty variations on a single bass line. Crick and Watson read four letters into the spine of a cell. The film listens, patiently, while the staff turns into the helix it always was."></p>
+    <div class="bridge-caption" aria-hidden="false">
+      <p class="cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
     </div>
 
     <div class="bridge-svg-wrap">
       <svg id="morph" viewBox="0 0 280 1000" preserveAspectRatio="none" aria-hidden="true">
-        <g id="lines" stroke="var(--bridge-fg, #14202E)" stroke-width="1" fill="none" stroke-linecap="round"></g>
-        <g id="goldStrand" stroke="#D4AF37" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
+        <g id="goldStrand" stroke="#D4AF37" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.9"></g>
         <g id="rungs" stroke="var(--bridge-fg, #14202E)" stroke-width="1" opacity="0"></g>
-        <g id="notes" fill="var(--bridge-fg, #14202E)"></g>
       </svg>
-    </div>
-
-    <div class="bridge-caption right">
-      <span class="cap-num">A · T · G · C</span>
-      <h3 class="cap-head decrypt-head" data-text="Four bases. Four voices."></h3>
-      <p class="cap-body decrypt" data-text="Stuart Ressler, Jan O'Deigh, Franklin Todd, Jeannette Koss — like the four nucleotides, like the four bass notes — twist around each other in mirrored patterns, twenty-eight years apart."></p>
+      <!-- Bug rides the strand. Position is set by JS based on scroll progress. -->
+      <div class="strand-bug" id="strandBug" aria-hidden="true">
+        <svg viewBox="0 0 28 38" width="28" height="38">
+          <defs>
+            <radialGradient id="bg2" cx="0.5" cy="0.35" r="0.6">
+              <stop offset="0%" stop-color="#F5D060"/><stop offset="40%" stop-color="#C9A227"/><stop offset="100%" stop-color="#6B5210"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="14" cy="22" rx="8" ry="13" fill="url(#bg2)" stroke="#6B5210" stroke-width="0.8"/>
+          <ellipse cx="14" cy="7" rx="5" ry="4" fill="#3a2e1c"/>
+          <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
+          <ellipse cx="11" cy="17" rx="2" ry="5" fill="#fff" opacity="0.25"/>
+        </svg>
+      </div>
     </div>
   </div>
 
@@ -2800,155 +2785,91 @@ function setupCursorTrail(){
 
 function setupHelixMorph(){
   const svg = document.getElementById('morph');
-  const linesG = document.getElementById('lines');
   const goldG = document.getElementById('goldStrand');
   const rungsG = document.getElementById('rungs');
-  const notesG = document.getElementById('notes');
+  const bug = document.getElementById('strandBug');
+  const bridge = document.getElementById('bridge');
+  const wrap = bridge.querySelector('.bridge-svg-wrap');
+  if (!svg || !goldG || !bug) return;
 
   const W = 280, H = 1000;
-  const STRANDS = 5;
   const SAMPLES = 220;
-  const HELIX_AMP = 70;
-  const HELIX_FREQ = 9;
-  const STAFF_GAP = 18;
+  const HELIX_AMP = 80;
+  const HELIX_FREQ = 6;        // fewer turns than before — calmer, more elegant
   const CX = W/2;
 
-  // Breathing — once the helix is fully formed, slowly phase-shift the wave
-  // so the strand bands appear to slide along the helix axis (simulating a
-  // gentle 3D rotation), and modulate amplitude ±5% so the helix breathes.
-  let breathePhase = 0;
-
-  function ampAt(t){
-    const breath = (t > 0.7) ? Math.sin(breathePhase * 0.6) * 0.05 : 0;
-    return HELIX_AMP * (1 + breath);
-  }
-
-  function strandPath(k, t){
-    const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
-    const helixPhase = (k === 0) ? 0 : (k === STRANDS-1 ? Math.PI : (k * Math.PI / (STRANDS-1)));
-    const driftPhase = (t > 0.7) ? breathePhase * (t - 0.7) / 0.3 : 0;
-    const amp = ampAt(t);
-    let d = '';
-    for(let i=0; i<=SAMPLES; i++){
-      const u = i / SAMPLES;
-      const y = u * H;
-      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + helixPhase + driftPhase );
-      const helixX = CX + wave * amp;
-      const staffY = (H/2) + staffY0;
-      const x0 = u * W;
-      const y0 = staffY;
-      const x1 = helixX;
-      const y1 = y;
-      const x = x0 + (x1 - x0) * t;
-      const yy = y0 + (y1 - y0) * t;
-      d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + yy.toFixed(2) + ' ';
-    }
-    return d;
-  }
-
-  // strand paths
-  const strandPaths = [];
-  for(let k=0;k<STRANDS;k++){
-    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    linesG.appendChild(p);
-    strandPaths.push(p);
-  }
+  // Single strand path
   const goldPath = document.createElementNS('http://www.w3.org/2000/svg','path');
   goldG.appendChild(goldPath);
 
-  // 14 note heads with stems
-  const NOTE_COUNT = 14;
-  const notes = [];
-  for(let i=0;i<NOTE_COUNT;i++){
-    const c = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
-    c.setAttribute('rx','7'); c.setAttribute('ry','5');
-    notesG.appendChild(c);
-    const s = document.createElementNS('http://www.w3.org/2000/svg','line');
-    s.setAttribute('stroke', 'currentColor');
-    s.setAttribute('stroke-width','1.4');
-    notesG.appendChild(s);
-    notes.push({head:c, stem:s});
-  }
-
-  // Rungs (DNA "ladder" — the shape alone reads as base-pairing,
-  // so we don't draw A/T/G/C glyphs that would clash with the strands).
-  const RUNG_COUNT = 11;
+  // Optional rungs (the "helix nod") — drawn lightly, fade in late
+  const RUNG_COUNT = 9;
   const rungs = [];
-  for(let i=0;i<RUNG_COUNT;i++){
+  for (let i = 0; i < RUNG_COUNT; i++){
     const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
     rungsG.appendChild(ln);
     rungs.push(ln);
   }
 
-  function render(t){
-    // strands
-    for(let k=0;k<STRANDS;k++){
-      const path = strandPaths[k];
-      path.setAttribute('d', strandPath(k, t));
-      let op;
-      if (k === 0 || k === STRANDS-1) op = 1;
-      else op = 1 - Math.min(1, t * 1.6);
-      path.setAttribute('opacity', op.toFixed(3));
-      if (k === STRANDS-1)
-        path.setAttribute('opacity', (1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35))).toFixed(3));
-    }
-    goldPath.setAttribute('d', strandPath(STRANDS-1, t));
-    const goldOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
-    goldG.setAttribute('opacity', goldOp.toFixed(3));
+  function strandX(y, t){
+    const amp = HELIX_AMP * Math.min(1, t / 0.6);
+    return CX + Math.sin((y / H) * HELIX_FREQ * Math.PI * 2) * amp;
+  }
 
-    // notes
-    const drift = (t > 0.7) ? breathePhase * (t - 0.7) / 0.3 : 0;
-    const amp = ampAt(t);
-    const noteOp = 1 - Math.min(1, t * 1.8);
-    notesG.setAttribute('opacity', Math.max(0, noteOp).toFixed(3));
-    for(let i=0;i<NOTE_COUNT;i++){
-      const u = (i + 0.5) / NOTE_COUNT;
+  function strandPathD(t){
+    let d = '';
+    for (let i = 0; i <= SAMPLES; i++){
+      const u = i / SAMPLES;
       const y = u * H;
-      const k = 1 + (i % 3);
-      const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
-      const staffY = H/2 + staffY0;
-      const xStaff = u * W;
-      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + (k === 1 ? 0 : Math.PI) + drift );
-      const xHel = CX + wave * amp;
-      const x = xStaff + (xHel - xStaff) * t;
-      const yy = staffY + (y - staffY) * t;
-      const n = notes[i];
-      n.head.setAttribute('cx', x.toFixed(2));
-      n.head.setAttribute('cy', yy.toFixed(2));
-      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${yy.toFixed(2)})`);
-      n.stem.setAttribute('x1', (x + 6.2).toFixed(2));
-      n.stem.setAttribute('y1', (yy - 2).toFixed(2));
-      n.stem.setAttribute('x2', (x + 6.2).toFixed(2));
-      n.stem.setAttribute('y2', (yy - 28).toFixed(2));
-      n.stem.setAttribute('opacity', (i % 4 === 3) ? 0 : 1);
+      const x = strandX(y, t);
+      d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
     }
+    return d;
+  }
 
-    // Rungs only — placed where the helix is at its widest so they read as
-    // proper base-pair bars; gold every other one. Fades in past t≈0.35.
-    const rungOp = Math.max(0, Math.min(1, (t - 0.35) / 0.4));
+  function render(t){
+    goldPath.setAttribute('d', strandPathD(t));
+    goldPath.setAttribute('opacity', Math.min(1, t * 1.2).toFixed(3));
+
+    const rungOp = Math.max(0, Math.min(1, (t - 0.6) / 0.3));
     rungsG.setAttribute('opacity', rungOp.toFixed(3));
-    for(let i=0;i<RUNG_COUNT;i++){
-      // Place each rung at a quarter-cycle offset so x1/x2 are at the
-      // strands' max separation — keeps rungs from collapsing visually.
+    for (let i = 0; i < RUNG_COUNT; i++){
       const phase = (i + 0.5) / RUNG_COUNT;
       const y = phase * H;
-      const wave  = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + 0 + drift );
-      const wave2 = Math.sin( (y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI + drift );
-      const x1 = CX + wave  * amp;
-      const x2 = CX + wave2 * amp;
+      const x1 = strandX(y, t);
+      // Mirror of strand for second "rail" of the rung
+      const x2 = CX - (x1 - CX);
       const ln = rungs[i];
       ln.setAttribute('x1', x1.toFixed(2));
       ln.setAttribute('y1', y.toFixed(2));
       ln.setAttribute('x2', x2.toFixed(2));
       ln.setAttribute('y2', y.toFixed(2));
       ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
-      ln.setAttribute('stroke-width', '1');
-      ln.setAttribute('opacity', '0.65');
+      ln.setAttribute('opacity', '0.55');
     }
+
+    // Bug position — ride the strand. Convert SVG coords → CSS px inside .bridge-svg-wrap.
+    const wrapRect = wrap.getBoundingClientRect();
+    const yu = Math.min(0.96, Math.max(0.04, t)); // 4–96% down the viewBox
+    const ySvg = yu * H;
+    const xSvg = strandX(ySvg, t);
+    const xPct = xSvg / W;
+    const yPct = yu;
+    const xPx = xPct * wrapRect.width;
+    const yPx = yPct * wrapRect.height;
+
+    // Tangent angle for bug rotation (point along the strand, head leading)
+    const dy = 1;
+    const ahead = strandX(ySvg + dy, t);
+    const angleRad = Math.atan2(dy, ahead - xSvg);
+    const angleDeg = angleRad * 180 / Math.PI - 90; // bug points along strand, head down
+
+    bug.style.transform =
+      `translate(${(xPx - 14).toFixed(1)}px, ${(yPx - 19).toFixed(1)}px) rotate(${angleDeg.toFixed(1)}deg)`;
+
+    bridge.classList.toggle('bug-active', t > 0.02 && t < 0.98);
   }
 
-  // Drive `t` from scroll position relative to bridge section
-  const bridge = document.getElementById('bridge');
   function getT(){
     const r = bridge.getBoundingClientRect();
     const total = bridge.offsetHeight - window.innerHeight;
@@ -2957,15 +2878,13 @@ function setupHelixMorph(){
     return Math.max(0, Math.min(1, scrolled / total));
   }
 
-  // Tinting: as t increases, the bridge fg shifts from ink (paper) → bone (walnut)
   function tintBridge(t){
     const inkR = 0x14, inkG = 0x20, inkB = 0x2E;
     const boneR = 0xF0, boneG = 0xE6, boneB = 0xD2;
     const r = Math.round(inkR + (boneR - inkR) * t);
     const g = Math.round(inkG + (boneG - inkG) * t);
     const b = Math.round(inkB + (boneB - inkB) * t);
-    const c = `rgb(${r},${g},${b})`;
-    bridge.style.setProperty('--bridge-fg', c);
+    bridge.style.setProperty('--bridge-fg', `rgb(${r},${g},${b})`);
     bridge.style.setProperty('--bridge-fg-mute', `rgba(${r},${g},${b},0.7)`);
   }
 
@@ -2982,35 +2901,7 @@ function setupHelixMorph(){
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
-
-  // Continuous breath loop — only re-renders while the helix is mostly
-  // formed (t > 0.7) and the bridge is on-screen. Pauses when the tab is
-  // hidden so it doesn't burn CPU in the background.
-  let breathRaf = 0;
-  let inViewport = true;
-  function breath(){
-    breathRaf = 0;
-    if (!inViewport || document.hidden) return;
-    breathePhase += 0.012;
-    const t = getT();
-    if (t > 0.7) render(t);
-    if (t > 0.5) breathRaf = requestAnimationFrame(breath);
-  }
-  function startBreath(){
-    if (!breathRaf) breathRaf = requestAnimationFrame(breath);
-  }
-  // Use IO so we don't run when the bridge is far off-screen.
-  const breathIo = new IntersectionObserver((ents) => {
-    inViewport = ents.some(e => e.isIntersecting);
-    if (inViewport) startBreath();
-  }, { rootMargin: '20% 0px 20% 0px' });
-  breathIo.observe(bridge);
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) startBreath();
-  });
-  startBreath();
-  render(0);
-  tintBridge(0);
+  onScroll();
 }
 
 /* =========== §C  ARIA AUDIO (YouTube IFrame Player + fallback) =========== */
@@ -3681,7 +3572,7 @@ function setupEasterEggs(){
   const ANCHORS = [
     '.hero .tagline em',
     '.epigraph.paper blockquote',
-    '.bridge-caption .cap-num',
+    '.bridge-caption .cap-body',
     '.desk-head .marque',
     '.signup .envelope .eyebrow'
   ];
