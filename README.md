@@ -36,7 +36,7 @@ npx serve .          # quick local server on port 3000
 
 ## Sections of the page
 
-1. **Hero (paper)** — title set "THE GOLD / BUG / VARIATIONS" with a
+1. **Hero (paper)** — title set "The Gold / Bug / Variations" with a
    warm Lora-italic tagline. Custom Poe-cipher cursor + symbol trail.
 2. **Bridge (paper → walnut)** — sticky scroll-driven SVG that morphs a
    Bach music staff with note-heads into a DNA double helix. Goldberg
