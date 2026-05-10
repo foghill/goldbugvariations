@@ -2814,10 +2814,10 @@ function bridgeMorph(opts){
   const HELIX_AMP  = opts.helixAmp  || 64;  // helix half-width (viewBox px)
   const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
   const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
-  const STEM_W    = 2.0;
-  const HEAD_RX   = 7.4;           // tilted note head, real-feel oval
-  const HEAD_RY   = 5.4;
-  const HEAD_TILT = -22;           // degrees
+  const STEM_W    = 3.0;           // thick, iconic — not a notation hairline
+  const HEAD_RX   = 10.5;          // large nearly-round head, iconic feel
+  const HEAD_RY   = 9.5;
+  const HEAD_TILT = -4;            // degrees — barely tilted, reads as a fat dot
 
   const clefG   = document.getElementById('clef');
   const linesG  = document.getElementById('lines');
@@ -3087,7 +3087,7 @@ function bridgeMorph(opts){
         const pn = positions[i + 1];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(pn, stemDown);
-        const BT = 5.2; // beam thickness
+        const BT = 6.5; // beam thickness — thick filled bar for iconic weight
         // Beam sits AWAY from the heads — for stem-up, beam extends below tip;
         // for stem-down, beam extends above tip. Either way, we draw a thick
         // parallelogram from one tip to the other; the sign accounts for the
@@ -3107,8 +3107,8 @@ function bridgeMorph(opts){
         const p2 = positions[i + 2];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(p2, stemDown);
-        const BT  = 4.0;     // beam thickness
-        const BS  = 2.8;     // separation between the two beams
+        const BT  = 5.0;     // beam thickness — bold bars, not engraver thin
+        const BS  = 3.0;     // separation between the two beams
         const sign = stemDown ? -1 : 1;
         const y1 = g1.tipY, y2 = g2.tipY;
         // First beam at stem tips.
@@ -3128,26 +3128,30 @@ function bridgeMorph(opts){
         beam.setAttribute('fill-rule', 'evenodd');
       }
 
-      // Flag (lone eighths only). A small curved leaf at the stem tip,
-      // curling away from the head.
+      // Flag (lone eighths only). A bold ribbon/leaf at the stem tip,
+      // sweeping outward and back in — graphic-iconic, not engraver thin.
       const flag = flags[i];
       flag.setAttribute('d', '');
       if (note.kind === 'e'){
         const gf = stemGeom(p, stemDown);
         const fx = gf.attachX;
         const fy = gf.tipY;
-        // dir: stem-up → flag drops downward (-1 sense); stem-down → upward.
+        // dir: stem-up tip is above the head, so flag flows DOWN toward the
+        // head — dir=+1. stem-down tip is below the head, so flag flows UP
+        // toward the head — dir=-1.
         const dir = stemDown ? -1 : 1;
-        // Flag side: on stem-up the flag emerges to the RIGHT; on stem-down
-        // it emerges to the RIGHT too (real notation), so we always +x.
+        // Flag emerges to the RIGHT in both cases (real notation convention).
+        // The outer curve sweeps out and beyond, the inner curve curls back
+        // toward the stem to close the ribbon. Extends ~16 px horizontally
+        // (past the new ~10 px head radius) and ~28 px along the stem.
         flag.setAttribute('d',
           `M ${fx.toFixed(2)} ${fy.toFixed(2)} ` +
-          `C ${(fx + 10).toFixed(2)} ${(fy + dir * 4).toFixed(2)}, ` +
-          `${(fx + 13).toFixed(2)} ${(fy + dir * 14).toFixed(2)}, ` +
-          `${(fx + 9).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
-          `C ${(fx + 9).toFixed(2)} ${(fy + dir * 15).toFixed(2)}, ` +
-          `${(fx + 5).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
-          `${fx.toFixed(2)} ${(fy + dir * 6).toFixed(2)} Z`);
+          `C ${(fx + 18).toFixed(2)} ${(fy + dir * 2).toFixed(2)}, ` +
+          `${(fx + 19).toFixed(2)} ${(fy + dir * 16).toFixed(2)}, ` +
+          `${(fx + 13).toFixed(2)} ${(fy + dir * 28).toFixed(2)} ` +
+          `C ${(fx + 12).toFixed(2)} ${(fy + dir * 20).toFixed(2)}, ` +
+          `${(fx + 6).toFixed(2)} ${(fy + dir * 14).toFixed(2)}, ` +
+          `${fx.toFixed(2)} ${(fy + dir * 10).toFixed(2)} Z`);
         flag.setAttribute('fill', 'currentColor');
       }
     }
