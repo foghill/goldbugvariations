@@ -1933,9 +1933,9 @@ body.is-investigation .egg-progress {
         </defs>
 
         <!-- HANDLE: drawn first so subsequent layers cover its top end.
-             Placed along a 45-degree axis emerging from the rim's lower-right.
-             The handle's rounded tip points away to (200, 200)+ direction. -->
-        <g transform="rotate(45 100 100)">
+             Rotated -45° (counter-clockwise in SVG's down-positive y) so the
+             handle emerges from the rim's lower-RIGHT — a right-handed grip. -->
+        <g transform="rotate(-45 100 100)">
           <!-- Body of the handle -->
           <rect x="92" y="188" width="16" height="86" rx="7" ry="7"
                 fill="url(#handleWood)"/>
@@ -1957,8 +1957,9 @@ body.is-investigation .egg-progress {
 
         <!-- FERRULE: the brass collar that joins handle to rim. Drawn AFTER
              the handle so it hides the handle's upper seam, and BEFORE the
-             rim so the rim's lower-right arc covers its top edge. -->
-        <g transform="rotate(45 100 100)">
+             rim so the rim's lower-right arc covers its top edge. Rotated
+             -45° to match the handle's right-handed orientation. -->
+        <g transform="rotate(-45 100 100)">
           <!-- Main collar block -->
           <rect x="84" y="178" width="32" height="22" rx="3" ry="3"
                 fill="url(#ferruleBrass)"
