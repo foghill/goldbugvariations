@@ -1063,6 +1063,10 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   position: relative;
   z-index: 1;
 }
+.hook-text .word {
+  display: inline-block;
+  white-space: nowrap;
+}
 .hook-text .ch {
   display: inline-block;
   position: relative;
@@ -3755,24 +3759,32 @@ function setupHookReveal(){
   const stage = hookText && hookText.closest('.hook-stage');
   if (!hookText || !lens || !stage) return;
 
-  // Build per-character spans. Each non-space char gets two children: a cipher
-  // glyph and the plaintext, with classes that toggle visibility.
+  // Build per-character spans grouped into per-word wrappers. Each word lives
+  // inside <span class="word"> with white-space: nowrap, so line-wrapping
+  // happens between words (never mid-word) even though characters are
+  // independently inline-block for the lens-reveal math.
   const plain = hookText.getAttribute('data-plain') || '';
   const frag = document.createDocumentFragment();
   const charSpans = [];
-  for (let i = 0; i < plain.length; i++){
-    const ch = plain.charAt(i);
-    if (ch === ' ') {
-      frag.appendChild(document.createTextNode(' '));
-      continue;
+  const words = plain.split(' ');
+  for (let w = 0; w < words.length; w++){
+    const word = words[w];
+    if (word.length){
+      const wrap = document.createElement('span');
+      wrap.className = 'word';
+      for (let i = 0; i < word.length; i++){
+        const ch = word.charAt(i);
+        const span = document.createElement('span');
+        span.className = 'ch cipher';
+        span.dataset.plain = ch;
+        span.dataset.cipher = encChar(ch);
+        span.textContent = span.dataset.cipher;
+        wrap.appendChild(span);
+        charSpans.push(span);
+      }
+      frag.appendChild(wrap);
     }
-    const span = document.createElement('span');
-    span.className = 'ch cipher';
-    span.dataset.plain = ch;
-    span.dataset.cipher = encChar(ch);  // uses existing cipher helper
-    span.textContent = span.dataset.cipher;
-    frag.appendChild(span);
-    charSpans.push(span);
+    if (w < words.length - 1) frag.appendChild(document.createTextNode(' '));
   }
   hookText.textContent = '';
   hookText.appendChild(frag);
