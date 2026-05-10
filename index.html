@@ -1327,6 +1327,16 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   margin-top: 16px;
   color: rgba(20,32,46,0.85);
 }
+.tool-quote cite {
+  display: block;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.55);
+  margin-top: 8px;
+}
 .tool-card a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
 .partners-list { list-style: none; padding: 0; margin: 0; }
 .partners-list li {
@@ -1338,6 +1348,9 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .partners-list li:last-child { border-bottom: 0; }
 .partners-list b { display: block; font-weight: 600; color: #14202E; }
 .partners-list span { font-size: 13px; color: rgba(20,32,46,0.65); font-style: italic; }
+@media (min-width: 761px){
+  .tools-grid > .tool-press { grid-column: 2 / 3; }
+}
 @media (max-width: 760px){
   .tools-grid { grid-template-columns: 1fr; }
 }
@@ -1552,19 +1565,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .desk-head .reset-btn { font-size: 13px; font-weight: 600; }
 .hint { font-size: 28px; }
 
-/* ---------- Source primer ---------- */
-.primer-head .primer-num { font-size: 14px; font-weight: 600; }
-.primer-head .primer-sub { font-size: clamp(20px, 1.7vw, 26px); font-weight: 500; }
-.primer-col .primer-date { font-size: 14px; font-weight: 600; }
-.primer-col .primer-by { font-size: clamp(16px, 1.2vw, 19px); font-weight: 500; }
-.primer-col > p { font-size: clamp(19px, 1.5vw, 22px); font-weight: 600; line-height: 1.6; color: #14202E; }
-.primer-col blockquote { font-size: clamp(19px, 1.5vw, 22px); font-weight: 500; line-height: 1.5; color: #2a2218; padding-top: 22px; }
-
-/* ---------- Testimonials ---------- */
-.testimonials-head .primer-num { font-size: 14px; font-weight: 600; }
-.testimonial { font-size: clamp(30px, 3.6vw, 50px); font-weight: 500; line-height: 1.3; }
-.testimonial cite { font-size: 14px; font-weight: 600; }
-
 /* ---------- Cards (fronts + backs) — uniform readable sizes ---------- */
 .notebook .nb-title { font-size: 44px; }
 .notebook .nb-sub { font-size: 14px; font-weight: 600; }
@@ -1643,194 +1643,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .cipher-key .key-cell .let { font-size: 12px; font-weight: 600; }
 .cipher-key .key-foot { font-size: 11px; font-weight: 500; line-height: 1.7; }
 .egg-progress { font-size: 12px; font-weight: 600; letter-spacing: 0.22em; }
-
-/* ---------- Epigraph blocks (Leibniz, Mencken) ---------- */
-.epigraph {
-  position: relative;
-  z-index: 2;
-  padding: clamp(40px, 6vh, 80px) var(--margin);
-  text-align: center;
-}
-.epigraph.paper { background: var(--paper); color: #14202E; }
-.epigraph.paper::before {
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-  mix-blend-mode: multiply;
-  background-image: radial-gradient(rgba(80,60,20,0.07) 1px, transparent 1px);
-  background-size: 3px 3px;
-}
-.epigraph.walnut {
-  background: var(--walnut-2);
-  color: var(--bone);
-  border-top: 1px solid var(--walnut-rule);
-  border-bottom: 1px solid var(--walnut-rule);
-}
-.epigraph blockquote {
-  position: relative;
-  z-index: 2;
-  max-width: 28ch;
-  margin: 0 auto;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(28px, 3.6vw, 50px);
-  font-weight: 500;
-  line-height: 1.28;
-  letter-spacing: -0.005em;
-  padding: 0;
-}
-.epigraph blockquote p { margin: 0; max-width: 28ch; margin-left: auto; margin-right: auto; }
-.epigraph blockquote::before, .epigraph blockquote::after {
-  content: "";
-  display: block;
-  width: 80px; height: 1px;
-  background: var(--gold);
-  margin: 0 auto 40px;
-}
-.epigraph blockquote::after { margin: 40px auto 0; }
-.epigraph cite {
-  display: block;
-  margin-top: 30px;
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-/* ---------- Source-material primer (between investigation and Mencken) ---------- */
-.primer {
-  position: relative; z-index: 2;
-  background: var(--walnut-2);
-  color: var(--bone);
-  padding: clamp(80px, 12vh, 160px) var(--margin);
-  border-top: 1px solid var(--walnut-rule);
-}
-.primer-head { max-width: 1200px; margin: 0 auto clamp(48px, 7vh, 96px); text-align: center; }
-.primer-num {
-  font-family: var(--mono); font-size: 13px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold-bright); display: block; margin-bottom: 16px;
-}
-.primer-head h2 {
-  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
-  font-size: clamp(36px, 5vw, 72px); line-height: 0.95;
-  text-transform: uppercase; letter-spacing: 0.005em;
-  margin: 0 0 18px;
-}
-.primer-head .primer-sub {
-  font-family: var(--serif); font-size: clamp(18px, 1.6vw, 24px);
-  font-style: italic; max-width: 56ch; margin: 0 auto;
-  color: rgba(240,230,210,0.8);
-}
-.primer-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(24px, 3vw, 48px);
-  max-width: 1300px;
-  margin: 0 auto;
-}
-.primer-col {
-  background: var(--paper);
-  color: #14202E;
-  padding: clamp(28px, 3vw, 44px);
-  border: 1px solid rgba(176,141,46,0.32);
-  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
-  position: relative;
-}
-.primer-col header { margin-bottom: 22px; }
-.primer-col .primer-date {
-  font-family: var(--mono); font-size: 13px; font-weight: 600;
-  letter-spacing: 0.32em; color: var(--gold); display: block;
-}
-.primer-col h3 {
-  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
-  font-size: clamp(24px, 2.4vw, 34px); line-height: 1;
-  text-transform: uppercase; letter-spacing: 0.005em;
-  margin: 14px 0 6px;
-  color: #14202E;
-}
-.primer-col .primer-by {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(15px, 1.2vw, 18px); margin: 0;
-  color: #4B4334;
-}
-.primer-col > p {
-  font-family: var(--serif); font-size: clamp(18px, 1.4vw, 21px);
-  font-weight: 600; line-height: 1.55; margin: 0 0 22px;
-  color: #14202E;
-}
-.primer-col blockquote {
-  font-family: var(--serif); font-style: italic;
-  font-weight: 500;
-  font-size: clamp(17px, 1.4vw, 21px); line-height: 1.5;
-  margin: 0; padding: 22px 0 0;
-  border-top: 1px solid rgba(176,141,46,0.45);
-  color: #3a2e1c;
-}
-@media (max-width: 820px) {
-  .primer-grid { grid-template-columns: 1fr; }
-}
-
-/* ---------- Testimonials carousel (between primer and Mencken) ---------- */
-.testimonials {
-  position: relative; z-index: 2;
-  background: var(--walnut-2);
-  color: var(--bone);
-  padding: clamp(70px, 10vh, 140px) var(--margin);
-  border-top: 1px solid var(--walnut-rule);
-  text-align: center;
-}
-.testimonials-head { max-width: 800px; margin: 0 auto clamp(40px, 6vh, 64px); }
-.testimonials-head h2 {
-  font-family: var(--grot); font-stretch: 125%; font-weight: 700;
-  font-size: clamp(28px, 4vw, 56px); line-height: 1;
-  text-transform: uppercase; letter-spacing: 0.005em;
-  margin: 12px 0 0;
-}
-.testimonials-stage {
-  position: relative;
-  max-width: 920px; margin: 0 auto;
-  min-height: 280px;
-}
-.testimonial {
-  position: absolute; inset: 0;
-  margin: 0; padding: 0 clamp(8px, 2vw, 32px);
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(28px, 3.4vw, 46px);
-  font-weight: 500; line-height: 1.3;
-  opacity: 0;
-  transition: opacity 700ms ease;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-}
-.testimonial.active { opacity: 1; }
-.testimonial p { margin: 0 0 24px; }
-.testimonial cite {
-  display: block;
-  font-family: var(--mono); font-style: normal;
-  font-size: 13px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold-bright);
-}
-.testimonial-dots {
-  display: flex; justify-content: center; gap: 12px;
-  margin-top: clamp(28px, 4vh, 48px);
-  position: relative; z-index: 2;
-}
-.testimonial-dots .dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: rgba(212,175,55,0.28);
-  border: 0; padding: 0; cursor: pointer;
-  transition: background 200ms ease, transform 200ms ease;
-}
-.testimonial-dots .dot:hover { background: rgba(212,175,55,0.6); }
-.testimonial-dots .dot.active { background: var(--gold-bright); transform: scale(1.45); }
 
 /* ---------- Standalone signup section (static envelope above the footer) ----------
    The envelope used to live on the investigation desk as a draggable card.
@@ -2022,8 +1834,6 @@ body.is-investigation .egg-progress {
    meet AA without changing the brand. Walnut sections keep the original
    bright gold which already has good contrast there. */
 .hero,
-.epigraph.paper,
-.primer-col,
 .journal,
 .notebook .side, .polaroid .side, .catalog .side, .telegram .side,
 .cast-card .side, .punchcard .side, .clipping .side, .envelope .side {
@@ -2135,18 +1945,6 @@ body.is-investigation .egg-progress {
     <span class="arrow">↓</span>
   </div>
 </header>
-
-
-<!-- ============================================================
-     EPIGRAPH — Leibniz, between hero and bridge
-     (music, math — sets up the staff → helix transition)
-     ============================================================ -->
-<section class="epigraph paper" aria-label="Epigraph by Gottfried Leibniz">
-  <blockquote>
-    <p>Music is the pleasure the human mind experiences from counting without being aware that it is counting.</p>
-    <cite>— Gottfried Leibniz</cite>
-  </blockquote>
-</section>
 
 
 <!-- ============================================================
@@ -2481,85 +2279,17 @@ body.is-investigation .egg-progress {
       <p>Principal photography across <em>New York, Illinois, and Leipzig</em>. We are looking for financial partners passionate about science, music, love, and the way they intertwine.</p>
     </article>
 
-  </div>
-</section>
-
-
-<!-- ============================================================
-     §4  SOURCE-MATERIAL PRIMER — Poe / Bach / Powers
-     ============================================================ -->
-<section class="primer" id="source" aria-label="Source material — Poe, Bach, Powers">
-  <div class="primer-head">
-    <span class="primer-num">§ 04 · Source material</span>
-    <h2>Three codes, one score.</h2>
-    <p class="primer-sub">The film braids three substitutions. Here is the lineage.</p>
-  </div>
-  <div class="primer-grid">
-
-    <article class="primer-col">
+    <article class="tool-card tool-press">
       <header>
-        <span class="primer-date">1843</span>
-        <h3>The Gold-Bug</h3>
-        <p class="primer-by">Edgar Allan Poe · Dollar Newspaper, Philadelphia</p>
+        <span class="tool-eyebrow">Praise for the source</span>
+        <h3>The novel.</h3>
       </header>
-      <p>A short story about a coded message and buried treasure on a small island off the Carolina coast. Its 26-glyph substitution cipher — a child's secret handshake — taught a generation of American readers what cryptography even <em>was</em>. The cipher used throughout this site is Poe's, verbatim.</p>
-      <blockquote>"A perfect cryptograph is one which the message can be read only by him for whom it is intended."</blockquote>
+      <blockquote class="tool-quote">
+        <p>"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story."</p>
+        <cite>— Kirkus, on the Powers novel</cite>
+      </blockquote>
     </article>
 
-    <article class="primer-col">
-      <header>
-        <span class="primer-date">1741</span>
-        <h3>Goldberg Variations</h3>
-        <p class="primer-by">J.S. Bach · BWV 988</p>
-      </header>
-      <p>An aria followed by thirty variations on a single bass line, returning at the end to the same aria — changed only by everything that has been heard between. Named for the harpsichordist who reportedly played them at night to soothe an insomniac count. Glenn Gould's 1955 recording made the work modern.</p>
-      <blockquote>"Bach ends where he began. The same melody, transformed by what has been heard between."</blockquote>
-    </article>
-
-    <article class="primer-col">
-      <header>
-        <span class="primer-date">1991</span>
-        <h3>The Gold Bug Variations</h3>
-        <p class="primer-by">Richard Powers · William Morrow · 639 pp.</p>
-      </header>
-      <p>Powers's third novel braids Poe's cipher and Bach's variations through a love story about the genetic code: 1957 in an Illinois lab, 1985 in a Brooklyn library, the same human question in both rooms. National Book Critics Circle Award. Time's Book of the Year. Structured, like Bach's, in four voices and thirty parts.</p>
-      <blockquote>"The genetic code is not a metaphor for music. It is music."</blockquote>
-    </article>
-
-  </div>
-</section>
-
-
-<!-- ============================================================
-     §5  TESTIMONIALS — auto-rotating carousel of notices for the novel
-     ============================================================ -->
-<section class="testimonials" aria-label="Praise for the source novel">
-  <div class="testimonials-head">
-    <span class="primer-num">§ 05 · Praise for the source</span>
-  </div>
-  <div class="testimonials-stage" id="testimonials">
-    <blockquote class="testimonial active">
-      <p>"Book of the Year."</p>
-      <cite>— Time Magazine</cite>
-    </blockquote>
-    <blockquote class="testimonial">
-      <p>"The Gold Bug Variations has everything."</p>
-      <cite>— New York Times Book Review</cite>
-    </blockquote>
-    <blockquote class="testimonial">
-      <p>"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story."</p>
-      <cite>— Kirkus</cite>
-    </blockquote>
-    <blockquote class="testimonial">
-      <p>"This amazing book deals with nearly all of life's larger questions."</p>
-      <cite>— Magill Book Reviews</cite>
-    </blockquote>
-  </div>
-  <div class="testimonial-dots" id="testimonialDots">
-    <button class="dot active" data-idx="0" aria-label="Quote 1 of 4"></button>
-    <button class="dot" data-idx="1" aria-label="Quote 2 of 4"></button>
-    <button class="dot" data-idx="2" aria-label="Quote 3 of 4"></button>
-    <button class="dot" data-idx="3" aria-label="Quote 4 of 4"></button>
   </div>
 </section>
 
@@ -2609,13 +2339,13 @@ body.is-investigation .egg-progress {
       <a href="#bridge">Synopsis</a><br>
       <a href="#investigation">Director's Note</a><br>
       <a href="#investigation">Cast</a><br>
-      <a href="#source">Source Material</a>
+      <a href="#tools">Source Material</a>
     </div>
     <div class="foot-col">
       <h4>Source</h4>
-      <a href="#source">Richard Powers · 1991</a><br>
-      <a href="#source">Poe — "The Gold-Bug"</a><br>
-      <a href="#source">Bach — Goldberg Variations</a><br>
+      <a href="#tools">Richard Powers · 1991</a><br>
+      <a href="#tools">Poe — "The Gold-Bug"</a><br>
+      <a href="#tools">Bach — Goldberg Variations</a><br>
       <a href="#bridge">The cipher key</a>
     </div>
     <div class="foot-col">
@@ -3846,34 +3576,6 @@ function setupSignup(){
 
 /* =========== §E  Section observer (mode tinting) + boot =========== */
 
-/* =========== Testimonials carousel =========== */
-function setupTestimonials(){
-  const stage = document.getElementById('testimonials');
-  const dotsEl = document.getElementById('testimonialDots');
-  if (!stage || !dotsEl) return;
-  const slides = stage.querySelectorAll('.testimonial');
-  const dots = dotsEl.querySelectorAll('.dot');
-  let idx = 0, timer = 0;
-  function show(n){
-    idx = (n + slides.length) % slides.length;
-    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-  }
-  function start(){ if (!timer) timer = setInterval(() => show(idx + 1), 6500); }
-  function stop(){ if (timer){ clearInterval(timer); timer = 0; } }
-  dots.forEach(d => d.addEventListener('click', (e) => {
-    show(parseInt(e.currentTarget.dataset.idx, 10));
-    stop(); start();
-  }));
-  // Pause on hover/focus, resume on leave/blur.
-  stage.addEventListener('mouseenter', stop);
-  stage.addEventListener('mouseleave', start);
-  stage.addEventListener('focusin',  stop);
-  stage.addEventListener('focusout', start);
-  // Honor reduced motion: don't auto-rotate.
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) start();
-}
-
 /* =========== Sound design — Web Audio synth (paper / chime / scuttle) ===========
    Lazy AudioContext, unlocked on the first user click. All effects are
    tiny and high-pass filtered so they sit under the visuals rather than
@@ -4074,7 +3776,7 @@ function setupEasterEggs(){
   // gold ‡ injected at the end. Find all five → unlock the screenplay line.
   const ANCHORS = [
     '.hero .tagline em',
-    '.epigraph.paper blockquote',
+    '.tools-epigraph p',
     '.bridge-caption .cap-body',
     '.desk-head .marque',
     '.signup .envelope .eyebrow'
@@ -4171,7 +3873,6 @@ function boot(){
   setupEasterEggs();
   setupSoundFx();
   setupDeskCipher();
-  setupTestimonials();
 }
 if (document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', boot);
