@@ -2693,17 +2693,22 @@ function staffToHelix(opts){
     for(let k=0; k<STRANDS; k++){
       const path = strandPaths[k];
       path.setAttribute('d', strandPath(k, t));
+      // Hold strands at opacity 0 until t=0.10, ramp to 1 by t=0.30
+      const fadeIn = Math.max(0, Math.min(1, (t - 0.10) / 0.20));
       let op;
       if(k === 0 || k === STRANDS-1){
-        op = 1;
+        op = fadeIn;
       } else {
-        op = 1 - Math.min(1, t * 1.6);
+        // Middle strands fade out as helix forms — use the reference's t*1.6 curve,
+        // but multiplied by the fadeIn ramp so they don't appear at t=0.
+        op = fadeIn * (1 - Math.min(1, t * 1.6));
       }
       path.setAttribute('opacity', op.toFixed(3));
       // Strand STRANDS-1 fades out so the gold copy can take over visually
       if(k === STRANDS-1){
-        path.setAttribute('opacity',
-          (1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35))).toFixed(3));
+        // Outer strand fades out 0.45→0.80 to be replaced by gold copy.
+        const fadeOut = 1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35));
+        path.setAttribute('opacity', (fadeIn * fadeOut).toFixed(3));
       }
     }
     // Gold complementary strand
@@ -2712,8 +2717,10 @@ function staffToHelix(opts){
     goldG.setAttribute('opacity', goldOp.toFixed(3));
 
     // Notes — fade out as helix forms
-    const noteOp = 1 - Math.min(1, t * 1.8);
-    notesG.setAttribute('opacity', Math.max(0, noteOp).toFixed(3));
+    // Notes hold at 0 until t=0.10, ramp to 1 by t=0.25, then fade out per reference.
+    const notesIn = Math.max(0, Math.min(1, (t - 0.10) / 0.15));
+    const notesNatural = 1 - Math.min(1, t * 1.8);
+    notesG.setAttribute('opacity', Math.max(0, notesIn * notesNatural).toFixed(3));
     for(let i=0; i<cfg.noteCount; i++){
       const u = (i + 0.5) / cfg.noteCount;
       const y = u * H;
@@ -2804,10 +2811,10 @@ function setupHelixMorph(){
       const t = getT();
       morph.render(t);
       tintBridge(t);
-      // Music-art illustration: fully visible until t≈0.05, fade out by t≈0.30
+      // Music-art illustration: fully visible until t≈0.02, fade out by t≈0.20
       const musicArt = document.getElementById('musicArt');
       if (musicArt) {
-        const op = Math.max(0, 1 - Math.max(0, t - 0.05) / 0.25);
+        const op = Math.max(0, 1 - Math.max(0, t - 0.02) / 0.18);
         musicArt.setAttribute('opacity', op.toFixed(3));
       }
     });
