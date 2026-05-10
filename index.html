@@ -208,33 +208,30 @@ input[type="email"], input[type="text"], textarea {
   gap: var(--col-gap);
   padding: clamp(60px, 12vh, 140px) var(--margin) 0;
 }
-.eyebrow {
-  grid-column: 1 / span 4;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(20,32,46,0.55);
-  align-self: start;
-  padding-top: 14px;
-  padding-left: var(--rail-inset);
-  border-top: 1px solid var(--paper-rule);
-  line-height: 1.8;
-}
-.eyebrow b { color: var(--gold); font-weight: 500; }
-
 .title {
   grid-column: 1 / span 12;
-  font-family: var(--grot);
-  font-weight: 700;
-  font-stretch: 125%;
-  font-size: clamp(56px, 11.4vw, 184px);
-  line-height: 0.86;
-  letter-spacing: 0.005em;
-  text-transform: uppercase;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(64px, 13vw, 200px);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: none;
   margin: 28px 0 0;
   color: #14202E;
 }
+.tagline {
+  grid-column: 2 / span 10;
+  margin-top: clamp(28px, 5vh, 56px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(18px, 1.6vw, 24px);
+  line-height: 1.45;
+  color: rgba(20,32,46,0.78);
+  text-align: center;
+}
+.tagline em { color: var(--gold); font-style: italic; }
 .title .row {
   display: block;
   /* Hero entrance — each row fades up, slightly staggered. */
@@ -248,61 +245,19 @@ input[type="email"], input[type="text"], textarea {
 @keyframes titleIn {
   to { opacity: 1; transform: translateY(0); }
 }
-.eyebrow, .credits, .logline-wrap, .scroll-cue, .topbar {
+.tagline, .scroll-cue, .topbar {
   opacity: 0;
   animation: heroFadeIn 800ms cubic-bezier(.2,.7,.2,1) 850ms forwards;
 }
 .scroll-cue { animation-delay: 1300ms; }
 @keyframes heroFadeIn { to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-  .title .row, .eyebrow, .credits, .logline-wrap, .scroll-cue, .topbar {
+  .title .row, .tagline, .scroll-cue, .topbar {
     opacity: 1;
     transform: none;
     animation: none;
   }
 }
-.title .amp {
-  color: var(--gold);
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-stretch: 100%;
-  text-transform: lowercase;
-  letter-spacing: 0;
-}
-
-.logline-wrap {
-  grid-column: 4 / span 7;
-  margin-top: clamp(40px, 7vh, 88px);
-  font-family: var(--serif);
-  font-size: clamp(20px, 1.8vw, 26px);
-  line-height: 1.4;
-  color: #14202E;
-}
-.logline-wrap .label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(20,32,46,0.55);
-  margin-bottom: 16px;
-}
-
-.credits {
-  grid-column: 1 / span 3;
-  margin-top: clamp(40px, 7vh, 88px);
-  margin-left: var(--rail-inset);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(20,32,46,0.55);
-  line-height: 2;
-  border-left: 1px solid var(--paper-rule);
-  padding-left: 16px;
-}
-.credits b { color: #14202E; font-weight: 500; }
 
 .scroll-cue {
   position: absolute;
@@ -1390,26 +1345,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 
 /* ---------- Hero ---------- */
 .topbar { font-size: 13px; font-weight: 500; color: rgba(20,32,46,0.78); }
-.eyebrow {
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(20,32,46,0.82);
-  line-height: 1.9;
-}
-.eyebrow b { color: var(--gold); font-weight: 600; }
-.logline-wrap {
-  font-size: clamp(24px, 2.3vw, 34px);
-  font-weight: 500;
-  line-height: 1.4;
-}
-.logline-wrap .label { font-size: 13px; font-weight: 600; }
-.credits {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 2;
-  color: rgba(20,32,46,0.82);
-}
-.credits b { color: #14202E; font-weight: 600; }
 .scroll-cue { font-size: 13px; font-weight: 600; }
 
 /* ---------- Bridge ---------- */
@@ -1954,8 +1889,6 @@ body.is-investigation .egg-progress {
   body { font-size: 17px; cursor: auto; }
   .topbar .doc { gap: 14px; font-size: 9px; }
   .hero-grid { grid-template-columns: repeat(6, 1fr); }
-  .eyebrow, .credits, .logline-wrap { grid-column: 1 / -1; padding-left: 0; border: 0; margin-left: 0; }
-  .credits { border-left: 1px solid var(--paper-rule); padding-left: 16px; margin-left: 0; }
   .title { font-size: 68px; }
   .title .row.r2 { padding-left: 0; }
   .title .row.r3 { text-align: left; }
@@ -1990,8 +1923,6 @@ body.is-investigation .egg-progress {
   <div class="topbar">
     <div class="doc">
       <span>FOLIO 01 / IV</span>
-      <span class="gold">● TRANSMISSION ENCRYPTED</span>
-      <span>POE SUBSTITUTION · 1843</span>
     </div>
     <div class="doc">
       <span>SHOOTING · Q3 2026</span>
@@ -1999,40 +1930,16 @@ body.is-investigation .egg-progress {
   </div>
 
   <div class="hero-grid">
-
-    <div class="eyebrow">
-      <b>A FILM IN DEVELOPMENT</b><br>
-      DIRECTED BY MARK A. LEVINSON<br>
-      ADAPTED FROM THE NOVEL BY RICHARD POWERS
-    </div>
-
     <h1 class="title" aria-label="The Gold Bug Variations">
-      <span class="row r1">THE&nbsp;GOLD</span>
-      <span class="row r2">BUG</span>
-      <span class="row r3">VARIATIONS</span>
+      <span class="row r1">The&nbsp;Gold</span>
+      <span class="row r2">Bug</span>
+      <span class="row r3">Variations</span>
     </h1>
 
-    <div class="logline-wrap">
-      <span class="label">— Logline · decrypts on entry —</span>
-      <p class="decrypt" data-text="A brilliant scientist on the brink of cracking the code for life is derailed by music, and by the search for the code for love."></p>
-    </div>
-
-    <div class="credits">
-      <b>BASED ON</b><br>
-      The Pulitzer Prize-<br>
-      winning novel by<br>
-      Richard Powers<br><br>
-      <b>FROM THE DIRECTOR OF</b><br>
-      Particle Fever<br><br>
-      <b>HONORS</b><br>
-      Sundance Lab<br>
-      IFP Fast Track<br>
-      Three Sloan Grants
-    </div>
+    <p class="tagline">A feature film based on the acclaimed novel by <em>Richard Powers</em>.</p>
   </div>
 
-  <div class="scroll-cue">
-    Scroll to follow
+  <div class="scroll-cue" aria-hidden="true">
     <span class="arrow">↓</span>
   </div>
 </header>
@@ -3772,7 +3679,7 @@ function setupEasterEggs(){
   // Five anchor selectors — one per "act" of the page. Each gets a small
   // gold ‡ injected at the end. Find all five → unlock the screenplay line.
   const ANCHORS = [
-    '.hero .credits',
+    '.hero .tagline em',
     '.epigraph.paper blockquote',
     '.bridge-caption .cap-num',
     '.desk-head .marque',
