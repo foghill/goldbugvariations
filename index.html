@@ -313,6 +313,8 @@ input[type="email"], input[type="text"], textarea {
 .bridge-caption {
   position: sticky;
   top: 24vh;
+  grid-column: 1 / -1;
+  justify-self: center;
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(18px, 1.6vw, 22px);
@@ -330,7 +332,7 @@ input[type="email"], input[type="text"], textarea {
   width: 28px; height: 38px;
   pointer-events: none;
   transform-origin: center center;
-  will-change: transform, top, left;
+  will-change: transform;
   opacity: 0;
   transition: opacity 400ms ease-out;
 }
