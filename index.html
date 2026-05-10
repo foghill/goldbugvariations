@@ -508,8 +508,8 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 }
 .desk-head .reset-btn {
   background: transparent;
-  border: 1px solid rgba(240,230,210,0.3);
-  color: rgba(240,230,210,0.65);
+  border: 1px solid rgba(240,230,210,0.5);
+  color: rgba(240,230,210,0.85);
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.22em;
@@ -530,7 +530,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   top: 26px; right: 40%;
   font-family: var(--hand);
   font-size: 22px;
-  color: rgba(240,230,210,0.55);
+  color: rgba(240,230,210,0.75);
   z-index: 5;
   pointer-events: none;
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
@@ -1128,25 +1128,26 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 }
 .tools-head { max-width: 720px; margin: 0 auto clamp(40px, 7vh, 80px); text-align: center; }
 .tools-epigraph {
-  max-width: 600px;
-  margin: 0 auto clamp(28px, 4vh, 48px);
+  max-width: 720px;
+  margin: 0 auto clamp(32px, 4.5vh, 56px);
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(15px, 1.15vw, 18px);
-  line-height: 1.5;
-  color: rgba(20,32,46,0.65);
+  font-weight: 500;
+  font-size: clamp(20px, 1.7vw, 26px);
+  line-height: 1.45;
+  color: rgba(20,32,46,0.82);
   border: 0;
   padding: 0;
 }
-.tools-epigraph p { margin: 0 0 6px; }
+.tools-epigraph p { margin: 0 0 10px; }
 .tools-epigraph cite {
   display: block;
   font-style: normal;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(20,32,46,0.5);
+  color: rgba(20,32,46,0.7);
 }
 .tools-num {
   display: block;
@@ -1225,7 +1226,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(20,32,46,0.55);
+  color: rgba(20,32,46,0.7);
   margin-top: 8px;
 }
 .tool-card a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
@@ -1238,7 +1239,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 }
 .partners-list li:last-child { border-bottom: 0; }
 .partners-list b { display: block; font-weight: 600; color: #14202E; }
-.partners-list span { font-size: 13px; color: rgba(20,32,46,0.65); font-style: italic; }
+.partners-list span { font-size: 15px; color: rgba(20,32,46,0.78); font-style: italic; line-height: 1.45; }
 @media (min-width: 761px){
   .tools-grid > .tool-press { grid-column: 2 / 3; }
 }
@@ -1284,7 +1285,6 @@ body.is-investigation .cipher-key {
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  opacity: 0.7;
 }
 .cipher-key .key-head b { color: var(--gold); font-weight: 500; opacity: 1; }
 .cipher-key .key-head .x { padding: 2px 6px; }
@@ -1303,11 +1303,11 @@ body.is-investigation .cipher-key {
 }
 .cipher-key .key-cell .sym { color: var(--gold); font-weight: 700; font-size: 14px; line-height: 1; }
 .cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
-.cipher-key .key-foot { margin-top: 12px; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6; line-height: 1.6; }
+.cipher-key .key-foot { margin-top: 12px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; line-height: 1.6; }
 .cipher-key .key-decoder { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid currentColor; opacity: 0.95; }
 .cipher-key .key-decoder label {
   display: block; font-family: var(--mono);
-  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
   color: var(--gold); font-weight: 600; margin-bottom: 6px;
 }
 .cipher-key .key-decoder input {
@@ -1376,7 +1376,7 @@ footer {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(240,230,210,0.55);
+  color: var(--bone);
   line-height: 2;
 }
 .foot-col h4 {
@@ -1388,7 +1388,7 @@ footer {
   border-bottom: 1px solid var(--walnut-rule);
   padding-bottom: 10px;
 }
-.foot-col a { color: var(--bone); text-decoration: none; }
+.foot-col a { color: var(--bone); text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.25); padding-bottom: 1px; }
 .foot-col a:hover { color: var(--gold-bright); }
 .foot-cipher {
   font-family: var(--mono);
@@ -1420,10 +1420,10 @@ footer {
   margin-top: 36px;
   display: flex; justify-content: space-between;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(240,230,210,0.45);
+  color: rgba(240,230,210,0.7);
 }
 
 /* ====================================================================
@@ -1496,7 +1496,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .signup .envelope button { font-size: 14px; font-weight: 600; }
 
 /* ---------- Footer ---------- */
-.foot-col { font-size: 14px; font-weight: 500; line-height: 2.05; color: rgba(240,230,210,0.78); }
+.foot-col { font-size: 14px; font-weight: 500; line-height: 2.05; color: var(--bone); }
 .foot-col h4 { font-size: 14px; font-weight: 600; }
 .foot-col a { font-weight: 500; }
 .foot-cipher { font-size: clamp(16px, 1.2vw, 19px); font-weight: 700; }
@@ -1751,7 +1751,7 @@ body.is-investigation .egg-progress {
 @media (max-width: 820px) {
   :root { --margin: 18px; --col-gap: 14px; }
   body { font-size: 17px; cursor: auto; }
-  .topbar .doc { gap: 14px; font-size: 9px; }
+  .topbar .doc { gap: 14px; font-size: 12px; }
   .hero-grid { grid-template-columns: repeat(6, 1fr); }
   .tagline { grid-column: 1 / -1; }
   .title { font-size: 68px; }
@@ -2097,7 +2097,7 @@ body.is-investigation .egg-progress {
             <p>1957. <em>Stuart Ressler</em> arrives at Illinois on a fellowship to crack the four-letter alphabet of life. By 1985 he is loading magnetic tapes on a Brooklyn graveyard shift, anonymous, brilliant, and unaccountably lost.</p>
             <p>When research librarian <em>Jan O'Deigh</em> receives a single reference question about Ressler's vanished career, she begins an investigation that rhymes — in fugue and counterpoint — with the work he abandoned.</p>
             <p>A four-handed study of two romances divided by a quarter century, structured like a Bach fugue: thirty variations on a single, recursive theme.</p>
-            <p style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;margin-top:14px;color:#6B1410;">FEATURE FILM · 132 MIN · IN PRE-PRODUCTION</p>
+            <p style="font-family:var(--mono);font-size:12px;letter-spacing:1.5px;margin-top:14px;color:#6B1410;">FEATURE FILM · 132 MIN · IN PRE-PRODUCTION</p>
           </div>
         </div>
       </div>
@@ -2136,7 +2136,7 @@ body.is-investigation .egg-progress {
             <h4>FROM THE DIRECTOR'S NOTE</h4>
             <p><em>Particle Fever</em> taught me that science, properly framed, is the most cinematic subject we have. It is people staring at a wall, willing it to speak, and occasionally being answered.</p>
             <p>The conceit of this site — that what at first looks like a puzzle softens, as you attend to it, into a love letter — is the conceit of the film.</p>
-            <p style="margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:#6e5a32;">— M.A. LEVINSON</p>
+            <p style="margin-top:12px;font-family:var(--mono);font-size:12px;letter-spacing:0.18em;color:#4a3a14;">— M.A. LEVINSON</p>
           </div>
         </div>
       </div>
@@ -2148,7 +2148,7 @@ body.is-investigation .egg-progress {
             <div class="cat-num">813.54&nbsp;&nbsp;·&nbsp;&nbsp;P.O.WERS, R.</div>
             <h4>POWERS, RICHARD · b. 1957</h4>
             <p class="cat-body"><em>The Gold Bug Variations</em> : a novel / by Richard Powers. — New York : William Morrow, 1991. — 639 p. ; 24 cm.</p>
-            <p class="cat-body" style="font-size:12px;margin-top:6px;">Time Magazine "Book of the Year" · National Book Critics Circle Award · "A formidable masterpiece" — Kirkus.</p>
+            <p class="cat-body" style="font-size:14px;margin-top:6px;">Time Magazine "Book of the Year" · National Book Critics Circle Award · "A formidable masterpiece" — Kirkus.</p>
             <div class="cat-stamp">PROPERTY · BPL</div>
           </div>
           <div class="side back">
@@ -2814,10 +2814,13 @@ function bridgeMorph(opts){
   const HELIX_AMP  = opts.helixAmp  || 64;  // helix half-width (viewBox px)
   const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
   const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
-  const STEM_W    = 2.0;
-  const HEAD_RX   = 7.4;           // tilted note head, real-feel oval
-  const HEAD_RY   = 5.4;
-  const HEAD_TILT = -22;           // degrees
+  const STEM_W    = 3.6;           // thick, iconic — matched to the heavy reference style
+  // Reference-style notes have ROUND, heavy filled heads roughly the size of a
+  // staff space (gap = 26 ≈ diameter 24). We render as a circle (rx = ry) with
+  // no tilt — the reference heads do not read as engraved-notation ovals.
+  const HEAD_RX   = 12.0;
+  const HEAD_RY   = 12.0;
+  const HEAD_TILT = 0;
 
   const clefG   = document.getElementById('clef');
   const linesG  = document.getElementById('lines');
@@ -2844,16 +2847,17 @@ function bridgeMorph(opts){
   //
   // x is centre of the note head in viewBox units (the bar spans x ≈ 76 → 344).
   const MUSIC_BAR = [
-    { x:  78, slot:  2, kind: 'q'  },
-    { x: 110, slot: -1, kind: 'b0' },
-    { x: 140, slot:  1, kind: 'b1' },
-    { x: 174, slot: -3, kind: 'q'  },
-    { x: 204, slot:  0, kind: 'e'  },
-    { x: 234, slot:  3, kind: 't0' },
-    { x: 258, slot:  1, kind: 't1' },
-    { x: 282, slot:  2, kind: 't2' },
-    { x: 312, slot: -2, kind: 'q'  },
-    { x: 342, slot: -4, kind: 'e'  }
+    // Shifted right and compressed so the first note clears the treble clef
+    // (which renders ~x=14 → ~x=110 at font-size 200 in this 360-wide viewBox).
+    { x: 130, slot:  2, kind: 'q'  },
+    { x: 156, slot: -1, kind: 'b0' },
+    { x: 180, slot:  1, kind: 'b1' },
+    { x: 206, slot: -3, kind: 'q'  },
+    { x: 230, slot:  0, kind: 'e'  },
+    { x: 274, slot:  1, kind: 'b0' },
+    { x: 292, slot:  2, kind: 'b1' },
+    { x: 316, slot: -2, kind: 'q'  },
+    { x: 340, slot: -4, kind: 'e'  }
   ];
 
   // Helper: y of a slot.
@@ -3052,7 +3056,11 @@ function bridgeMorph(opts){
     // Stem geometry helper. Returns the head-attachment x and the stem-tip y
     // for a note at position p with the group-shared stem direction.
     function stemGeom(p, stemDown){
-      const HEAD_EDGE = HEAD_RX * 0.95;
+      // Round head: the stem joins flush with the head's side, slightly tucked
+      // in so the stem reads as embedded in (not floating off) the head.
+      const tiltRad = HEAD_TILT * Math.PI / 180;
+      const HEAD_EDGE = Math.abs(HEAD_RX * Math.cos(tiltRad)) +
+                        Math.abs(HEAD_RY * Math.sin(tiltRad)) - 1.5;
       const attachX = stemDown ? (p.x - HEAD_EDGE) : (p.x + HEAD_EDGE);
       const tipY    = stemDown ? (p.y + STEM_LEN) : (p.y - STEM_LEN);
       return { attachX, tipY };
@@ -3087,7 +3095,7 @@ function bridgeMorph(opts){
         const pn = positions[i + 1];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(pn, stemDown);
-        const BT = 5.2; // beam thickness
+        const BT = 8.5; // beam thickness — heavy filled bar matching the reference style
         // Beam sits AWAY from the heads — for stem-up, beam extends below tip;
         // for stem-down, beam extends above tip. Either way, we draw a thick
         // parallelogram from one tip to the other; the sign accounts for the
@@ -3107,8 +3115,8 @@ function bridgeMorph(opts){
         const p2 = positions[i + 2];
         const g1 = stemGeom(p,  stemDown);
         const g2 = stemGeom(p2, stemDown);
-        const BT  = 4.0;     // beam thickness
-        const BS  = 2.8;     // separation between the two beams
+        const BT  = 6.5;     // beam thickness — heavy bars matching reference style
+        const BS  = 4.0;     // separation between the two beams
         const sign = stemDown ? -1 : 1;
         const y1 = g1.tipY, y2 = g2.tipY;
         // First beam at stem tips.
@@ -3128,26 +3136,58 @@ function bridgeMorph(opts){
         beam.setAttribute('fill-rule', 'evenodd');
       }
 
-      // Flag (lone eighths only). A small curved leaf at the stem tip,
-      // curling away from the head.
+      // Flag (lone eighths only). Reference-style "scimitar": starts at the
+      // stem tip, sweeps OUT (right) and DOWN, then curls back UP and BACK
+      // over the stem-tip area. Closed filled shape with a tapered tip at
+      // both ends and a heavy belly mid-curve. Total span ~36 (~½ stem),
+      // belly width ~12 (~head diameter).
       const flag = flags[i];
       flag.setAttribute('d', '');
       if (note.kind === 'e'){
         const gf = stemGeom(p, stemDown);
         const fx = gf.attachX;
         const fy = gf.tipY;
-        // dir: stem-up → flag drops downward (-1 sense); stem-down → upward.
+        // dir: stem-up tip is above the head → flag swoops DOWN toward head
+        // (dir=+1). stem-down → flag swoops UP toward head (dir=-1).
         const dir = stemDown ? -1 : 1;
-        // Flag side: on stem-up the flag emerges to the RIGHT; on stem-down
-        // it emerges to the RIGHT too (real notation), so we always +x.
+        // Geometry, in stem-local coords (origin = stem tip, +x = outward
+        // from head along stem-side, +y = dir = down for stem-up):
+        //
+        //   START (stem tip): narrow point on the stem.
+        //   OUTER SPINE: arcs out-and-away then drops, peaking at
+        //     (+22, +20·dir) — the "elbow" of the scimitar.
+        //   FAR TIP: (+10, +34·dir) — the curling-back tip, BACK toward
+        //     the stem axis, a touch beyond the elbow vertically.
+        //   INNER CURVE: returns up-and-in along the inside of the curl,
+        //     back toward a point ~3px below origin on the stem.
+        //
+        // The result reads as a thick "comma" / "scimitar" silhouette
+        // — out, down, curling back up-and-in over the stem tip.
         flag.setAttribute('d',
+          // Pointed origin on the stem at the tip.
           `M ${fx.toFixed(2)} ${fy.toFixed(2)} ` +
-          `C ${(fx + 10).toFixed(2)} ${(fy + dir * 4).toFixed(2)}, ` +
-          `${(fx + 13).toFixed(2)} ${(fy + dir * 14).toFixed(2)}, ` +
-          `${(fx + 9).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
-          `C ${(fx + 9).toFixed(2)} ${(fy + dir * 15).toFixed(2)}, ` +
-          `${(fx + 5).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
-          `${fx.toFixed(2)} ${(fy + dir * 6).toFixed(2)} Z`);
+          // Outer spine: out-and-down sweep to the elbow, then curling
+          // BACK toward the stem axis to the far tip.
+          `C ${(fx + 16).toFixed(2)} ${(fy + dir * 2).toFixed(2)}, ` +
+          `${(fx + 26).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
+          `${(fx + 22).toFixed(2)} ${(fy + dir * 22).toFixed(2)} ` +
+          // Continue the curl: out-elbow to far-tip, scooping back toward stem.
+          `C ${(fx + 19).toFixed(2)} ${(fy + dir * 30).toFixed(2)}, ` +
+          `${(fx + 13).toFixed(2)} ${(fy + dir * 34).toFixed(2)}, ` +
+          `${(fx + 9).toFixed(2)} ${(fy + dir * 33).toFixed(2)} ` +
+          // Crisp inner tip at the far end (the "point" of the comma).
+          `L ${(fx + 8).toFixed(2)} ${(fy + dir * 31).toFixed(2)} ` +
+          // Inner curve back: rides the inside of the curl, narrowing as it
+          // returns toward the stem near the origin.
+          `C ${(fx + 13).toFixed(2)} ${(fy + dir * 27).toFixed(2)}, ` +
+          `${(fx + 18).toFixed(2)} ${(fy + dir * 20).toFixed(2)}, ` +
+          `${(fx + 15).toFixed(2)} ${(fy + dir * 12).toFixed(2)} ` +
+          // Inner spine continues back toward the stem at the origin.
+          `C ${(fx + 12).toFixed(2)} ${(fy + dir * 7).toFixed(2)}, ` +
+          `${(fx + 6).toFixed(2)} ${(fy + dir * 4).toFixed(2)}, ` +
+          `${(fx + 0.5).toFixed(2)} ${(fy + dir * 3).toFixed(2)} ` +
+          // Close back to the origin — pointed base on the stem.
+          `Z`);
         flag.setAttribute('fill', 'currentColor');
       }
     }
