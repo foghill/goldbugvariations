@@ -263,7 +263,6 @@ input[type="email"], input[type="text"], textarea {
   }
 }
 
-.scroll-cue .cue-bug { display: block; margin: 0 auto 6px; opacity: 0.85; }
 .scroll-cue {
   position: absolute;
   bottom: 28px; left: 50%;
@@ -1041,9 +1040,6 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   line-height: 1.3;
   color: #14202E;
 }
-.hook-bug { margin-top: clamp(40px, 6vh, 80px); }
-.hook-bug svg { display: block; margin: 0 auto; opacity: 0.8; }
-
 /* ---------- §6 Tools ---------- */
 .tools {
   background: var(--paper);
@@ -1735,11 +1731,6 @@ body.is-investigation .egg-progress {
   </div>
 
   <div class="scroll-cue" aria-hidden="true">
-    <svg class="cue-bug" viewBox="0 0 28 38" width="20" height="28">
-      <ellipse cx="14" cy="22" rx="8" ry="13" fill="#C9A227" stroke="#6B5210" stroke-width="0.8"/>
-      <ellipse cx="14" cy="7" rx="5" ry="4" fill="#3a2e1c"/>
-      <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
-    </svg>
     <span class="arrow">↓</span>
   </div>
 </header>
@@ -1762,6 +1753,77 @@ body.is-investigation .egg-progress {
         <g id="rungs"      stroke="currentColor" stroke-width="1"   opacity="0"></g>
         <g id="notes"      fill="currentColor"></g>
         <g id="bases"      fill="currentColor"  opacity="0"></g>
+
+        <!-- Rich music-notation illustration shown at t=0; fades out as the
+             helix morph takes over. Drawn last so it paints on top. -->
+        <g id="musicArt" fill="currentColor" stroke="currentColor">
+
+          <!-- Bass clef glyph (𝄢) at far left -->
+          <text x="3" y="515"
+                font-family="'Bravura Text','Apple Symbols','Noto Music','Segoe UI Symbol',serif"
+                font-size="80" fill="currentColor" stroke="none">&#x1D122;</text>
+
+          <!-- Treble clef glyph (𝄞), larger, just to the right of bass clef -->
+          <text x="18" y="555"
+                font-family="'Bravura Text','Apple Symbols','Noto Music','Segoe UI Symbol',serif"
+                font-size="180" fill="currentColor" stroke="none">&#x1D11E;</text>
+
+          <!-- Five swelling staff lines (cubic Bezier sweep gently up then back down) -->
+          <g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M 40 464 C 60 458 80 454 100 460 C 110 463 116 464 120 466"/>
+            <path d="M 40 482 C 60 476 80 472 100 478 C 110 481 116 482 120 484"/>
+            <path d="M 40 500 C 60 494 80 490 100 496 C 110 499 116 500 120 502"/>
+            <path d="M 40 518 C 60 512 80 508 100 514 C 110 517 116 518 120 520"/>
+            <path d="M 40 536 C 60 530 80 526 100 532 C 110 535 116 536 120 538"/>
+          </g>
+
+          <!-- Notes scattered across the staff. Heavy filled heads + thick stems. -->
+          <!-- Note 1: beamed pair near start -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="50" cy="505" rx="3" ry="6" transform="rotate(-22 50 505)"/>
+            <ellipse cx="58" cy="495" rx="3" ry="6" transform="rotate(-22 58 495)"/>
+            <line x1="52.5" y1="503" x2="52.5" y2="465" stroke-width="2"/>
+            <line x1="60.5" y1="493" x2="60.5" y2="465" stroke-width="2"/>
+            <rect x="51" y="463" width="11" height="4" fill="currentColor" stroke="none"/>
+          </g>
+
+          <!-- Note 2: single quarter note -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="68" cy="510" rx="3" ry="6" transform="rotate(-22 68 510)"/>
+            <line x1="70.5" y1="508" x2="70.5" y2="475" stroke-width="2"/>
+          </g>
+
+          <!-- Note 3: beamed pair of sixteenths (double beam) -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="76" cy="500" rx="3" ry="6" transform="rotate(-22 76 500)"/>
+            <ellipse cx="84" cy="488" rx="3" ry="6" transform="rotate(-22 84 488)"/>
+            <line x1="78.5" y1="498" x2="78.5" y2="460" stroke-width="2"/>
+            <line x1="86.5" y1="486" x2="86.5" y2="460" stroke-width="2"/>
+            <rect x="77" y="458" width="11" height="3.5" fill="currentColor" stroke="none"/>
+            <rect x="77" y="464" width="11" height="3.5" fill="currentColor" stroke="none"/>
+          </g>
+
+          <!-- Note 4: single eighth note with curl flag -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="94" cy="515" rx="3" ry="6" transform="rotate(-22 94 515)"/>
+            <line x1="96.5" y1="513" x2="96.5" y2="478" stroke-width="2"/>
+            <path d="M 96.5 478 Q 105 484 102 495" stroke-width="2" fill="none"/>
+          </g>
+
+          <!-- Note 5: single quarter -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="105" cy="495" rx="3" ry="6" transform="rotate(-22 105 495)"/>
+            <line x1="107.5" y1="493" x2="107.5" y2="460" stroke-width="2"/>
+          </g>
+
+          <!-- Note 6: single eighth with flag -->
+          <g stroke="currentColor" stroke-width="2" fill="currentColor">
+            <ellipse cx="114" cy="500" rx="3" ry="6" transform="rotate(-22 114 500)"/>
+            <line x1="116.5" y1="498" x2="116.5" y2="465" stroke-width="2"/>
+            <path d="M 116.5 465 Q 122 471 119 480" stroke-width="2" fill="none"/>
+          </g>
+
+        </g>
       </svg>
     </div>
   </div>
@@ -1816,13 +1878,6 @@ body.is-investigation .egg-progress {
      ============================================================ -->
 <section class="hook" aria-label="The mystery">
   <p class="hook-text">The mystery of the disappearance of a brilliant scientist poised to discover the ultimate code for life.</p>
-  <div class="hook-bug" aria-hidden="true">
-    <svg viewBox="0 0 28 38" width="22" height="30">
-      <ellipse cx="14" cy="22" rx="8" ry="13" fill="#C9A227" stroke="#6B5210" stroke-width="0.8"/>
-      <ellipse cx="14" cy="7" rx="5" ry="4" fill="#3a2e1c"/>
-      <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
-    </svg>
-  </div>
 </section>
 
 
@@ -2696,21 +2751,25 @@ function staffToHelix(opts){
 
   /* ----- Render frame. Call render(t) with t ∈ [0, 1]. ----- */
   function render(t){
-    // Strands
+    // Strands — staff lines hidden at t=0 (music-art illustration covers
+    // them), fade in around t=0.2 to bridge into the helix shape.
     for(let k=0; k<STRANDS; k++){
       const path = strandPaths[k];
       path.setAttribute('d', strandPath(k, t));
       let op;
       if(k === 0 || k === STRANDS-1){
-        op = 1;
+        op = Math.max(0, Math.min(1, (t - 0.2) / 0.25));
       } else {
-        op = 1 - Math.min(1, t * 1.6);
+        const ramp = Math.max(0, Math.min(1, (t - 0.2) / 0.2));
+        const fade = Math.max(0, 1 - Math.max(0, t - 0.4) / 0.2);
+        op = ramp * fade;
       }
       path.setAttribute('opacity', op.toFixed(3));
       // Strand STRANDS-1 fades out so the gold copy can take over visually
       if(k === STRANDS-1){
-        path.setAttribute('opacity',
-          (1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35))).toFixed(3));
+        const inOp  = Math.max(0, Math.min(1, (t - 0.2) / 0.25));
+        const outOp = 1 - Math.max(0, Math.min(1, (t - 0.45) / 0.35));
+        path.setAttribute('opacity', (inOp * outOp).toFixed(3));
       }
     }
     // Gold complementary strand
@@ -2718,9 +2777,11 @@ function staffToHelix(opts){
     const goldOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
     goldG.setAttribute('opacity', goldOp.toFixed(3));
 
-    // Notes — fade out as helix forms
-    const noteOp = 1 - Math.min(1, t * 1.8);
-    notesG.setAttribute('opacity', Math.max(0, noteOp).toFixed(3));
+    // Notes — fade in t=0.2→0.35 (after the music-art illustration begins
+    // fading), then fade out t=0.4→0.6 as the helix forms.
+    const notesIn  = Math.max(0, Math.min(1, (t - 0.2) / 0.15));
+    const notesOut = Math.max(0, 1 - Math.max(0, t - 0.4) / 0.2);
+    notesG.setAttribute('opacity', (notesIn * notesOut).toFixed(3));
     for(let i=0; i<cfg.noteCount; i++){
       const u = (i + 0.5) / cfg.noteCount;
       const y = u * H;
@@ -2811,6 +2872,12 @@ function setupHelixMorph(){
       const t = getT();
       morph.render(t);
       tintBridge(t);
+      // Music-art illustration: fully visible until t≈0.15, fade out by t≈0.45
+      const musicArt = document.getElementById('musicArt');
+      if (musicArt) {
+        const op = Math.max(0, 1 - Math.max(0, t - 0.15) / 0.30);
+        musicArt.setAttribute('opacity', op.toFixed(3));
+      }
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
