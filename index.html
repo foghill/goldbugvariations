@@ -329,6 +329,7 @@ input[type="email"], input[type="text"], textarea {
 .bridge-caption .cap-body { margin: 0; }
 
 .strand-bug {
+  display: none;
   position: absolute;
   width: 28px; height: 38px;
   pointer-events: none;
@@ -1985,8 +1986,6 @@ body.is-investigation .egg-progress {
         <g id="staffLines" stroke="var(--bridge-fg, #14202E)" stroke-width="1.2" fill="none" stroke-linecap="round"></g>
         <!-- Back strand of the helix — rendered first so the gold strand sits on top. -->
         <g id="backStrand" stroke="var(--bridge-fg, #14202E)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0"></g>
-        <!-- Base-pair rungs cross between the two strands. -->
-        <g id="rungs" stroke="var(--bridge-fg, #14202E)" stroke-width="1" opacity="0"></g>
         <!-- Front strand — gold, thicker, drawn last so crossings read as 3D. -->
         <g id="goldStrand" stroke="#D4AF37" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"></g>
         <!-- Music notes scattered along the staff, migrating onto the helix. -->
@@ -2828,12 +2827,15 @@ function setupHelixMorph(){
   const linesG = document.getElementById('staffLines');
   const goldG = document.getElementById('goldStrand');
   const backG = document.getElementById('backStrand');
-  const rungsG = document.getElementById('rungs');
   const notesG = document.getElementById('notes');
   const bug = document.getElementById('strandBug');
   const bridge = document.getElementById('bridge');
   const wrap = bridge.querySelector('.bridge-svg-wrap');
   if (!svg || !goldG || !bug) return;
+
+  // Bug riding the strand is disabled for now — flip ENABLE_BUG to true
+  // (and remove the `display:none` on .strand-bug) to restore.
+  const ENABLE_BUG = false;
 
   const W = 280, H = 1000;
   const SAMPLES = 220;
@@ -2843,9 +2845,6 @@ function setupHelixMorph(){
   const STAFF_CY = 500;          // staff vertically centered around y=500 (mid-canvas)
   const STRAND_COUNT = 5;
   const CX = W/2;
-  // SVG renders with preserveAspectRatio="none" so it stretches horizontally
-  // to fill the wrap (≈1.36× on desktop). Note ellipses are tightened in rx
-  // to compensate so heads read as tilted ovals rather than flat pancakes.
 
   // -------- Staff lines: 5 horizontal at t=0, bend into helix curves at t=1.
   // Each line interpolates from y=staffY to a sinusoid with helixPhase.
@@ -2879,9 +2878,7 @@ function setupHelixMorph(){
   // -------- Notes: 12 musical notes (heads + stems) scattered on the staff.
   // Each note has a fixed (u, kSlot) — its horizontal slot along the staff and
   // which of the 9 vertical positions (5 lines + 4 spaces) it sits on.
-  // As t→1 the note drifts onto the helix. Note-head rx is tightened (2.6)
-  // to counteract the SVG's horizontal stretch — visually the head reads as
-  // a properly proportioned tilted oval, not a flat pancake.
+  // As t→1 the note drifts onto the helix.
   const NOTE_COUNT = 12;
   const notes = [];
   // 9 slots: 0=top space (above line k=0), 1=line k=0, 2=space, 3=line k=1, …, 8=line k=4.
@@ -2894,12 +2891,12 @@ function setupHelixMorph(){
   const slotPattern = [6, 3, 7, 2, 5, 4, 8, 1, 6, 3, 7, 2];
   for (let i = 0; i < NOTE_COUNT; i++){
     const head = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
-    head.setAttribute('rx','2.6');
-    head.setAttribute('ry','2.4');
+    head.setAttribute('rx','7');
+    head.setAttribute('ry','5');
     notesG.appendChild(head);
     const stem = document.createElementNS('http://www.w3.org/2000/svg','line');
     stem.setAttribute('stroke', 'currentColor');
-    stem.setAttribute('stroke-width','1.2');
+    stem.setAttribute('stroke-width','1.6');
     stem.setAttribute('stroke-linecap','round');
     notesG.appendChild(stem);
     // optional flag for ~1/3 of notes — gives variety, reads as eighth-notes
@@ -2907,7 +2904,7 @@ function setupHelixMorph(){
     if (i % 3 === 1){
       flag = document.createElementNS('http://www.w3.org/2000/svg','path');
       flag.setAttribute('stroke', 'currentColor');
-      flag.setAttribute('stroke-width','1.2');
+      flag.setAttribute('stroke-width','1.4');
       flag.setAttribute('fill','none');
       flag.setAttribute('stroke-linecap','round');
       notesG.appendChild(flag);
@@ -2916,15 +2913,6 @@ function setupHelixMorph(){
     const u = 0.18 + (i + 0.5) / NOTE_COUNT * 0.78;
     const slot = slotPattern[i];
     notes.push({ head, stem, flag, u, slot });
-  }
-
-  // -------- Rungs: 11 base-pair bars connecting front & back strand.
-  const RUNG_COUNT = 11;
-  const rungs = [];
-  for (let i = 0; i < RUNG_COUNT; i++){
-    const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
-    rungsG.appendChild(ln);
-    rungs.push(ln);
   }
 
   // -------- Helix math.
@@ -2984,7 +2972,7 @@ function setupHelixMorph(){
     }
 
     // 3. Notes — interpolate from staff position to helix position; fully
-    //    gone by t=0.6 so they don't co-exist with rungs/back-strand.
+    //    gone by t=0.6 so they don't co-exist with the back-strand.
     const noteOp = Math.max(0, 1 - t / 0.6);
     notesG.setAttribute('opacity', noteOp.toFixed(3));
     const amp = ampAt(t);
@@ -3001,8 +2989,8 @@ function setupHelixMorph(){
       const y = staffY + (yEnd - staffY) * t;
       n.head.setAttribute('cx', x.toFixed(2));
       n.head.setAttribute('cy', y.toFixed(2));
-      // Tilted oval — long axis at +25° from horizontal (rotate -25 in SVG y-down).
-      n.head.setAttribute('transform', `rotate(-25 ${x.toFixed(2)} ${y.toFixed(2)})`);
+      // Tilted oval — long axis at +18° from horizontal (rotate -18 in SVG y-down).
+      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${y.toFixed(2)})`);
       // Stem direction: notes BELOW the middle line get stems UP on the right;
       // notes ABOVE the middle line get stems DOWN on the left. Standard notation.
       const stemUp = staffY > middleY;
@@ -3078,34 +3066,6 @@ function setupHelixMorph(){
       bp.setAttribute('d', d);
       bp.setAttribute('opacity', depthOp.toFixed(3));
       bp.setAttribute('stroke-width', sw.toFixed(2));
-    }
-
-    // 6. Rungs — fade in starting at t=0.7, full by t=0.95. Holding rungs
-    //    until staff/notes are completely gone keeps the mid-morph clean.
-    const rungOp = Math.max(0, Math.min(1, (t - 0.7) / 0.25));
-    rungsG.setAttribute('opacity', rungOp.toFixed(3));
-    for (let i = 0; i < RUNG_COUNT; i++){
-      const phase = (i + 0.5) / RUNG_COUNT;
-      const y = phase * H;
-      const x1 = frontX(y, t);
-      const x2 = backX(y, t);
-      const ln = rungs[i];
-      ln.setAttribute('x1', x1.toFixed(2));
-      ln.setAttribute('y1', y.toFixed(2));
-      ln.setAttribute('x2', x2.toFixed(2));
-      ln.setAttribute('y2', y.toFixed(2));
-      // Perspective trick: separation = |x1 - x2|. Modulate stroke-width
-      // so rungs that are "edge-on" (near a crossing) are thinner — reads as
-      // foreshortened. Color alternates ink/gold subtly.
-      const sep = Math.abs(x1 - x2);
-      const maxSep = HELIX_AMP * 2;
-      const sepN = Math.min(1, sep / maxSep); // 0..1
-      const sw = 0.7 + sepN * 1.2; // 0.7 → 1.9
-      ln.setAttribute('stroke-width', sw.toFixed(2));
-      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
-      // Rungs that are nearly edge-on also fade slightly so they don't pile up
-      // as bright dots at the centerline.
-      ln.setAttribute('opacity', (0.45 + sepN * 0.45).toFixed(3));
     }
 
     bridge.classList.toggle('bug-active', t > 0.02 && t < 0.98);
@@ -3209,8 +3169,10 @@ function setupHelixMorph(){
       render(t);
       tintBridge(t);
       // Compress bug travel: lingers at top/bottom of strand (handled in renderBug).
-      bugTargetT = t;
-      if (!bugRaf) bugRaf = requestAnimationFrame(tickBug);
+      if (ENABLE_BUG){
+        bugTargetT = t;
+        if (!bugRaf) bugRaf = requestAnimationFrame(tickBug);
+      }
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -3219,7 +3181,7 @@ function setupHelixMorph(){
   // Initial paint
   render(0);
   tintBridge(0);
-  renderBug(0);
+  if (ENABLE_BUG) renderBug(0);
 }
 
 /* =========== §C  ARIA AUDIO (YouTube IFrame Player + fallback) =========== */
