@@ -2815,9 +2815,9 @@ function bridgeMorph(opts){
   const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
   const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
   const STEM_W    = 3.0;           // thick, iconic — not a notation hairline
-  const HEAD_RX   = 10.5;          // large nearly-round head, iconic feel
-  const HEAD_RY   = 9.5;
-  const HEAD_TILT = -4;            // degrees — barely tilted, reads as a fat dot
+  const HEAD_RX   = 8.5;           // long axis of the tilted oval head
+  const HEAD_RY   = 5.5;           // short axis — clearly oval, not round
+  const HEAD_TILT = -22;           // degrees — proper notation tilt, lower-left to upper-right
 
   const clefG   = document.getElementById('clef');
   const linesG  = document.getElementById('lines');
@@ -3054,7 +3054,13 @@ function bridgeMorph(opts){
     // Stem geometry helper. Returns the head-attachment x and the stem-tip y
     // for a note at position p with the group-shared stem direction.
     function stemGeom(p, stemDown){
-      const HEAD_EDGE = HEAD_RX * 0.95;
+      // Visual horizontal half-extent of the tilted oval head: combines the
+      // projections of both axes onto the screen-x axis. For a -22° tilt with
+      // rx=8.5, ry=5.5 this is ~9.9 — the stem sits flush with the visible
+      // side of the head.
+      const tiltRad = HEAD_TILT * Math.PI / 180;
+      const HEAD_EDGE = Math.abs(HEAD_RX * Math.cos(tiltRad)) +
+                        Math.abs(HEAD_RY * Math.sin(tiltRad)) - 0.5;
       const attachX = stemDown ? (p.x - HEAD_EDGE) : (p.x + HEAD_EDGE);
       const tipY    = stemDown ? (p.y + STEM_LEN) : (p.y - STEM_LEN);
       return { attachX, tipY };
@@ -3130,8 +3136,9 @@ function bridgeMorph(opts){
         beam.setAttribute('fill-rule', 'evenodd');
       }
 
-      // Flag (lone eighths only). A bold ribbon/leaf at the stem tip,
-      // sweeping outward and back in — graphic-iconic, not engraver thin.
+      // Flag (lone eighths only). A tapered, brushstroke-style curved flag
+      // that starts narrow at the stem tip, swells slightly mid-curve, and
+      // tapers to a point at the far tip — the classical notation look.
       const flag = flags[i];
       flag.setAttribute('d', '');
       if (note.kind === 'e'){
@@ -3142,18 +3149,29 @@ function bridgeMorph(opts){
         // head — dir=+1. stem-down tip is below the head, so flag flows UP
         // toward the head — dir=-1.
         const dir = stemDown ? -1 : 1;
-        // Flag emerges to the RIGHT in both cases (real notation convention).
-        // The outer curve sweeps out and beyond, the inner curve curls back
-        // toward the stem to close the ribbon. Extends ~16 px horizontally
-        // (past the new ~10 px head radius) and ~28 px along the stem.
+        // Flag is a closed thin tapered shape:
+        //   - Origin point at the stem tip (narrow start, on-stem).
+        //   - Outer (spine) curve sweeps right and along the stem, hooking
+        //     down at the far end to a point ~22 px from the stem tip.
+        //   - Inner curve returns just inside the spine, back to a point
+        //     barely below the origin — keeping the base pointed.
+        // Max width is ~6 px across, ~1/3 of the way down.
         flag.setAttribute('d',
+          // Start at the stem tip — pointed origin.
           `M ${fx.toFixed(2)} ${fy.toFixed(2)} ` +
-          `C ${(fx + 18).toFixed(2)} ${(fy + dir * 2).toFixed(2)}, ` +
-          `${(fx + 19).toFixed(2)} ${(fy + dir * 16).toFixed(2)}, ` +
-          `${(fx + 13).toFixed(2)} ${(fy + dir * 28).toFixed(2)} ` +
-          `C ${(fx + 12).toFixed(2)} ${(fy + dir * 20).toFixed(2)}, ` +
-          `${(fx + 6).toFixed(2)} ${(fy + dir * 14).toFixed(2)}, ` +
-          `${fx.toFixed(2)} ${(fy + dir * 10).toFixed(2)} Z`);
+          // Outer (spine) curve: out-and-down to the flag's far tip.
+          `C ${(fx + 14).toFixed(2)} ${(fy + dir * 3).toFixed(2)}, ` +
+          `${(fx + 21).toFixed(2)} ${(fy + dir * 12).toFixed(2)}, ` +
+          `${(fx + 15).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
+          // Sharp point at the flag's far tip — single L for a crisp taper.
+          `L ${(fx + 13).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
+          // Inner curve: back along the inside of the brushstroke, narrowing
+          // toward the stem. Returns to a point just below the origin.
+          `C ${(fx + 15).toFixed(2)} ${(fy + dir * 16).toFixed(2)}, ` +
+          `${(fx + 10).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
+          `${(fx + 1).toFixed(2)} ${(fy + dir * 5).toFixed(2)} ` +
+          // Close back to the origin — pointed base.
+          `Z`);
         flag.setAttribute('fill', 'currentColor');
       }
     }
