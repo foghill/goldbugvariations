@@ -1044,16 +1044,90 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
   padding: clamp(80px, 16vh, 180px) var(--margin);
   text-align: center;
+  position: relative;
 }
-.hook-text {
+.hook-stage {
+  position: relative;
   max-width: 880px;
   margin: 0 auto;
+  cursor: none; /* Hide native cursor inside the stage; the lens IS the cursor. */
+}
+.hook-text {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
   font-size: clamp(26px, 3vw, 44px);
   line-height: 1.3;
   color: #14202E;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+.hook-text .ch {
+  display: inline-block;
+  position: relative;
+}
+.hook-text .ch.cipher {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(20,32,46,0.55);
+}
+.hook-text .ch.revealed {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  color: #14202E;
+}
+
+/* The magnifying glass lens */
+.hook-lens {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 2px solid rgba(176,141,46,0.85); /* gold rim */
+  box-shadow:
+    inset 0 0 24px rgba(176,141,46,0.18),
+    0 4px 16px rgba(0,0,0,0.20);
+  background: radial-gradient(
+    circle at 38% 28%,
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.06) 35%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  z-index: 2;
+}
+.hook-lens::after {
+  /* Lens handle — small angled stick at lower-right */
+  content: "";
+  position: absolute;
+  bottom: -22px;
+  right: -22px;
+  width: 36px;
+  height: 8px;
+  background: rgba(176,141,46,0.85);
+  border-radius: 4px;
+  transform: rotate(45deg);
+  transform-origin: top left;
+}
+.hook-stage.lens-active .hook-lens { opacity: 1; }
+
+/* Touch / no-hover fallback: auto-decrypted */
+@media (hover: none) {
+  .hook-stage { cursor: auto; }
+  .hook-lens { display: none; }
+}
+
+/* Reduced motion: skip the lens cursor; show plaintext immediately */
+@media (prefers-reduced-motion: reduce) {
+  .hook-stage { cursor: auto; }
+  .hook-lens { display: none; }
 }
 /* ---------- §6 Tools ---------- */
 .tools {
@@ -1829,7 +1903,10 @@ body.is-investigation .egg-progress {
      §4  MYSTERY HOOK — single caption setting up the case
      ============================================================ -->
 <section class="hook" aria-label="The mystery">
-  <p class="hook-text">The mystery of the disappearance of a brilliant scientist poised to discover the ultimate code for life.</p>
+  <div class="hook-stage">
+    <p class="hook-text" id="hookText" data-plain="The mystery of the disappearance of a brilliant scientist poised to discover the ultimate code for life."></p>
+    <div class="hook-lens" id="hookLens" aria-hidden="true"></div>
+  </div>
 </section>
 
 
@@ -3547,6 +3624,106 @@ function setupSectionObserver(){
   if (hero) io.observe(hero);
 }
 
+function setupHookReveal(){
+  const hookText = document.getElementById('hookText');
+  const lens = document.getElementById('hookLens');
+  const stage = hookText && hookText.closest('.hook-stage');
+  if (!hookText || !lens || !stage) return;
+
+  // Build per-character spans. Each non-space char gets two children: a cipher
+  // glyph and the plaintext, with classes that toggle visibility.
+  const plain = hookText.getAttribute('data-plain') || '';
+  const frag = document.createDocumentFragment();
+  const charSpans = [];
+  for (let i = 0; i < plain.length; i++){
+    const ch = plain.charAt(i);
+    if (ch === ' ') {
+      frag.appendChild(document.createTextNode(' '));
+      continue;
+    }
+    const span = document.createElement('span');
+    span.className = 'ch cipher';
+    span.dataset.plain = ch;
+    span.dataset.cipher = encChar(ch);  // uses existing cipher helper
+    span.textContent = span.dataset.cipher;
+    frag.appendChild(span);
+    charSpans.push(span);
+  }
+  hookText.textContent = '';
+  hookText.appendChild(frag);
+
+  const LENS_RADIUS = 90;       // px — half of CSS lens diameter
+  const REVEAL_RADIUS = 80;     // px — slightly inside the rim for a snug feel
+
+  let raf = 0;
+  let mouseX = 0, mouseY = 0;
+
+  function update(){
+    raf = 0;
+    const stageRect = stage.getBoundingClientRect();
+    const localX = mouseX - stageRect.left;
+    const localY = mouseY - stageRect.top;
+
+    lens.style.left = localX + 'px';
+    lens.style.top  = localY + 'px';
+
+    for (const span of charSpans){
+      const r = span.getBoundingClientRect();
+      const cx = r.left + r.width  / 2 - stageRect.left;
+      const cy = r.top  + r.height / 2 - stageRect.top;
+      const dx = cx - localX, dy = cy - localY;
+      const inside = (dx*dx + dy*dy) < (REVEAL_RADIUS * REVEAL_RADIUS);
+      const wantClass = inside ? 'ch revealed' : 'ch cipher';
+      if (span.className !== wantClass){
+        span.className = wantClass;
+        span.textContent = inside ? span.dataset.plain : span.dataset.cipher;
+      }
+    }
+  }
+
+  function onMove(e){
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!raf) raf = requestAnimationFrame(update);
+  }
+
+  function onEnter(){
+    stage.classList.add('lens-active');
+  }
+  function onLeave(){
+    stage.classList.remove('lens-active');
+    // Re-cipher all characters when leaving the stage.
+    for (const span of charSpans){
+      span.className = 'ch cipher';
+      span.textContent = span.dataset.cipher;
+    }
+  }
+
+  stage.addEventListener('mousemove', onMove);
+  stage.addEventListener('mouseenter', onEnter);
+  stage.addEventListener('mouseleave', onLeave);
+
+  // Touch / coarse-pointer / reduced-motion: auto-decrypt on scroll-into-view.
+  const noHover = matchMedia('(hover: none)').matches ||
+                  matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (noHover){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        // Reveal characters left-to-right with a slight stagger.
+        charSpans.forEach((span, i) => {
+          setTimeout(() => {
+            span.className = 'ch revealed';
+            span.textContent = span.dataset.plain;
+          }, 30 * i);
+        });
+        io.disconnect();
+      });
+    }, { threshold: 0.4 });
+    io.observe(stage);
+  }
+}
+
 function boot(){
   initCipherTargets();
   setupDecryptObserver();
@@ -3562,6 +3739,7 @@ function boot(){
   setupEasterEggs();
   setupSoundFx();
   setupDeskCipher();
+  setupHookReveal();
 }
 if (document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', boot);
