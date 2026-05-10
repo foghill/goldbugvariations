@@ -1228,6 +1228,120 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   color: #14202E;
 }
 
+/* ---------- §6 Tools ---------- */
+.tools {
+  background: var(--paper);
+  color: #14202E;
+  padding: clamp(80px, 14vh, 160px) var(--margin);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.tools-head { max-width: 720px; margin: 0 auto clamp(40px, 7vh, 80px); text-align: center; }
+.tools-epigraph {
+  max-width: 600px;
+  margin: 0 auto clamp(28px, 4vh, 48px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.5;
+  color: rgba(20,32,46,0.65);
+  border: 0;
+  padding: 0;
+}
+.tools-epigraph p { margin: 0 0 6px; }
+.tools-epigraph cite {
+  display: block;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20,32,46,0.5);
+}
+.tools-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.tools-head h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.15;
+  margin: 0 0 18px;
+  color: #14202E;
+}
+.tools-sub {
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.2vw, 19px);
+  line-height: 1.5;
+  color: rgba(20,32,46,0.7);
+  margin: 0;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.tool-card {
+  background: var(--paper-2);
+  border: 1px solid var(--paper-rule);
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: 2px;
+}
+.tool-card header { margin-bottom: 16px; }
+.tool-eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.tool-card h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.25;
+  margin: 0;
+  color: #14202E;
+}
+.tool-card p, .tool-card blockquote {
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.55;
+  color: rgba(20,32,46,0.78);
+  margin: 0 0 12px;
+}
+.tool-card blockquote {
+  font-style: italic;
+  border-left: 2px solid var(--gold);
+  padding-left: 14px;
+  margin-top: 16px;
+  color: rgba(20,32,46,0.85);
+}
+.tool-card a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.partners-list { list-style: none; padding: 0; margin: 0; }
+.partners-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.1vw, 17px);
+}
+.partners-list li:last-child { border-bottom: 0; }
+.partners-list b { display: block; font-weight: 600; color: #14202E; }
+.partners-list span { font-size: 13px; color: rgba(20,32,46,0.65); font-style: italic; }
+@media (max-width: 760px){
+  .tools-grid { grid-template-columns: 1fr; }
+}
+
 /* ---------- §6 Cipher key, footer, mobile ---------- */
 .cipher-key {
   position: fixed;
@@ -2317,6 +2431,56 @@ body.is-investigation .egg-progress {
       <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
       <ellipse cx="11" cy="17" rx="2" ry="5" fill="#fff" opacity="0.25"/>
     </svg>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §6  TOOLS — the kit being used to work out the mystery
+     ============================================================ -->
+<section class="tools" id="tools" aria-label="The tools — director, partners, honors">
+  <div class="tools-head">
+    <blockquote class="tools-epigraph">
+      <p>"Music is the pleasure the human mind experiences from counting without being aware that it is counting."</p>
+      <cite>— Gottfried Leibniz</cite>
+    </blockquote>
+    <span class="tools-num">§ 06 · The tools</span>
+    <h2>The kit on the desk.</h2>
+    <p class="tools-sub">A director. A handful of institutions. Three Sloan grants. Everything we are using to follow the strand.</p>
+  </div>
+
+  <div class="tools-grid">
+
+    <article class="tool-card tool-director">
+      <header>
+        <span class="tool-eyebrow">The director</span>
+        <h3>Mark A. Levinson</h3>
+      </header>
+      <p>Director of <a href="https://en.wikipedia.org/wiki/Particle_Fever" target="_blank" rel="noopener">Particle Fever</a> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
+      <blockquote>"Films and formulas — both are theories about how the universe operates."</blockquote>
+    </article>
+
+    <article class="tool-card tool-partners">
+      <header>
+        <span class="tool-eyebrow">Development partners</span>
+        <h3>The institutions reading along.</h3>
+      </header>
+      <ul class="partners-list">
+        <li><b>Sundance Institute</b><span>Screenwriters &amp; Directors Lab</span></li>
+        <li><b>Film Independent</b><span>Fast Track · Producers Lab</span></li>
+        <li><b>Sloan Foundation</b><span>Three Science-in-Fiction grants</span></li>
+        <li><b>Gotham (IFP)</b><span>No-Borders International</span></li>
+      </ul>
+    </article>
+
+    <article class="tool-card tool-shooting">
+      <header>
+        <span class="tool-eyebrow">Production</span>
+        <h3>Shooting Q3 2026.</h3>
+      </header>
+      <p>Principal photography across <em>New York, Illinois, and Leipzig</em>. We are looking for financial partners passionate about science, music, love, and the way they intertwine.</p>
+    </article>
+
   </div>
 </section>
 
