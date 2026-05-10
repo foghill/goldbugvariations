@@ -345,15 +345,19 @@ input[type="email"], input[type="text"], textarea {
   width: 100%;
   height: 100%;
   overflow: visible;
+  display: block;
 }
-#musicArt {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(90%, 480px);
-  aspect-ratio: 462 / 369;
-  pointer-events: none;
+#morph .clef-glyph {
+  font-family: 'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol',
+               'STIX Two Math', 'Cambria Math', serif;
+  font-weight: 400;
+  font-size: 200px;
+  fill: currentColor;
+  /* The Unicode music clef glyph U+1D11E sits with a generous left bearing
+     and a baseline near its tail. We anchor it where the morph code wants
+     it via x/y attributes on the <text> element. */
+  dominant-baseline: alphabetic;
+  text-anchor: start;
 }
 .bridge-aria {
   position: fixed;
@@ -1062,6 +1066,10 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   margin: 0;
   position: relative;
   z-index: 1;
+}
+.hook-text .word {
+  display: inline-block;
+  white-space: nowrap;
 }
 .hook-text .ch {
   display: inline-block;
@@ -1818,21 +1826,30 @@ body.is-investigation .egg-progress {
     </div>
 
     <div class="bridge-svg-wrap">
-      <svg id="morph" viewBox="0 0 120 1000" preserveAspectRatio="none" aria-hidden="true">
-        <g id="lines"      stroke="currentColor" stroke-width="1"   fill="none" stroke-linecap="round"></g>
-        <g id="goldStrand" stroke="#D4AF37"      stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0"></g>
+      <!--
+        Single coherent morph: at t=0 the SVG renders a bar of music
+        (treble clef + 5 staff lines + a phrase of mixed notes); as scroll
+        progresses, the staff lines bend into a DNA double helix and the
+        note ornamentation (clef, stems, beams, flags) recedes so the
+        helix can take the stage. The same primitives are present at every
+        t — there is no cross-fade between two visual systems.
+
+        viewBox is 360 × 720 (matching the .bridge-svg-wrap aspect on
+        desktop) with preserveAspectRatio="xMidYMid meet" so circles stay
+        circular, stems stay vertical, and beams stay parallel.
+      -->
+      <svg id="morph" viewBox="0 0 360 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- Back-to-front z-order: staff lines, beams, stems, heads, flags, clef. -->
+        <g id="lines"      stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"></g>
+        <g id="goldStrand" stroke="#D4AF37"      stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
         <g id="rungs"      stroke="currentColor" stroke-width="1"   opacity="0"></g>
+        <g id="beams"      fill="currentColor"></g>
+        <g id="stems"      fill="currentColor"></g>
         <g id="notes"      fill="currentColor"></g>
-        <g id="bases"      fill="currentColor"  opacity="0"></g>
+        <g id="flags"      fill="currentColor"></g>
+        <g id="clef"></g>
       </svg>
 
-      <!-- Rich music-notation illustration shown at t=0; fades out as the
-           helix morph takes over. Sits as a sibling of #morph so it keeps
-           its natural aspect ratio independent of the morph's stretch. -->
-      <svg id="musicArt" class="music-art" viewBox="729 357 462 369" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path fill="currentColor" stroke="none" d="M729.37,473.6c1.52,2.4,2.81,4.36,3.87,5.89c8.22,11.88,18.24,21.84,30.05,29.89 c0.13,0.09,0.31,0.05,0.39-0.09c3.76-6.09,8.2-12.39,13.33-18.88c0.12-0.15,0.08-0.37-0.09-0.46c-5.09-3.02-9.94-6.3-14.55-9.84 c-12.63-9.68-22.58-21.64-29.85-35.85c-1.07-2.08-1.98-4.19-2.75-6.33c-0.02-0.05-0.03-0.09-0.02-0.11 c0.01-0.01,0.01-0.02,0.02-0.02c0.01-0.01,0.03-0.01,0.04,0.01c4.02,7.87,8.48,14.63,13.38,20.29c5.8,6.7,11.69,12.33,17.67,16.87 c5.91,4.49,12.17,8.45,18.78,11.86c0.12,0.06,0.26,0.03,0.35-0.07l13.16-15.2c0.22-0.25,0.29-0.61,0.2-0.94 c-1.78-5.81-3.26-10.83-4.43-15.05c-3.81-13.84-5.99-28.73-5.21-43.03c0.74-13.38,4.33-25.72,10.78-37.01 c2.9-5.08,7.99-11.09,13.39-13.28c13.11-5.3,20.9,7.5,25.5,17.25c3.68,7.81,5.75,16.41,7.22,24.91 c5.44,31.33-4.17,62.17-23.48,86.76c-3.12,3.97-4.87,6.2-5.26,6.69c-0.2,0.25-0.07,0.62,0.24,0.69c23.29,4.87,47.15,4.1,70.63-0.14 c17.9-3.24,34.82-7.81,51.81-13.75c0.16-0.06,0.27-0.21,0.27-0.39c-0.04-14.32-0.03-24.41,0.03-30.26 c0.03-3.32,6.32-3.71,6.47-0.13c0.39,9.16,3.04,17.58,7.97,25.23c0.12,0.19,0.35,0.27,0.55,0.19c17.35-5.9,31.97-11,48.98-15.8 c5.65-1.59,13.56-3.38,23.73-5.36c0.18-0.03,0.31-0.19,0.31-0.37c0.05-19.34,0.05-30.84,0.02-34.49c-0.01-0.96,0.12-1.64,0.4-2.06 c0.11-0.16,0.24-0.29,0.39-0.41c1.88-1.33,5.69-1.5,6.17,1.6c1.98,12.91,8.12,23.42,18.42,31.55c0.26,0.2,0.58,0.3,0.9,0.27 c14.93-1.3,29.97-0.56,45.12,2.22c6.24,1.15,12.52,2.8,18.82,4.95c0.26,0.09,0.53-0.1,0.53-0.38v-32.62c0-0.49,0.22-0.96,0.58-1.29 c1.76-1.52,5.58-1.36,5.99,1.51c1.84,12.76,6.86,23.74,15.08,32.92c1.59,1.77,4.87,5.04,9.85,9.81c4.24,4.06,7.72,8.22,10.45,12.48 c0.31,0.47,0.69,0.88,1.14,1.21c7.11,5.22,13.82,11.68,20.12,19.38c5.53,6.74,9.97,13.92,13.32,21.55c0.02,0.05,0,0.1-0.05,0.12 l-0.01,0.01c-0.06,0.03-0.14,0.01-0.18-0.06c-7.57-14.11-18.68-25.88-31.59-35.51c-0.12-0.09-0.29,0.03-0.24,0.18 c2.27,7.6,2.86,15.28,1.76,23.03c-0.04,0.29,0.07,0.57,0.3,0.75c2.29,1.81,4.74,3.88,7.37,6.2c5.65,5.02,11.05,11.52,16.18,19.5 c2.92,4.54,5.06,8.68,6.41,12.43c0.01,0.02-0.01,0.03-0.03,0.03c-0.07-0.01-0.11-0.03-0.13-0.09l-0.03-0.08 c-7.65-13.7-17.86-25.13-30.62-34.3c-0.07-0.05-0.17-0.01-0.19,0.07c-1.29,6.2-3.47,12.05-6.57,17.52 c-0.07,0.11-0.03,0.27,0.07,0.35c6.28,4.65,11.96,9,16.96,14.07c8.61,8.74,15.39,18.73,20.33,29.98c0.03,0.06,0,0.14-0.06,0.17 h-0.01c-0.07,0.03-0.15,0.01-0.19-0.06c-9.15-17.1-22.53-30.31-38.75-40.8c-0.24-0.15-0.55-0.08-0.7,0.16 c-0.84,1.43-5.77,9.06-7.67,5.58c-0.29-0.53-0.23-1.07,0.17-1.61c1.54-2.1,2.82-4.27,3.85-6.51c0.07-0.16,0.01-0.36-0.14-0.45 c-8.23-4.84-17.18-9.49-26.35-12.44c-0.25-0.08-0.5,0.1-0.5,0.36v23.62c0,0.13,0.08,0.24,0.21,0.28 c15.56,4.58,29.56,12.36,42.33,22.38c4.19,3.29,7.97,6.86,11.35,10.7c6.61,7.52,12.68,16.21,16.46,25.3 c0.03,0.06,0.03,0.11,0.01,0.15c-0.01,0.03-0.05,0.03-0.06,0.01c-6.37-11.35-14.41-21.12-24.09-29.29 c-6.22-5.25-13.46-10.22-21.73-14.91c-7.52-4.27-15.61-7.68-24.27-10.25c-0.15-0.05-0.3,0.05-0.32,0.2 c-1.65,9.26-7.84,16.58-16.19,20.59c-0.05,0.03-0.04,0.1,0.02,0.11c15.7,2.51,30.54,7.58,44.54,15.18 c9.81,5.33,18.91,12.83,26.28,21.04c6.79,7.55,12.15,16.06,16.1,25.52c0.02,0.05-0.01,0.11-0.06,0.13 c-0.07,0.03-0.16,0.01-0.2-0.07c-5.81-11.86-14.4-22.37-25.79-31.52c-7.03-5.65-14.02-10.16-20.99-13.54 c-14.68-7.13-30.17-11.93-46.27-13.58c-0.56-0.06-1.12-0.05-1.67,0.02c-4.29,0.56-8.33,0.57-12.12,0.03 c-1.79-0.25-4.06-0.86-5.95-1.25c-0.36-0.07-0.73-0.11-1.11-0.1c-18.56,0.48-35.88,2.96-51.94,7.45 c-16.61,4.64-32.03,9.85-46.26,15.64c-17.51,7.12-27.24,11.07-29.18,11.85c-13.99,5.66-28.47,10.78-43.43,15.36 c-3.43,1.05-9.2,2.5-17.29,4.35c-11.87,2.71-23.92,4.42-36.15,5.16c-0.15,0.01-0.26,0.15-0.21,0.3c2.34,7.93,4.42,15.14,6.27,21.64 c1.52,5.37,2.61,10.96,3.27,16.79c1.52,13.36-2.95,26.92-12.76,36.31c-13.99,13.39-37.86,15.42-53.73,4.34 c-8.44-5.9-13.85-15.03-14.39-25.35c-0.63-12.28,6.28-23.63,18.19-27.1c17.62-5.13,33.51,10.56,28.61,28.23 c-1.26,4.54-3.81,8.38-7.65,11.52c-4.11,3.37-8.93,5.12-14.47,5.26c-0.12,0-0.18,0.14-0.1,0.23c0.57,0.58,1.16,1.05,1.76,1.39 c9.51,5.3,21.29,4.74,30.64-0.62c16.65-9.55,18.12-28.67,13.58-46.03c-2.25-8.59-4.92-17.32-7.99-26.18 c-0.06-0.18-0.25-0.28-0.44-0.23c-6.79,2.05-13.64,3.71-20.97,4.12c-19.39,1.09-36.46-4.37-51.24-16.38 c-4.73-3.85-8.84-8.35-12.35-13.52c-0.45-0.67-1.01-1.25-1.66-1.73c-11.11-8.29-20.12-18.46-27.04-30.53 c-0.02-0.03-0.01-0.08,0.02-0.1c0.04-0.02,0.09-0.02,0.12,0.02c6.57,9.01,14.39,16.89,23.47,23.61c0.09,0.07,0.2-0.03,0.16-0.14 c-4.96-10.91-7.31-22.45-7.08-34.64c0.01-0.4-0.15-0.78-0.43-1.05c-6.65-6.59-12.05-14.09-16.18-22.49 c-0.03-0.06-0.01-0.12,0.05-0.15h0.01c0.06-0.03,0.12-0.02,0.16,0.03c4.54,6.61,10.01,13.18,16.18,18.42 c0.14,0.12,0.36,0.03,0.37-0.15c0.74-7.71,2.71-15.53,4.79-23.44c0.05-0.17-0.01-0.35-0.14-0.48 c-8.92-8.41-16.15-18.16-21.67-29.25c-0.02-0.05-0.01-0.1,0.03-0.12l0.02-0.02c0.07-0.06,0.18-0.03,0.22,0.05 c1.65,2.95,4.57,7,8.78,12.16c4.16,5.09,8.83,9.62,14.02,13.58c0.12,0.09,0.3,0.04,0.35-0.11c2.41-7.11,5.46-13.86,9.13-20.24 c0.12-0.21,0.06-0.48-0.14-0.62c-13.67-10.01-24.91-23.4-32.09-38.84c-0.01-0.01,0-0.02,0.01-0.02 C729.35,473.59,729.36,473.6,729.37,473.6L729.37,473.6z M800.19,463.41c0.06,0.18,0.29,0.23,0.42,0.09 c12.76-14.24,25.2-30.41,28.14-49.82c0.68-4.5,0.59-8.89-0.25-13.14c-0.83-4.22-3.61-8.19-7.95-8.78c-6.08-0.82-11.74,4.05-15,8.8 c-6.46,9.41-9.48,21.46-9.72,32.66C795.62,443.5,797.07,453.57,800.19,463.41L800.19,463.41z M1053.6,458.07 c7.82,6.27,14.29,14.22,16.69,24.06c0.05,0.18,0.2,0.31,0.39,0.32c3.44,0.16,6.36,0.32,8.74,0.48c11.73,0.8,23.05,2.95,33.96,6.45 c0.12,0.03,0.24-0.05,0.24-0.18v-23.23c0-0.2-0.13-0.39-0.32-0.46c-3.24-1.2-6.55-2.22-9.92-3.05 c-16.45-4.08-33.02-5.63-49.71-4.61C1053.56,457.86,1053.51,458,1053.6,458.07L1053.6,458.07z M1022.54,462.29 c-17.03,3-34.18,7.82-50.69,13.69c-5.09,1.81-11.61,4.03-19.59,6.68c-0.18,0.06-0.29,0.25-0.25,0.44c0.02,0.1,0.09,0.23,0.21,0.38 c1.63,2.1,3.86,4.48,6.71,7.15c4.23,3.95,8.13,8.01,11.71,12.18c0.07,0.09,0.19,0.11,0.29,0.08c8.29-2.8,14.84-4.98,19.64-6.53 c10.95-3.54,21.63-6.42,32.03-8.65c0.17-0.03,0.29-0.19,0.29-0.36v-24.77C1022.9,462.4,1022.73,462.25,1022.54,462.29 L1022.54,462.29z M1057.36,482.51c-3.82-7.63-10.18-15.03-18.35-17.8c-2.96-1-10.27-0.65-10.15,4.03 c0.05,1.95,0.11,7.72,0.18,17.31c0.01,0.18,0.16,0.31,0.33,0.27c9.46-1.78,18.73-2.96,27.82-3.52 C1057.33,482.79,1057.42,482.64,1057.36,482.51L1057.36,482.51z M1151.71,507.77c-1.67-10.82-6.28-19.91-13.84-27.29 c-2.19-2.14-4.88-3.95-8.09-5.44c-2.61-1.21-8.73-2.37-9.96,1.13c-0.1,0.28-0.13,1.75-0.1,4.41c0.04,3.84,0.02,7.44-0.08,10.79 c-0.01,0.16,0.1,0.32,0.25,0.37c6.28,2.35,12.63,4.87,18.29,7.94c4.25,2.31,8.7,5.04,13.33,8.2 C1151.6,507.95,1151.72,507.88,1151.71,507.77L1151.71,507.77z M1113.62,517.39v-23.63c0-0.18-0.12-0.35-0.29-0.4 c-13.21-4.5-27.91-6.52-41.78-6.88c-0.18-0.01-0.33,0.15-0.31,0.33c0.69,8.42-0.38,16.67-3.2,24.74c-0.05,0.14,0.06,0.28,0.2,0.28 c15.31-0.32,30.31,1.63,44.98,5.85C1113.41,517.74,1113.62,517.6,1113.62,517.39L1113.62,517.39z M1028.95,490.92v24.68 c0,0.24,0.22,0.41,0.44,0.37c10.32-1.92,20.79-3.25,31.42-3.97c0.09-0.01,0.17-0.07,0.19-0.16c2.09-8.14,2.14-17.26-1.62-24.91 c-0.08-0.17-0.26-0.28-0.45-0.27c-10.17,0.58-20.03,1.84-29.57,3.77C1029.12,490.47,1028.95,490.67,1028.95,490.92L1028.95,490.92z M810.12,502.51l8.56,27.37c0.05,0.15,0.2,0.24,0.35,0.2c11.76-2.45,23.14-1.41,34.18,3.12c0.21,0.09,0.43,0.14,0.66,0.14 c0.55,0.02,1.18,0.01,1.91-0.02c14.92-0.75,29.98-3.16,45.18-7.21c10.29-2.75,22.22-6.65,33.53-10.59 c0.18-0.06,0.29-0.23,0.29-0.41v-26.05c0-0.18-0.17-0.3-0.34-0.24c-21.64,7.27-42.55,12.75-64.94,15.72 c-20,2.65-39.74,1.92-59.22-2.18C810.18,502.33,810.09,502.42,810.12,502.51L810.12,502.51z M978.68,530.34 c-0.01,0.09,0.08,0.16,0.16,0.13c9.04-3.05,18.63-6.11,28.77-9.16c4.74-1.43,9.64-2.67,14.7-3.74c0.31-0.07,0.54-0.34,0.54-0.66 v-24.96c0-0.18-0.16-0.32-0.34-0.28c-14.61,3.22-25.47,6.79-43.26,12.47c-1.9,0.61-3.93,1.34-6.09,2.22 c-0.09,0.03-0.12,0.14-0.07,0.23C977.57,513.64,979.32,522.02,978.68,530.34L978.68,530.34z M1148.52,533.36 c0.56-0.91,1.05-2,1.45-3.27c1.8-5.66,2.52-11.47,2.14-17.43c-0.02-0.2-0.12-0.38-0.28-0.49c-9.72-6.83-20.48-12.56-31.84-16.2 c-0.14-0.05-0.29,0.06-0.29,0.21v23.54c0,0.13,0.08,0.24,0.2,0.28c9.91,3.52,19.32,8.01,28.22,13.46 C1148.26,533.53,1148.43,533.49,1148.52,533.36L1148.52,533.36z M958.91,507.16c-4.76-3.04-12.37-8.4-17.09-1.92 c-0.56,0.77-0.83,1.54-0.8,2.31c0.06,1.95,0.06,3.8-0.02,5.53c-0.01,0.19,0.18,0.33,0.36,0.27l17.53-6.04 C958.96,507.28,958.97,507.2,958.91,507.16L958.91,507.16z M810.14,529.31l-6.66-21.27c-0.04-0.12-0.2-0.16-0.28-0.06l-12.68,15.46 c-0.18,0.22-0.1,0.56,0.18,0.66c6.15,2.33,12.54,4.16,19.18,5.48C810.05,529.62,810.19,529.47,810.14,529.31L810.14,529.31z M941.43,543.98l29.45-10.86c0.21-0.08,0.35-0.28,0.35-0.51c-0.12-8.33-2.95-15.59-8.49-21.76c-0.27-0.31-0.7-0.42-1.09-0.28 l-20.33,7.01c-0.13,0.05-0.22,0.17-0.22,0.31v25.85C941.09,543.92,941.27,544.04,941.43,543.98L941.43,543.98z M1113.6,537.95 v-15.68c0-0.23-0.15-0.44-0.37-0.5c-15.03-4.46-30.52-6.43-46.46-5.9c-0.17,0.01-0.32,0.12-0.38,0.28 c-2.11,5.9-5.63,11.43-9.17,16.53c-1.06,1.54-3.69,4.96-5.54,2.9c-0.63-0.71-0.46-1.72,0-2.47c3.3-5.34,5.89-10.91,7.76-16.7 c0.04-0.12-0.06-0.24-0.18-0.23c-10.27,0.62-20.24,1.9-29.92,3.84c-0.16,0.03-0.28,0.18-0.28,0.35v26.4c0,0.11,0.1,0.19,0.21,0.16 c14.31-3.2,29.02-5.37,43.74-5.34c0.18,0,0.36-0.06,0.5-0.18c9.12-7.14,19.39-9.54,30.79-7.16c2.74,0.57,5.72,1.86,8.96,3.88 C1113.41,538.22,1113.6,538.12,1113.6,537.95L1113.6,537.95z M860.3,537.26c1.8,1.37,3.51,2.78,5.14,4.24 c6.34,5.7,10.8,12.63,13.38,20.81c0.09,0.28,0.37,0.45,0.66,0.39c18.57-3.89,36.94-9.26,55.11-16.09c0.14-0.05,0.23-0.18,0.23-0.33 v-26.28c0-0.15-0.15-0.25-0.29-0.2c-2.33,0.8-8.65,2.86-18.94,6.17c-16.36,5.26-33.69,9.05-52.28,10.96 c-1.33,0.14-2.31,0.18-2.93,0.14C860.27,537.07,860.22,537.2,860.3,537.26L860.3,537.26z M1022.9,542.32v-20.43 c0-0.19-0.18-0.34-0.37-0.29c-5.01,1.1-11.26,2.76-18.73,4.98c-7.6,2.26-16.02,5.02-25.26,8.29c-0.19,0.07-0.33,0.24-0.36,0.44 c-1.41,8.19-4.67,16.19-9.78,23.99c-0.56,0.85-1.61,1.22-2.58,0.91l-0.06-0.02c-0.89-0.29-1.31-1.31-0.89-2.15 c3.57-7.07,5.63-13.84,6.17-20.31c0.01-0.16-0.15-0.29-0.3-0.24c-7.61,2.65-16.44,5.9-26.46,9.74c-0.96,0.37-1.97,0.8-3.01,1.31 c-0.11,0.05-0.18,0.16-0.18,0.29v27.5c0,0.16,0.16,0.27,0.31,0.22l34.15-12.97c0.08-0.03,0.14-0.1,0.15-0.19 c1.4-7.47,5.24-13.42,11.51-17.86c6.62-4.69,14.08-7.01,22.38-6.97c4.41,0.02,8.74,1.34,12.97,3.97 C1022.7,542.59,1022.9,542.49,1022.9,542.32L1022.9,542.32z M810.11,533.6c-7.94-1.59-15.23-3.66-21.88-6.22 c-0.2-0.08-0.44-0.01-0.57,0.16c-5.19,6.9-9.59,14.15-13.21,21.75c-0.03,0.07-0.01,0.16,0.06,0.2c4.44,2.36,9.16,4.39,14.18,6.08 c0.19,0.07,0.4-0.02,0.49-0.2c4.49-9.28,11.67-16.79,20.97-21.4C810.34,533.9,810.3,533.64,810.11,533.6L810.11,533.6z M1069.33,545.53c-13.06,0.27-26.31,2.1-39.76,5.47c-0.16,0.05-0.28,0.2-0.27,0.37c1.27,18.18-14.12,31.38-31.27,32.52 c-10.54,0.71-20.98-4.39-22.46-15.63c-0.03-0.22-0.26-0.36-0.46-0.28l-33.84,12.85c-0.32,0.12-0.52,0.46-0.47,0.8 c1.25,8.29-0.87,15.64-6.35,22.03c-8.02,9.35-22.24,15.13-34.52,11.03c-8.06-2.7-12.41-8.39-13.03-17.06 c-0.01-0.16-0.15-0.27-0.31-0.24l-8.62,1.54c-0.36,0.06-0.65,0.31-0.78,0.64c-5.29,13.46-13.93,23.88-25.92,31.24 c-0.16,0.1-0.09,0.35,0.1,0.33c22.57-1.35,44.73-6.35,66.16-13.67c10.45-3.58,18.13-6.33,23.02-8.28 c12.1-4.81,23.11-9.25,33.03-13.3c13.46-5.5,27.74-10.43,41.5-14.69c16.99-5.26,34.37-8.46,52.14-9.6 c1.85-0.12,3.41-0.14,4.65-0.05c0.14,0.01,0.23-0.14,0.15-0.25c-0.29-0.41-1.22-1.04-1.62-1.49c-5.43-6.15-6.32-13.04-2.66-20.69 c0.36-0.75,0.95-1.85,1.77-3.3C1069.58,545.69,1069.49,545.52,1069.33,545.53L1069.33,545.53z M879.12,594.51l8.11-1.44 c0.16-0.03,0.29-0.14,0.35-0.29c2.82-8.12,8.09-14.08,15.81-17.89c9.42-4.65,22.07-5.94,31.18,0.29c0.11,0.07,0.26-0.01,0.26-0.14 v-23.85c0-0.12-0.12-0.2-0.24-0.16c-1.78,0.61-6.62,2.27-14.53,4.97c-6.11,2.1-12.6,3.79-19.42,5.81 c-2.66,0.79-9.39,2.35-20.22,4.69c-0.19,0.04-0.31,0.22-0.27,0.4c1.6,9.19,1.21,18.62-1.24,27.4 C878.89,594.42,878.99,594.53,879.12,594.51L879.12,594.51z M785.9,586.08c-1.57-7.48-1.57-15.65,0.57-22.88 c0.66-2.22,0.99-3.33,1-3.34c0.08-0.1,0.04-0.25-0.08-0.3l-14.26-6.1c-0.15-0.07-0.32,0.01-0.39,0.15 c-2.94,7.03-4.87,14.73-5.8,23.08c-0.05,0.42,0.16,0.84,0.53,1.05c5.86,3.35,11.9,6.22,18.12,8.6 C785.77,586.41,785.94,586.26,785.9,586.08L785.9,586.08z M855.08,565.53c0.15-0.01,0.22-0.18,0.13-0.29 c-6.8-8.57-17.88-12.2-28.61-10.55c-0.14,0.02-0.23,0.16-0.19,0.3l3.09,9.88c0.06,0.21,0.25,0.36,0.47,0.37 C838.09,565.87,846.45,565.97,855.08,565.53L855.08,565.53z M810.03,562.28l10.24,2.11c0.18,0.03,0.32-0.12,0.27-0.29l-2.23-7.11 c-0.04-0.13-0.19-0.2-0.32-0.15c-3.12,1.33-5.82,2.97-8.1,4.94C809.72,561.94,809.8,562.23,810.03,562.28L810.03,562.28z M830.94,597.23l-8.76-27.99c-0.05-0.16-0.18-0.27-0.33-0.31l-15.14-3.13c-0.22-0.05-0.43,0.04-0.55,0.22 c-4.31,6.18-6.31,13.13-6.01,20.84c0.07,1.76,0.32,3.39,0.74,4.9c0.05,0.16,0.18,0.29,0.34,0.35c9.7,2.81,19.54,4.61,29.49,5.41 C830.87,597.52,830.99,597.38,830.94,597.23L830.94,597.23z M830.85,569.98l8.64,27.63c0.08,0.25,0.31,0.41,0.56,0.42 c7.7,0.07,15.47-0.33,23.32-1.18c0.21-0.02,0.38-0.18,0.42-0.39c1.65-9.2-0.48-18.62-5.31-26.57c-0.1-0.16-0.28-0.26-0.46-0.24 c-9.2,0.58-18.17,0.59-26.92,0.03C830.92,569.66,830.8,569.82,830.85,569.98L830.85,569.98z M766.73,582.09 c-0.32,17.65,6.51,33.21,22.9,41.03c10.52,5.03,21.71,7.44,33.55,7.26c5.6-0.09,11.11-1.16,16.51-3.23c0.27-0.1,0.41-0.4,0.32-0.67 l-7.61-24.34c-0.08-0.25-0.3-0.43-0.57-0.45c-9.74-0.88-19.39-2.52-28.97-4.93c-0.14-0.03-0.26,0.12-0.18,0.24 c3.49,6.02,9.01,9.52,15.74,11.92c0.86,0.31,1.51,0.81,1.94,1.51c0.39,0.62,0.37,1.41-0.03,1.99c-2.22,3.24-7.82,1.51-11.03,0.4 c-9.78-3.41-17.46-11.65-21.59-21.07c-0.16-0.37-0.48-0.66-0.87-0.79c-6.62-2.22-13.31-5.51-19.77-9.07 C766.92,581.81,766.73,581.91,766.73,582.09L766.73,582.09z M841.07,602.58l6.17,19.73c0.07,0.23,0.34,0.32,0.53,0.18 c1.35-0.97,2.74-2.22,4.18-3.72c4.45-4.68,8.74-10.91,10.51-17.21c0.03-0.1-0.04-0.19-0.14-0.19l-21.05,0.94 C841.12,602.31,841.03,602.45,841.07,602.58L841.07,602.58z"/>
-        <path fill="currentColor" stroke="none" d="M959.67,541.24c0.05,0.06,0.08,0.11,0.09,0.17c0.01,0.06-0.06,0.1-0.1,0.07c-0.1-0.06-0.15-0.11-0.16-0.16C959.49,541.22,959.61,541.16,959.67,541.24L959.67,541.24z"/>
-      </svg>
     </div>
   </div>
 
@@ -1933,9 +1950,9 @@ body.is-investigation .egg-progress {
         </defs>
 
         <!-- HANDLE: drawn first so subsequent layers cover its top end.
-             Placed along a 45-degree axis emerging from the rim's lower-right.
-             The handle's rounded tip points away to (200, 200)+ direction. -->
-        <g transform="rotate(45 100 100)">
+             Rotated -45° (counter-clockwise in SVG's down-positive y) so the
+             handle emerges from the rim's lower-RIGHT — a right-handed grip. -->
+        <g transform="rotate(-45 100 100)">
           <!-- Body of the handle -->
           <rect x="92" y="188" width="16" height="86" rx="7" ry="7"
                 fill="url(#handleWood)"/>
@@ -1957,8 +1974,9 @@ body.is-investigation .egg-progress {
 
         <!-- FERRULE: the brass collar that joins handle to rim. Drawn AFTER
              the handle so it hides the handle's upper seam, and BEFORE the
-             rim so the rim's lower-right arc covers its top edge. -->
-        <g transform="rotate(45 100 100)">
+             rim so the rim's lower-right arc covers its top edge. Rotated
+             -45° to match the handle's right-handed orientation. -->
+        <g transform="rotate(-45 100 100)">
           <!-- Main collar block -->
           <rect x="84" y="178" width="32" height="22" rx="3" ry="3"
                 fill="url(#ferruleBrass)"
@@ -2760,93 +2778,132 @@ function setupCursorTrail(){
 /* =========== §B  HELIX MORPH =========== */
 
 /* ================================================================
-   staffToHelix(opts?) — initialise the morph.
-   Returns: { render(t), config }
+   bridgeMorph() — single-system staff-to-helix morph.
 
-   Required DOM (by default ids):
-     #morph         — the <svg> (already has the viewBox + groups below)
-     #lines         — group of strand <path> elements (created here)
-     #goldStrand    — group containing the gold complementary <path>
-     #rungs         — group of base-pair connector <line> elements
-     #notes         — group of staff note <ellipse>+<line> pairs
-     #bases         — group of base-letter <text> elements
+   At t=0 the SVG renders a stylised bar of music:
+     - a treble clef glyph on the left
+     - five horizontal staff lines
+     - a phrase of mixed notes (quarters, beamed pairs, beamed
+       sixteenth-triples, lone flagged eighths) with real stem
+       direction depending on each note's slot
 
-   All ids are configurable via opts. Defaults match the markup above.
+   As t advances 0..1, the SAME staff lines bend along the demo's
+   parametric interpolation toward a DNA double helix; the note heads
+   ride the curve while stems / beams / flags / clef fade out before
+   the helix forms, so the transition reads as a single notation
+   gradually warping rather than two layered systems cross-fading.
 
-   Default config matches the original site exactly.
-   Override any of these by passing them in opts:
-     viewBoxW (120), viewBoxH (1000),  -- SVG coordinate space
-     strands  (5),                     -- number of staff lines
-     samples  (200),                   -- path resolution
-     helixAmp (22),                    -- helix half-width (in viewBox units)
-     helixFreq (11),                   -- number of full waves down the page
-     staffGap (9),                     -- staff line spacing
-     noteCount (14), baseCount (14), rungCount (14),
-     baseChars (['A','T','G','C',...]),
-     inkColor ('#1A1A1A'), goldColor ('#D4AF37'),
-     baseFontFamily ('JetBrains Mono, monospace'), baseFontSize (7)
+   At t=1 the visible state is a clean gold + ink helix with optional
+   ATGC base-pair rungs.
+
+   Coordinates: viewBox 360 × 720, preserveAspectRatio xMidYMid meet.
+   Centre of staff is at y = H/2 = 360.
    ================================================================ */
-function staffToHelix(opts){
+function bridgeMorph(opts){
   opts = opts || {};
-  const cfg = {
-    rootId:     opts.rootId     || 'morph',
-    linesId:    opts.linesId    || 'lines',
-    goldId:     opts.goldId     || 'goldStrand',
-    rungsId:    opts.rungsId    || 'rungs',
-    notesId:    opts.notesId    || 'notes',
-    basesId:    opts.basesId    || 'bases',
-    viewBoxW:   opts.viewBoxW   || 120,
-    viewBoxH:   opts.viewBoxH   || 1000,
-    strands:    opts.strands    || 5,
-    samples:    opts.samples    || 200,
-    helixAmp:   opts.helixAmp   || 22,
-    helixFreq:  opts.helixFreq  || 11,
-    staffGap:   opts.staffGap   || 9,
-    noteCount:  opts.noteCount  || 14,
-    baseCount:  (opts.baseCount === 0 ? 0 : (opts.baseCount || 14)),
-    rungCount:  opts.rungCount  || 14,
-    baseChars:  opts.baseChars  || ['A','T','G','C','A','C','G','T','C','G','A','T','G','A'],
-    inkColor:   opts.inkColor   || '#1A1A1A',
-    goldColor:  opts.goldColor  || '#D4AF37',
-    baseFontFamily: opts.baseFontFamily || 'JetBrains Mono, monospace',
-    baseFontSize:   opts.baseFontSize   || 7
-  };
-
-  const linesG = document.getElementById(cfg.linesId);
-  const goldG  = document.getElementById(cfg.goldId);
-  const rungsG = document.getElementById(cfg.rungsId);
-  const notesG = document.getElementById(cfg.notesId);
-  const basesG = document.getElementById(cfg.basesId);
-
-  const W = cfg.viewBoxW, H = cfg.viewBoxH;
-  const STRANDS   = cfg.strands;
-  const SAMPLES   = cfg.samples;
-  const HELIX_AMP = cfg.helixAmp;
-  const HELIX_FREQ = cfg.helixFreq;
-  const STAFF_GAP = cfg.staffGap;
-  const STAFF_CX  = W / 2;
   const SVGNS = 'http://www.w3.org/2000/svg';
 
-  /* ----- One strand's path. -----
-     k: strand index 0..STRANDS-1
-     t: morph progress 0..1
-     At t=0 the path is a horizontal staff line at y = H/2 + offset.
-     At t=1 the path is a sine wave (helix strand). Strands 0 and STRANDS-1
-     are 180° out of phase (the two helix strands); middles fade out. */
+  // ---- Geometry (viewBox units) ----
+  const W = 360, H = 720;
+  const CX = W / 2;
+  const STAFF_CY = H / 2;          // staff vertical centre
+  const STRANDS = 5;
+  const STAFF_GAP = 26;            // distance between adjacent staff lines
+  const HALF_GAP  = STAFF_GAP / 2; // distance between line and adjacent space (= one slot)
+  const SAMPLES = 220;             // strand resolution
+  const HELIX_AMP  = opts.helixAmp  || 64;  // helix half-width (viewBox px)
+  const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
+  const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
+  const STEM_W    = 2.0;
+  const HEAD_RX   = 7.4;           // tilted note head, real-feel oval
+  const HEAD_RY   = 5.4;
+  const HEAD_TILT = -22;           // degrees
+
+  const clefG   = document.getElementById('clef');
+  const linesG  = document.getElementById('lines');
+  const goldG   = document.getElementById('goldStrand');
+  const rungsG  = document.getElementById('rungs');
+  const beamsG  = document.getElementById('beams');
+  const stemsG  = document.getElementById('stems');
+  const notesG  = document.getElementById('notes');
+  const flagsG  = document.getElementById('flags');
+
+  // ---- The musical phrase. -----
+  // `slot` is half-line offset from middle line. 0 = middle line.
+  // Negative = above middle (higher pitch), positive = below.
+  // The five staff lines sit at slots {-4, -2, 0, +2, +4}.
+  // Slot ranges from -5 (just above top line) to +5 (just below bottom line);
+  // we keep notes mostly within the staff for a melodic, on-staff feel.
+  //
+  // `kind`:  'q' = quarter (no flag/beam)
+  //          'e' = lone eighth (gets a curved flag)
+  //          'b0'/'b1' = beamed eighth pair (b0 is the leader; the next note
+  //                       must be b1 and shares a single beam to b0)
+  //          't0'/'t1'/'t2' = beamed sixteenth triple (t0 leader, t2 tail)
+  //                       gets a double beam connecting all three stem tips
+  //
+  // x is centre of the note head in viewBox units (the bar spans x ≈ 76 → 344).
+  const MUSIC_BAR = [
+    { x:  78, slot:  2, kind: 'q'  },
+    { x: 110, slot: -1, kind: 'b0' },
+    { x: 140, slot:  1, kind: 'b1' },
+    { x: 174, slot: -3, kind: 'q'  },
+    { x: 204, slot:  0, kind: 'e'  },
+    { x: 234, slot:  3, kind: 't0' },
+    { x: 258, slot:  1, kind: 't1' },
+    { x: 282, slot:  2, kind: 't2' },
+    { x: 312, slot: -2, kind: 'q'  },
+    { x: 342, slot: -4, kind: 'e'  }
+  ];
+
+  // Helper: y of a slot.
+  function slotY(slot){ return STAFF_CY + slot * HALF_GAP; }
+
+  // Beamed groups share a stem direction. We compute it once from the
+  // mean slot of the group: mean <= 0 → stem DOWN; else stem UP.
+  // For lone notes (no group), each note picks its own direction.
+  (function annotateStemDirs(){
+    const N = MUSIC_BAR.length;
+    for (let i = 0; i < N; i++){
+      const note = MUSIC_BAR[i];
+      if (note.kind === 'b0' && i + 1 < N){
+        const mean = (note.slot + MUSIC_BAR[i+1].slot) / 2;
+        const down = mean <= 0;
+        note._groupStemDown = down;
+        MUSIC_BAR[i+1]._groupStemDown = down;
+      } else if (note.kind === 't0' && i + 2 < N){
+        const mean = (note.slot + MUSIC_BAR[i+1].slot + MUSIC_BAR[i+2].slot) / 3;
+        const down = mean <= 0;
+        note._groupStemDown = down;
+        MUSIC_BAR[i+1]._groupStemDown = down;
+        MUSIC_BAR[i+2]._groupStemDown = down;
+      }
+    }
+    for (let i = 0; i < N; i++){
+      const note = MUSIC_BAR[i];
+      if (note._groupStemDown === undefined){
+        note._groupStemDown = note.slot <= 0;
+      }
+    }
+  })();
+
+  // ---- Strand path (the demo's math, in new coords). ----
   function strandPath(k, t){
-    const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
+    // k=0..STRANDS-1. At t=0, strand k sits at y = STAFF_CY + (k-2)*STAFF_GAP.
+    // Strand 0 = top staff line, strand 4 = bottom staff line.
+    const staffY = STAFF_CY + (k - (STRANDS-1)/2) * STAFF_GAP;
+    // Phases: strand 0 in phase, strand STRANDS-1 anti-phase.
     const helixPhase = (k === 0) ? 0
                      : (k === STRANDS-1 ? Math.PI
                      : (k * Math.PI / (STRANDS-1)));
     let d = '';
-    for(let i=0; i<=SAMPLES; i++){
+    for (let i = 0; i <= SAMPLES; i++){
       const u = i / SAMPLES;
       const y = u * H;
-      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI*2 + helixPhase );
-      const helixX = STAFF_CX + wave * HELIX_AMP;
-      const staffY = (H/2) + staffY0;
-      const x0 = u * W,    y0 = staffY;
-      const x1 = helixX,   y1 = y;
+      const wave = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + helixPhase);
+      const helixX = CX + wave * HELIX_AMP;
+      const x0 = u * W,     y0 = staffY;
+      const x1 = helixX,    y1 = y;
       const x  = x0 + (x1 - x0) * t;
       const yy = y0 + (y1 - y0) * t;
       d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + yy.toFixed(2) + ' ';
@@ -2854,150 +2911,277 @@ function staffToHelix(opts){
     return d;
   }
 
-  /* ----- Build DOM children once. ----- */
-  // 5 strand paths
+  // ---- Note head position at scroll t. -----
+  // The head's t=0 position is its bar position (x, slotY); its t=1 position
+  // rides one of the helix strands so it lands as a base-pair-like marker.
+  // We assign each note to an alternating strand to avoid all heads piling
+  // up on a single curve at t=1.
+  function notePos(noteIndex, t){
+    const note = MUSIC_BAR[noteIndex];
+    const x0 = note.x;
+    const y0 = slotY(note.slot);
+    // For the helix end-position we use u = x0 / W as the parametric y so
+    // notes spiral down in the same left-to-right reading order they had
+    // on the staff. The strand alternates so notes hit both sides of the
+    // helix.
+    const u = (x0 - 30) / (W - 60); // normalise within the staff x-range
+    const y1 = u * H;
+    const phase = (noteIndex % 2 === 0) ? 0 : Math.PI;
+    const wave = Math.sin((y1 / H) * HELIX_FREQ * Math.PI * 2 + phase);
+    const x1 = CX + wave * HELIX_AMP;
+    return {
+      x: x0 + (x1 - x0) * t,
+      y: y0 + (y1 - y0) * t
+    };
+  }
+
+  // ---- Build static children ----
+
+  // Treble clef: Unicode U+1D11E rendered via SVG <text>.
+  // The font stack falls back through macOS Apple Symbols / Bravura / Noto Music.
+  // We anchor the text so the clef's hairpin curl wraps the G-line (the
+  // 4th staff line from top, slot=+2, y ≈ STAFF_CY + STAFF_GAP).
+  const clefText = document.createElementNS(SVGNS, 'text');
+  clefText.setAttribute('class', 'clef-glyph');
+  // Unicode treble clef glyph.
+  clefText.textContent = '𝄞';
+  clefG.appendChild(clefText);
+
+  // Strand paths (5)
   const strandPaths = [];
-  for(let k=0; k<STRANDS; k++){
+  for (let k = 0; k < STRANDS; k++){
     const p = document.createElementNS(SVGNS, 'path');
     linesG.appendChild(p);
     strandPaths.push(p);
   }
-  // Gold complementary strand (mirrors strand STRANDS-1)
+  // Gold complementary strand (mirrors the bottom strand)
   const goldPath = document.createElementNS(SVGNS, 'path');
   goldG.appendChild(goldPath);
 
-  // Note heads + stems
-  const notes = [];
-  for(let i=0; i<cfg.noteCount; i++){
+  // Note primitives — one head, one stem, one flag per note;
+  // beams are kept in a separate group, indexed per beam-leader note.
+  const heads = [];
+  const stems = [];
+  const flags = [];
+  const beams = [];
+  for (let i = 0; i < MUSIC_BAR.length; i++){
     const head = document.createElementNS(SVGNS, 'ellipse');
-    head.setAttribute('rx','2.4');
-    head.setAttribute('ry','5.5');
-    head.setAttribute('transform','rotate(-22)');
+    head.setAttribute('rx', HEAD_RX.toFixed(2));
+    head.setAttribute('ry', HEAD_RY.toFixed(2));
     notesG.appendChild(head);
-    const stem = document.createElementNS(SVGNS, 'line');
-    stem.setAttribute('stroke', cfg.inkColor);
-    stem.setAttribute('stroke-width','1.4');
-    notesG.appendChild(stem);
-    notes.push({ head, stem });
+    heads.push(head);
+
+    const stem = document.createElementNS(SVGNS, 'rect');
+    stem.setAttribute('width', STEM_W.toFixed(2));
+    stemsG.appendChild(stem);
+    stems.push(stem);
+
+    const flag = document.createElementNS(SVGNS, 'path');
+    flagsG.appendChild(flag);
+    flags.push(flag);
+
+    const beam = document.createElementNS(SVGNS, 'path');
+    beamsG.appendChild(beam);
+    beams.push(beam);
   }
 
-  // Base letters
-  const bases = [];
-  for(let i=0; i<cfg.baseCount; i++){
-    const tx = document.createElementNS(SVGNS, 'text');
-    tx.setAttribute('font-family', cfg.baseFontFamily);
-    tx.setAttribute('font-size', String(cfg.baseFontSize));
-    tx.setAttribute('text-anchor','middle');
-    tx.setAttribute('fill', cfg.inkColor);
-    tx.textContent = cfg.baseChars[i % cfg.baseChars.length];
-    basesG.appendChild(tx);
-    bases.push(tx);
-  }
-
-  // Rungs
+  // ATGC base letters (drawn but kept invisible until late in the morph,
+  // optional — base-pair rungs are the main visual at t=1).
+  const BASE_CHARS = ['A','T','G','C','A','C','G','T','C','G','A','T','G','A'];
+  const BASE_COUNT = 14;
   const rungs = [];
-  for(let i=0; i<cfg.rungCount; i++){
+  for (let i = 0; i < BASE_COUNT; i++){
     const ln = document.createElementNS(SVGNS, 'line');
     rungsG.appendChild(ln);
     rungs.push(ln);
   }
 
-  /* ----- Render frame. Call render(t) with t ∈ [0, 1]. ----- */
+  // ---- Render. Call render(t) with t ∈ [0, 1]. ----
   function render(t){
-    // Strands
-    for(let k=0; k<STRANDS; k++){
-      const path = strandPaths[k];
-      path.setAttribute('d', strandPath(k, t));
-      // Hold strands at opacity 0 until t=0.10, ramp to 1 by t=0.30
-      const fadeIn = Math.max(0, Math.min(1, (t - 0.10) / 0.20));
+    const clampedT = Math.max(0, Math.min(1, t));
+
+    // ---- Strands ----
+    for (let k = 0; k < STRANDS; k++){
+      const p = strandPaths[k];
+      p.setAttribute('d', strandPath(k, clampedT));
       let op;
-      if(k === 0 || k === STRANDS-1){
-        op = fadeIn;
+      if (k === 0){
+        // Front strand — stays full opacity throughout.
+        op = 1;
+      } else if (k === STRANDS - 1){
+        // Back strand fades out 0.45 → 0.80 so the gold copy can take over.
+        op = 1 - Math.min(1, Math.max(0, (clampedT - 0.45) / 0.35));
       } else {
-        // Middle strands fade out as helix forms — use the reference's t*1.6 curve,
-        // but multiplied by the fadeIn ramp so they don't appear at t=0.
-        op = fadeIn * (1 - Math.min(1, t * 1.6));
+        // Inner strands fade out as the staff bends; they have no helix counterpart.
+        op = 1 - Math.min(1, clampedT * 1.6);
       }
-      path.setAttribute('opacity', op.toFixed(3));
-      // Strand STRANDS-1 fades out so the gold copy can take over visually
-      if(k === STRANDS-1){
-        // Outer strand fades out 0.45→0.80 to be replaced by gold copy.
-        const fadeOut = 1 - Math.min(1, Math.max(0, (t - 0.45) / 0.35));
-        path.setAttribute('opacity', (fadeIn * fadeOut).toFixed(3));
-      }
+      p.setAttribute('opacity', op.toFixed(3));
     }
-    // Gold complementary strand
-    goldPath.setAttribute('d', strandPath(STRANDS-1, t));
-    const goldOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
+    // Gold complementary strand fades in 0.40 → 0.80.
+    goldPath.setAttribute('d', strandPath(STRANDS - 1, clampedT));
+    const goldOp = Math.max(0, Math.min(1, (clampedT - 0.40) / 0.40));
     goldG.setAttribute('opacity', goldOp.toFixed(3));
 
-    // Notes — fade out as helix forms
-    // Notes hold at 0 until t=0.10, ramp to 1 by t=0.25, then fade out per reference.
-    const notesIn = Math.max(0, Math.min(1, (t - 0.10) / 0.15));
-    const notesNatural = 1 - Math.min(1, t * 1.8);
-    notesG.setAttribute('opacity', Math.max(0, notesIn * notesNatural).toFixed(3));
-    for(let i=0; i<cfg.noteCount; i++){
-      const u = (i + 0.5) / cfg.noteCount;
-      const y = u * H;
-      const k = 1 + (i % 3);                                // ride inner staff lines
-      const staffY0 = (k - (STRANDS-1)/2) * STAFF_GAP;
-      const staffY  = H/2 + staffY0;
-      const xStaff  = u * W;
-      const wave = Math.sin( (y / H) * HELIX_FREQ * Math.PI*2 + (k === 1 ? 0 : Math.PI) );
-      const xHel = STAFF_CX + wave * HELIX_AMP;
-      const x  = xStaff + (xHel - xStaff) * t;
-      const yy = staffY + (y - staffY) * t;
-      const n = notes[i];
-      n.head.setAttribute('cx', x.toFixed(2));
-      n.head.setAttribute('cy', yy.toFixed(2));
-      n.head.setAttribute('transform', `rotate(-22 ${x.toFixed(2)} ${yy.toFixed(2)})`);
-      n.stem.setAttribute('x1', (x + 2.2).toFixed(2));
-      n.stem.setAttribute('y1', (yy - 1).toFixed(2));
-      n.stem.setAttribute('x2', (x + 2.2).toFixed(2));
-      n.stem.setAttribute('y2', (yy - 28).toFixed(2));
-      n.stem.setAttribute('opacity', (i % 4 === 3) ? 0 : 1);
+    // ---- Clef ----
+    // Sits on the staff at t=0, slowly fades 0.0 → 0.40.
+    // Anchored so its G-curl (which in Unicode glyphs lies roughly at the
+    // glyph's baseline) wraps the G-line (slot +2). Apple Symbols and
+    // Bravura render the glyph with the baseline near the descender's
+    // bottom loop, so we place the baseline a touch below the staff.
+    const clefX = 14;
+    const clefY = STAFF_CY + 56;   // baseline below staff for visual fit
+    clefText.setAttribute('x', clefX.toFixed(2));
+    clefText.setAttribute('y', clefY.toFixed(2));
+    const clefOp = 1 - Math.min(1, Math.max(0, clampedT / 0.40));
+    clefG.setAttribute('opacity', clefOp.toFixed(3));
+
+    // ---- Notes ----
+    // Per-element opacity envelopes (decoration fades faster than heads):
+    //   stems / beams / flags: 1 until t≈0.30, 0 by t≈0.55
+    //   heads: 1 until t≈0.50, 0 by t≈0.85
+    const decoOp = 1 - Math.min(1, Math.max(0, (clampedT - 0.30) / 0.25));
+    const headOp = 1 - Math.min(1, Math.max(0, (clampedT - 0.50) / 0.35));
+    stemsG.setAttribute('opacity', decoOp.toFixed(3));
+    beamsG.setAttribute('opacity', decoOp.toFixed(3));
+    flagsG.setAttribute('opacity', decoOp.toFixed(3));
+    notesG.setAttribute('opacity', headOp.toFixed(3));
+
+    // Cache head positions (needed for beam endpoints).
+    const positions = MUSIC_BAR.map((_, i) => notePos(i, clampedT));
+
+    // Stem geometry helper. Returns the head-attachment x and the stem-tip y
+    // for a note at position p with the group-shared stem direction.
+    function stemGeom(p, stemDown){
+      const HEAD_EDGE = HEAD_RX * 0.95;
+      const attachX = stemDown ? (p.x - HEAD_EDGE) : (p.x + HEAD_EDGE);
+      const tipY    = stemDown ? (p.y + STEM_LEN) : (p.y - STEM_LEN);
+      return { attachX, tipY };
     }
 
-    // Bases + rungs — fade in as helix forms (t > ~0.35)
-    const baseOp = Math.max(0, Math.min(1, (t - 0.35) / 0.4));
-    basesG.setAttribute('opacity', baseOp.toFixed(3));
-    rungsG.setAttribute('opacity', baseOp.toFixed(3));
-    for(let i=0; i<cfg.baseCount; i++){
-      const u = (i + 0.5) / cfg.baseCount;
+    for (let i = 0; i < MUSIC_BAR.length; i++){
+      const note = MUSIC_BAR[i];
+      const p = positions[i];
+      const stemDown = note._groupStemDown;
+
+      // Head — tilted ellipse.
+      const head = heads[i];
+      head.setAttribute('cx', p.x.toFixed(2));
+      head.setAttribute('cy', p.y.toFixed(2));
+      head.setAttribute('transform',
+        `rotate(${HEAD_TILT} ${p.x.toFixed(2)} ${p.y.toFixed(2)})`);
+
+      // Stem — rect from head edge toward stem-tip.
+      const g = stemGeom(p, stemDown);
+      const stemX = g.attachX - STEM_W / 2;
+      const stemTopY = stemDown ? p.y : g.tipY;
+      const stem = stems[i];
+      stem.setAttribute('x', stemX.toFixed(2));
+      stem.setAttribute('y', stemTopY.toFixed(2));
+      stem.setAttribute('height', STEM_LEN.toFixed(2));
+      stem.setAttribute('fill', 'currentColor');
+
+      // Beam (beam-leader of an eighth pair).
+      const beam = beams[i];
+      beam.setAttribute('d', '');
+      if (note.kind === 'b0' && i + 1 < MUSIC_BAR.length){
+        const pn = positions[i + 1];
+        const g1 = stemGeom(p,  stemDown);
+        const g2 = stemGeom(pn, stemDown);
+        const BT = 5.2; // beam thickness
+        // Beam sits AWAY from the heads — for stem-up, beam extends below tip;
+        // for stem-down, beam extends above tip. Either way, we draw a thick
+        // parallelogram from one tip to the other; the sign accounts for the
+        // direction the beam thickness should grow.
+        const sign = stemDown ? -1 : 1;
+        const y1 = g1.tipY, y2 = g2.tipY;
+        beam.setAttribute('d',
+          `M ${g1.attachX.toFixed(2)} ${y1.toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${y2.toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${(y2 + sign * BT).toFixed(2)} ` +
+          `L ${g1.attachX.toFixed(2)} ${(y1 + sign * BT).toFixed(2)} Z`);
+        beam.setAttribute('fill', 'currentColor');
+      }
+      // Sixteenth-triple double-beam: drawn on the leader (t0), spans
+      // through t2's stem tip. Two parallel beams.
+      if (note.kind === 't0' && i + 2 < MUSIC_BAR.length){
+        const p2 = positions[i + 2];
+        const g1 = stemGeom(p,  stemDown);
+        const g2 = stemGeom(p2, stemDown);
+        const BT  = 4.0;     // beam thickness
+        const BS  = 2.8;     // separation between the two beams
+        const sign = stemDown ? -1 : 1;
+        const y1 = g1.tipY, y2 = g2.tipY;
+        // First beam at stem tips.
+        const off2 = sign * (BT + BS);
+        beam.setAttribute('d',
+          // beam 1
+          `M ${g1.attachX.toFixed(2)} ${y1.toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${y2.toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${(y2 + sign * BT).toFixed(2)} ` +
+          `L ${g1.attachX.toFixed(2)} ${(y1 + sign * BT).toFixed(2)} Z ` +
+          // beam 2 (offset inward toward heads)
+          `M ${g1.attachX.toFixed(2)} ${(y1 + off2).toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${(y2 + off2).toFixed(2)} ` +
+          `L ${g2.attachX.toFixed(2)} ${(y2 + off2 + sign * BT).toFixed(2)} ` +
+          `L ${g1.attachX.toFixed(2)} ${(y1 + off2 + sign * BT).toFixed(2)} Z`);
+        beam.setAttribute('fill', 'currentColor');
+        beam.setAttribute('fill-rule', 'evenodd');
+      }
+
+      // Flag (lone eighths only). A small curved leaf at the stem tip,
+      // curling away from the head.
+      const flag = flags[i];
+      flag.setAttribute('d', '');
+      if (note.kind === 'e'){
+        const gf = stemGeom(p, stemDown);
+        const fx = gf.attachX;
+        const fy = gf.tipY;
+        // dir: stem-up → flag drops downward (-1 sense); stem-down → upward.
+        const dir = stemDown ? -1 : 1;
+        // Flag side: on stem-up the flag emerges to the RIGHT; on stem-down
+        // it emerges to the RIGHT too (real notation), so we always +x.
+        flag.setAttribute('d',
+          `M ${fx.toFixed(2)} ${fy.toFixed(2)} ` +
+          `C ${(fx + 10).toFixed(2)} ${(fy + dir * 4).toFixed(2)}, ` +
+          `${(fx + 13).toFixed(2)} ${(fy + dir * 14).toFixed(2)}, ` +
+          `${(fx + 9).toFixed(2)} ${(fy + dir * 24).toFixed(2)} ` +
+          `C ${(fx + 9).toFixed(2)} ${(fy + dir * 15).toFixed(2)}, ` +
+          `${(fx + 5).toFixed(2)} ${(fy + dir * 10).toFixed(2)}, ` +
+          `${fx.toFixed(2)} ${(fy + dir * 6).toFixed(2)} Z`);
+        flag.setAttribute('fill', 'currentColor');
+      }
+    }
+
+    // ---- Rungs (helix end-state). Fade in 0.65 → 0.95, so they don't
+    // appear as floating horizontal lines while the strands are still
+    // mid-bend. At t=1 they connect the two strands as base-pair markers. ----
+    const rungOp = Math.max(0, Math.min(1, (clampedT - 0.65) / 0.30));
+    rungsG.setAttribute('opacity', rungOp.toFixed(3));
+    for (let i = 0; i < BASE_COUNT; i++){
+      const u = (i + 0.5) / BASE_COUNT;
       const y = u * H;
-      const wave  = Math.sin( (y / H) * HELIX_FREQ * Math.PI*2 + 0 );
-      const wave2 = Math.sin( (y / H) * HELIX_FREQ * Math.PI*2 + Math.PI );
-      const x1 = STAFF_CX + wave  * HELIX_AMP;
-      const x2 = STAFF_CX + wave2 * HELIX_AMP;
-      const mx = (x1 + x2) / 2;
-      bases[i].setAttribute('x', mx.toFixed(2));
-      bases[i].setAttribute('y', (y + 2.6).toFixed(2));
+      const wave  = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + 0);
+      const wave2 = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI);
+      const x1 = CX + wave  * HELIX_AMP;
+      const x2 = CX + wave2 * HELIX_AMP;
       const ln = rungs[i];
       ln.setAttribute('x1', x1.toFixed(2));
       ln.setAttribute('y1', y.toFixed(2));
       ln.setAttribute('x2', x2.toFixed(2));
       ln.setAttribute('y2', y.toFixed(2));
-      ln.setAttribute('stroke', (i % 2 === 0) ? cfg.inkColor : cfg.goldColor);
-      ln.setAttribute('stroke-width','0.9');
+      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
+      ln.setAttribute('stroke-width', '1');
     }
   }
 
-  return { render, config: cfg };
+  return { render };
 }
 
 function setupHelixMorph(){
   const bridge = document.getElementById('bridge');
   if (!bridge) return;
 
-  // Build the renderer using the Claude Design staffToHelix.
-  // inkColor → 'currentColor' so the staff/notes/bases/rungs inherit
-  // the bridge's tint (which interpolates ink → bone as t scrolls).
-  const morph = staffToHelix({
-    inkColor: 'currentColor',
-    goldColor: '#D4AF37',
-    baseCount: 0,
-    staffGap: 22
-  });
+  const morph = bridgeMorph();
 
   function getT(){
     const r = bridge.getBoundingClientRect();
@@ -3017,26 +3201,30 @@ function setupHelixMorph(){
     bridge.style.setProperty('--bridge-fg-mute', `rgba(${r},${g},${b},0.7)`);
   }
 
+  const reducedMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   let raf = false;
   function onScroll(){
     if (raf) return;
     raf = true;
     requestAnimationFrame(() => {
       raf = false;
-      const t = getT();
-      morph.render(t);
-      tintBridge(t);
-      // Music-art illustration: fully visible until t≈0.02, fade out by t≈0.20
-      const musicArt = document.getElementById('musicArt');
-      if (musicArt) {
-        const op = Math.max(0, 1 - Math.max(0, t - 0.02) / 0.18);
-        musicArt.setAttribute('opacity', op.toFixed(3));
-      }
+      const sT = getT();
+      morph.render(sT);
+      tintBridge(sT);
     });
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  onScroll();
+
+  if (reducedMotion){
+    // Render the bar of music at t=0 and don't animate.
+    morph.render(0);
+    tintBridge(0);
+  } else {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  }
 }
 
 
@@ -3754,24 +3942,32 @@ function setupHookReveal(){
   const stage = hookText && hookText.closest('.hook-stage');
   if (!hookText || !lens || !stage) return;
 
-  // Build per-character spans. Each non-space char gets two children: a cipher
-  // glyph and the plaintext, with classes that toggle visibility.
+  // Build per-character spans grouped into per-word wrappers. Each word lives
+  // inside <span class="word"> with white-space: nowrap, so line-wrapping
+  // happens between words (never mid-word) even though characters are
+  // independently inline-block for the lens-reveal math.
   const plain = hookText.getAttribute('data-plain') || '';
   const frag = document.createDocumentFragment();
   const charSpans = [];
-  for (let i = 0; i < plain.length; i++){
-    const ch = plain.charAt(i);
-    if (ch === ' ') {
-      frag.appendChild(document.createTextNode(' '));
-      continue;
+  const words = plain.split(' ');
+  for (let w = 0; w < words.length; w++){
+    const word = words[w];
+    if (word.length){
+      const wrap = document.createElement('span');
+      wrap.className = 'word';
+      for (let i = 0; i < word.length; i++){
+        const ch = word.charAt(i);
+        const span = document.createElement('span');
+        span.className = 'ch cipher';
+        span.dataset.plain = ch;
+        span.dataset.cipher = encChar(ch);
+        span.textContent = span.dataset.cipher;
+        wrap.appendChild(span);
+        charSpans.push(span);
+      }
+      frag.appendChild(wrap);
     }
-    const span = document.createElement('span');
-    span.className = 'ch cipher';
-    span.dataset.plain = ch;
-    span.dataset.cipher = encChar(ch);  // uses existing cipher helper
-    span.textContent = span.dataset.cipher;
-    frag.appendChild(span);
-    charSpans.push(span);
+    if (w < words.length - 1) frag.appendChild(document.createTextNode(' '));
   }
   hookText.textContent = '';
   hookText.appendChild(frag);
