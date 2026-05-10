@@ -313,17 +313,18 @@ input[type="email"], input[type="text"], textarea {
 .bridge-caption {
   position: sticky;
   top: 24vh;
-  grid-column: 1 / -1;
-  justify-self: center;
+  grid-column: 1;
+  justify-self: end;
+  align-self: start;
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(18px, 1.6vw, 22px);
   line-height: 1.5;
   color: var(--bridge-fg, #14202E);
-  max-width: 520px;
-  padding: 0 var(--margin);
-  margin: 0 auto;
-  text-align: center;
+  max-width: 320px;
+  padding: 0 var(--margin) 0 0;
+  margin: 0;
+  text-align: right;
 }
 .bridge-caption .cap-body { margin: 0; }
 
@@ -337,6 +338,17 @@ input[type="email"], input[type="text"], textarea {
   transition: opacity 400ms ease-out;
 }
 .bridge.bug-active .strand-bug { opacity: 1; }
+/* Inner SVG wobbles slightly on its own axis so the bug reads as alive,
+   not just sliding. Outer transform handles position + strand-tangent rotation. */
+.strand-bug > svg {
+  display: block;
+  transform-origin: 50% 50%;
+  animation: bugWalk 1.2s ease-in-out infinite alternate;
+}
+@keyframes bugWalk {
+  from { transform: rotate(-2deg); }
+  to   { transform: rotate(2deg); }
+}
 
 .bridge-svg-wrap {
   grid-column: 2;
@@ -1878,7 +1890,13 @@ body.is-investigation .egg-progress {
   .title .row.r3 { text-align: left; }
   .bridge { height: 160vh; }
   .bridge-stage { grid-template-columns: 1fr; padding: 0 24px; }
-  .bridge-caption { padding: 0; max-width: 100%; }
+  .bridge-caption {
+    grid-column: 1 / -1;
+    justify-self: center;
+    text-align: center;
+    max-width: 100%;
+    padding: 0;
+  }
   .bridge-svg-wrap { grid-column: 1; height: 60vh; }
   .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
   .case-board .artifact {
@@ -1952,8 +1970,24 @@ body.is-investigation .egg-progress {
 
     <div class="bridge-svg-wrap">
       <svg id="morph" viewBox="0 0 280 1000" preserveAspectRatio="none" aria-hidden="true">
-        <g id="goldStrand" stroke="#D4AF37" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.9"></g>
+        <!-- Treble clef — Unicode glyph U+1D11E, scaled large.
+             Falls back to plain serif rendering if the music symbol font is absent.
+             Sits at the left of the staff between y=300 and y=500. -->
+        <text id="trebleClef" x="38" y="500"
+              font-family="'Bravura Text', 'Noto Music', 'Apple Symbols', serif"
+              font-size="200"
+              fill="var(--bridge-fg, #14202E)"
+              opacity="1">&#x1D11E;</text>
+        <!-- 5-line musical staff (lines bend into helix curves over scroll). -->
+        <g id="staffLines" stroke="var(--bridge-fg, #14202E)" stroke-width="1.2" fill="none" stroke-linecap="round"></g>
+        <!-- Back strand of the helix — rendered first so the gold strand sits on top. -->
+        <g id="backStrand" stroke="var(--bridge-fg, #14202E)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0"></g>
+        <!-- Base-pair rungs cross between the two strands. -->
         <g id="rungs" stroke="var(--bridge-fg, #14202E)" stroke-width="1" opacity="0"></g>
+        <!-- Front strand — gold, thicker, drawn last so crossings read as 3D. -->
+        <g id="goldStrand" stroke="#D4AF37" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"></g>
+        <!-- Music notes scattered along the staff, migrating onto the helix. -->
+        <g id="notes" fill="var(--bridge-fg, #14202E)" stroke="var(--bridge-fg, #14202E)"></g>
       </svg>
       <!-- Bug rides the strand. Position is set by JS based on scroll progress. -->
       <div class="strand-bug" id="strandBug" aria-hidden="true">
@@ -2787,8 +2821,12 @@ function setupCursorTrail(){
 
 function setupHelixMorph(){
   const svg = document.getElementById('morph');
+  const clef = document.getElementById('trebleClef');
+  const linesG = document.getElementById('staffLines');
   const goldG = document.getElementById('goldStrand');
+  const backG = document.getElementById('backStrand');
   const rungsG = document.getElementById('rungs');
+  const notesG = document.getElementById('notes');
   const bug = document.getElementById('strandBug');
   const bridge = document.getElementById('bridge');
   const wrap = bridge.querySelector('.bridge-svg-wrap');
@@ -2796,16 +2834,76 @@ function setupHelixMorph(){
 
   const W = 280, H = 1000;
   const SAMPLES = 220;
-  const HELIX_AMP = 80;
-  const HELIX_FREQ = 6;        // fewer turns than before — calmer, more elegant
+  const HELIX_AMP = 78;
+  const HELIX_FREQ = 5;          // 5 turns over the lane — calm, readable
+  const STAFF_GAP = 22;          // px between staff lines (in viewBox units)
+  const STAFF_CY = 400;          // staff vertically centered around y=400 (room for clef)
+  const STRAND_COUNT = 5;
   const CX = W/2;
 
-  // Single strand path
+  // -------- Staff lines: 5 horizontal at t=0, bend into helix curves at t=1.
+  // Each line interpolates from y=staffY to a sinusoid with helixPhase.
+  // Two of them (k=0 / front and k=STRAND_COUNT-1 / back) survive past t≈0.55
+  // as the two strands of the helix; the middle three fade out by then.
+  const staffPaths = [];
+  for (let k = 0; k < STRAND_COUNT; k++){
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    linesG.appendChild(p);
+    staffPaths.push(p);
+  }
+
+  // Front strand (gold) — same wave as k=0 but redrawn on top of everything.
   const goldPath = document.createElementNS('http://www.w3.org/2000/svg','path');
   goldG.appendChild(goldPath);
 
-  // Optional rungs (the "helix nod") — drawn lightly, fade in late
-  const RUNG_COUNT = 9;
+  // Back strand — drawn as 3 segments that mask out where the front strand
+  // crosses in front. Segments are pre-allocated and their `d` attrs are set
+  // each render. Even (0,2,...) segments are "behind" the front; odd (1,3...)
+  // are "in front" of nothing — they're the visible halves of the back strand
+  // that aren't overlapped. We achieve depth by lowering the opacity of the
+  // even (occluded) halves so they read as shadowed.
+  const BACK_SEGS = HELIX_FREQ * 2; // one segment per half-period
+  const backPaths = [];
+  for (let i = 0; i < BACK_SEGS; i++){
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    backG.appendChild(p);
+    backPaths.push(p);
+  }
+
+  // -------- Notes: 12 musical notes (heads + stems) scattered on the staff.
+  // Each note has a fixed (u, k) — its horizontal slot along the staff and
+  // which staff line it sits on. As t→1 the note drifts onto the helix.
+  const NOTE_COUNT = 12;
+  const notes = [];
+  for (let i = 0; i < NOTE_COUNT; i++){
+    const head = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    head.setAttribute('rx','7');
+    head.setAttribute('ry','5');
+    notesG.appendChild(head);
+    const stem = document.createElementNS('http://www.w3.org/2000/svg','line');
+    stem.setAttribute('stroke', 'currentColor');
+    stem.setAttribute('stroke-width','1.6');
+    stem.setAttribute('stroke-linecap','round');
+    notesG.appendChild(stem);
+    // optional flag for ~1/3 of notes — gives variety, reads as eighth-notes
+    let flag = null;
+    if (i % 3 === 1){
+      flag = document.createElementNS('http://www.w3.org/2000/svg','path');
+      flag.setAttribute('stroke', 'currentColor');
+      flag.setAttribute('stroke-width','1.4');
+      flag.setAttribute('fill','none');
+      flag.setAttribute('stroke-linecap','round');
+      notesG.appendChild(flag);
+    }
+    // Spread notes evenly along x, choose a staff line k (0..4),
+    // bias toward inner lines so the staff looks composed, not random.
+    const u = (i + 0.5) / NOTE_COUNT;
+    const k = (i * 7 + 2) % STRAND_COUNT; // pseudo-random spread, stable
+    notes.push({ head, stem, flag, u, k });
+  }
+
+  // -------- Rungs: 11 base-pair bars connecting front & back strand.
+  const RUNG_COUNT = 11;
   const rungs = [];
   for (let i = 0; i < RUNG_COUNT; i++){
     const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -2813,65 +2911,250 @@ function setupHelixMorph(){
     rungs.push(ln);
   }
 
-  function strandX(y, t){
-    const amp = HELIX_AMP * Math.min(1, t / 0.6);
-    return CX + Math.sin((y / H) * HELIX_FREQ * Math.PI * 2) * amp;
+  // -------- Helix math.
+  // Front strand wave at viewBox y. amp grows with t.
+  function ampAt(t){
+    return HELIX_AMP * Math.min(1, Math.max(0, (t - 0.05) / 0.6));
+  }
+  function frontWave(y){
+    return Math.sin((y / H) * HELIX_FREQ * Math.PI * 2);
+  }
+  function backWave(y){
+    return Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI);
+  }
+  // x position of front strand at viewBox y, given t.
+  function frontX(y, t){
+    return CX + frontWave(y) * ampAt(t);
+  }
+  function backX(y, t){
+    return CX + backWave(y) * ampAt(t);
   }
 
-  function strandPathD(t){
+  // Build a path that interpolates a horizontal staff line at staffY toward
+  // a sinusoidal helix curve as t→1. Phase distinguishes the strands.
+  function strandPath(k, t){
+    const staffY = STAFF_CY + (k - (STRAND_COUNT - 1)/2) * STAFF_GAP;
+    // Phase: k=0 → 0 (front), k=STRAND_COUNT-1 → π (back), middle interpolated.
+    const helixPhase = (k / (STRAND_COUNT - 1)) * Math.PI;
+    const amp = ampAt(t);
     let d = '';
     for (let i = 0; i <= SAMPLES; i++){
       const u = i / SAMPLES;
-      const y = u * H;
-      const x = strandX(y, t);
+      const yEnd = u * H;
+      const wave = Math.sin((yEnd / H) * HELIX_FREQ * Math.PI * 2 + helixPhase);
+      const xHelix = CX + wave * amp;
+      const xStaff = u * W;
+      const x = xStaff + (xHelix - xStaff) * t;
+      const y = staffY + (yEnd - staffY) * t;
       d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
     }
     return d;
   }
 
   function render(t){
-    goldPath.setAttribute('d', strandPathD(t));
-    goldPath.setAttribute('opacity', Math.min(1, t * 1.2).toFixed(3));
+    // 1. Treble clef — visible at t<0.3, fades by t≈0.5.
+    if (clef){
+      const clefOp = Math.max(0, Math.min(1, (0.5 - t) / 0.3));
+      clef.setAttribute('opacity', clefOp.toFixed(3));
+    }
 
-    const rungOp = Math.max(0, Math.min(1, (t - 0.6) / 0.3));
+    // 2. Staff lines — bend into helix curves; middle 3 fade as helix forms.
+    const staffOp = Math.max(0, Math.min(1, (0.55 - t) / 0.25));
+    for (let k = 0; k < STRAND_COUNT; k++){
+      const p = staffPaths[k];
+      p.setAttribute('d', strandPath(k, t));
+      // Outer strands (front/back of helix) survive longer than inner ones;
+      // they will be replaced by the gold front + muted back strand by t≈0.7.
+      let op;
+      if (k === 0 || k === STRAND_COUNT - 1){
+        op = Math.max(0, Math.min(1, (0.65 - t) / 0.2));
+      } else {
+        op = staffOp;
+      }
+      p.setAttribute('opacity', op.toFixed(3));
+    }
+
+    // 3. Notes — interpolate from staff position to helix position; fade by t≈0.65.
+    const noteOp = Math.max(0, Math.min(1, (0.7 - t) / 0.25));
+    notesG.setAttribute('opacity', noteOp.toFixed(3));
+    const amp = ampAt(t);
+    for (let i = 0; i < NOTE_COUNT; i++){
+      const n = notes[i];
+      const yEnd = n.u * H;
+      const staffY = STAFF_CY + (n.k - (STRAND_COUNT - 1)/2) * STAFF_GAP;
+      const xStaff = n.u * W;
+      // Note migrates onto the front-strand curve.
+      const wave = Math.sin((yEnd / H) * HELIX_FREQ * Math.PI * 2);
+      const xHelix = CX + wave * amp;
+      const x = xStaff + (xHelix - xStaff) * t;
+      const y = staffY + (yEnd - staffY) * t;
+      n.head.setAttribute('cx', x.toFixed(2));
+      n.head.setAttribute('cy', y.toFixed(2));
+      n.head.setAttribute('transform', `rotate(-18 ${x.toFixed(2)} ${y.toFixed(2)})`);
+      // Stem on the right side of the head, going up.
+      const stemX = x + 6.2;
+      n.stem.setAttribute('x1', stemX.toFixed(2));
+      n.stem.setAttribute('y1', (y - 2).toFixed(2));
+      n.stem.setAttribute('x2', stemX.toFixed(2));
+      n.stem.setAttribute('y2', (y - 28).toFixed(2));
+      if (n.flag){
+        // Eighth-note flag — small curl off the top of the stem.
+        const fx = stemX, fy = y - 28;
+        n.flag.setAttribute('d',
+          `M${fx.toFixed(2)} ${fy.toFixed(2)} ` +
+          `C${(fx+10).toFixed(2)} ${(fy+4).toFixed(2)}, ` +
+          `${(fx+12).toFixed(2)} ${(fy+12).toFixed(2)}, ` +
+          `${(fx+4).toFixed(2)} ${(fy+18).toFixed(2)}`);
+      }
+    }
+
+    // 4. Front (gold) strand — fade in from t≈0.3, fully visible by t≈0.7.
+    goldPath.setAttribute('d', strandPath(0, t));
+    const goldOp = Math.max(0, Math.min(1, (t - 0.3) / 0.4));
+    goldG.setAttribute('opacity', goldOp.toFixed(3));
+
+    // 5. Back strand — broken into HELIX_FREQ*2 segments. We model the helix
+    // as a 3D coil whose y-axis is the strand and whose x-z circle is the
+    // wave. The "depth" of the front strand at vertical position y is
+    // z_front = cos(ω·y); the back strand sits at phase π so z_back = -cos(ω·y).
+    // The back is occluded (hidden behind the front) when z_back < 0,
+    // i.e. cos(ω·y) > 0. We render those segments at low opacity / thinner
+    // stroke; segments where z_back > 0 (back is closer to viewer) are nearly
+    // fully visible. This gives the strand a real "twisting around" feel.
+    const backOp = Math.max(0, Math.min(1, (t - 0.4) / 0.4));
+    backG.setAttribute('opacity', backOp.toFixed(3));
+    const segLen = H / BACK_SEGS;
+    const staffYBack = STAFF_CY + ((STRAND_COUNT-1) - (STRAND_COUNT-1)/2) * STAFF_GAP;
+    for (let i = 0; i < BACK_SEGS; i++){
+      const yStart = i * segLen;
+      const yEnd   = (i + 1) * segLen;
+      const yMid = (yStart + yEnd) / 2;
+      // z-depth of back strand at midpoint: -cos(ω·yMid). > 0 → in front of axis,
+      // < 0 → behind axis (occluded by front strand).
+      const zBack = -Math.cos((yMid / H) * HELIX_FREQ * Math.PI * 2);
+      // Map z ∈ [-1, 1] → opacity ∈ [0.22, 0.85]. Behind axis = dim/recessed.
+      const depthOp = 0.22 + ((zBack + 1) / 2) * 0.63;
+      // Stroke-width tapers similarly — recessed parts are thinner, suggesting
+      // they're farther from the camera.
+      const sw = 1.0 + ((zBack + 1) / 2) * 0.7; // 1.0 → 1.7
+      // Build a per-segment interpolated path so back strand also morphs out of
+      // its staff line as t→1.
+      const N = 12;
+      let d = '';
+      for (let j = 0; j <= N; j++){
+        const y = yStart + (yEnd - yStart) * (j / N);
+        const wave = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI);
+        const xHelix = CX + wave * amp;
+        const xStaff = (y / H) * W;
+        const x = xStaff + (xHelix - xStaff) * t;
+        const yy = staffYBack + (y - staffYBack) * t;
+        d += (j === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + yy.toFixed(2) + ' ';
+      }
+      const bp = backPaths[i];
+      bp.setAttribute('d', d);
+      bp.setAttribute('opacity', depthOp.toFixed(3));
+      bp.setAttribute('stroke-width', sw.toFixed(2));
+    }
+
+    // 6. Rungs — fade in starting at t≈0.6, full by t≈0.95.
+    const rungOp = Math.max(0, Math.min(1, (t - 0.6) / 0.35));
     rungsG.setAttribute('opacity', rungOp.toFixed(3));
     for (let i = 0; i < RUNG_COUNT; i++){
       const phase = (i + 0.5) / RUNG_COUNT;
       const y = phase * H;
-      const x1 = strandX(y, t);
-      // Mirror of strand for second "rail" of the rung
-      const x2 = CX - (x1 - CX);
+      const x1 = frontX(y, t);
+      const x2 = backX(y, t);
       const ln = rungs[i];
       ln.setAttribute('x1', x1.toFixed(2));
       ln.setAttribute('y1', y.toFixed(2));
       ln.setAttribute('x2', x2.toFixed(2));
       ln.setAttribute('y2', y.toFixed(2));
+      // Perspective trick: separation = |x1 - x2|. Modulate stroke-width
+      // so rungs that are "edge-on" (near a crossing) are thinner — reads as
+      // foreshortened. Color alternates ink/gold subtly.
+      const sep = Math.abs(x1 - x2);
+      const maxSep = HELIX_AMP * 2;
+      const sepN = Math.min(1, sep / maxSep); // 0..1
+      const sw = 0.7 + sepN * 1.2; // 0.7 → 1.9
+      ln.setAttribute('stroke-width', sw.toFixed(2));
       ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
-      ln.setAttribute('opacity', '0.55');
+      // Rungs that are nearly edge-on also fade slightly so they don't pile up
+      // as bright dots at the centerline.
+      ln.setAttribute('opacity', (0.45 + sepN * 0.45).toFixed(3));
     }
 
-    // Bug position — ride the strand. Convert SVG coords → CSS px inside .bridge-svg-wrap.
+    bridge.classList.toggle('bug-active', t > 0.02 && t < 0.98);
+  }
+
+  // -------- Bug — lerp-smoothed position + rotation. Climbs the front strand.
+  let currentT = 0;          // latest scroll-driven t — read by renderBug for strand shape
+  let bugTargetT = 0;
+  let bugCurrentT = 0;
+  let bugCurrentAngle = 0;
+  let bugRaf = 0;
+
+  function renderBug(tBug){
     const wrapRect = wrap.getBoundingClientRect();
-    const yu = Math.min(0.96, Math.max(0.04, t)); // 4–96% down the viewBox
+    if (!wrapRect.width || !wrapRect.height) return;
+    // Compress 0..1 → 0.075..0.925 so the bug lingers at top/bottom of the strand.
+    const yu = 0.075 + tBug * 0.85;
     const ySvg = yu * H;
-    const xSvg = strandX(ySvg, t);
+    // Use the LATEST scroll-driven t (not bug t) for the strand shape, so the bug
+    // sits on the current strand position. Read it from a closure variable.
+    const tShape = currentT;
+    // The bug rides the front (gold) strand. At low t the strand isn't formed yet,
+    // so its position is still near the staff Y for k=0; that reads fine because
+    // the bug fades in via .bug-active anyway.
+    const xSvg = (() => {
+      // Compute interpolated position along the (k=0, t=tShape) strand at this y.
+      const u = ySvg / H;
+      const yEnd = u * H;
+      const wave = Math.sin((yEnd / H) * HELIX_FREQ * Math.PI * 2);
+      const xHelix = CX + wave * ampAt(tShape);
+      const staffY = STAFF_CY + (0 - (STRAND_COUNT - 1)/2) * STAFF_GAP;
+      const xStaff = u * W;
+      const x = xStaff + (xHelix - xStaff) * tShape;
+      // y on the path will differ from ySvg when t < 1 because of the same
+      // interpolation; but we want the bug at a consistent visual y down the
+      // wrap, so use ySvg for placement (the path is approximately straight at
+      // small t anyway).
+      return x;
+    })();
     const xPct = xSvg / W;
     const yPct = yu;
     const xPx = xPct * wrapRect.width;
     const yPx = yPct * wrapRect.height;
 
-    // Tangent angle for bug rotation (point along the strand, head leading)
-    const dy = 1;
-    const ahead = strandX(ySvg + dy, t);
-    const angleRad = Math.atan2(dy, ahead - xSvg);
-    const angleDeg = angleRad * 180 / Math.PI - 90; // bug points along strand, head down
+    // Tangent: sample slightly ahead on the front strand, lerp angle.
+    const dy = 4;
+    const yAhead = ySvg + dy;
+    const waveA = Math.sin((yAhead / H) * HELIX_FREQ * Math.PI * 2);
+    const xHelixA = CX + waveA * ampAt(tShape);
+    const u2 = yAhead / H;
+    const xStaffA = u2 * W;
+    const xAhead = xStaffA + (xHelixA - xStaffA) * tShape;
+    const targetAngle = Math.atan2(dy, xAhead - xSvg) * 180 / Math.PI - 90;
+    // Wrap-around-safe angle lerp: shift target into [-180, 180] of current.
+    let delta = targetAngle - bugCurrentAngle;
+    while (delta > 180) delta -= 360;
+    while (delta < -180) delta += 360;
+    bugCurrentAngle += delta * 0.12;
 
     bug.style.transform =
-      `translate(${(xPx - 14).toFixed(1)}px, ${(yPx - 19).toFixed(1)}px) rotate(${angleDeg.toFixed(1)}deg)`;
-
-    bridge.classList.toggle('bug-active', t > 0.02 && t < 0.98);
+      `translate(${(xPx - 14).toFixed(1)}px, ${(yPx - 19).toFixed(1)}px) rotate(${bugCurrentAngle.toFixed(2)}deg)`;
   }
 
+  function tickBug(){
+    bugRaf = 0;
+    const dt = 0.08; // lerp factor — smooth, ~10-frame settle
+    bugCurrentT += (bugTargetT - bugCurrentT) * dt;
+    renderBug(bugCurrentT);
+    if (Math.abs(bugTargetT - bugCurrentT) > 0.0005){
+      bugRaf = requestAnimationFrame(tickBug);
+    }
+  }
+
+  // -------- Scroll → t mapping.
   function getT(){
     const r = bridge.getBoundingClientRect();
     const total = bridge.offsetHeight - window.innerHeight;
@@ -2897,13 +3180,21 @@ function setupHelixMorph(){
     requestAnimationFrame(() => {
       raf = false;
       const t = getT();
+      currentT = t;
       render(t);
       tintBridge(t);
+      // Compress bug travel: lingers at top/bottom of strand (handled in renderBug).
+      bugTargetT = t;
+      if (!bugRaf) bugRaf = requestAnimationFrame(tickBug);
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
+  // Initial paint
+  render(0);
+  tintBridge(0);
+  renderBug(0);
 }
 
 /* =========== §C  ARIA AUDIO (YouTube IFrame Player + fallback) =========== */
