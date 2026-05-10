@@ -1,5 +1,38 @@
 # Changelog — The Gold Bug Variations site
 
+## 2026-05-09 — Director's restructure
+
+A warmer, more emotional pass on the whole page, ordered to lead with the
+love story rather than the puzzle.
+
+- **Hero** stripped to title plus a Lora-italic tagline; "TRANSMISSION
+  ENCRYPTED" topbar removed.
+- **Bridge** now morphs a Bach music staff with note-heads into a DNA
+  double helix; the strand-riding Gold Bug is paused for now while the
+  morph beds in.
+- **Thematic cards** ("Four notes / Four bases / Two love stories") added
+  between the bridge and the mystery hook, framing the film around three
+  simple things.
+- **Mystery hook** — single line setting up the case ("the disappearance
+  of a brilliant scientist poised to discover the ultimate code for life")
+  introduced between the thematic cards and the detective board.
+- **Detective board** (formerly Investigation) pared from eight cards to
+  five — notebook, polaroid, catalog, canister, cast. Cast card is now
+  role-only.
+- **Tools** section added — director bio, development partners, production
+  note, and the Kirkus pull quote, with the Leibniz epigraph living
+  inside the section header.
+- **Removed** the standalone Leibniz epigraph (relocated into Tools), the
+  Poe / Bach / Powers source primer, and the testimonials carousel.
+- **Signup** reframed as "Join the search" — warmer copy, an occasional
+  *clue* rather than an occasional *cipher*.
+- **Static Gold Bug glyphs** added under the hero scroll cue and beneath
+  the hook line so the bug is the navigator across the page's transitions.
+- **Footer** consolidated to a single `goldbugmovie@gmail.com` mailbox.
+- **Cleanup** — orphaned telegram / punchcard / press-clipping CSS and JS
+  removed, residual cipher / "encrypted" framing softened, section
+  comment numbering reconciled with the final 8-section flow.
+
 ## v1 — 2026-05-06 (frozen snapshot)
 
 Saved as [`goldbug-variations-v1.html`](./goldbug-variations-v1.html). Full
