@@ -1737,6 +1737,98 @@ body.is-investigation .egg-progress {
           drop-shadow(0 0 14px rgba(212,175,55,0.4));
 }
 
+/* ---------- §7 Cinematic atmosphere ----------
+   Four layers that sell the "this is film" framing:
+     1. film-grain  — fixed-position SVG fractal-noise overlay, low opacity,
+                      staccato CSS animation (steps()), respects rm-motion.
+     2. letterbox   — top/bottom 6vh bars that slide in when Aria audio plays
+                      (body.aria-playing).
+     3. parallax    — body::before paper-noise drifts at 0.3× scroll via
+                      a --scroll-y custom property updated by JS.
+     4. is-evening  — after 7pm / before 6am the paper warms toward
+                      candlelight (subtle — NOT a dark mode).
+*/
+
+.film-grain {
+  position: fixed;
+  inset: -10%;            /* slight overscan so the transform animation
+                             never reveals the page edges */
+  pointer-events: none;
+  z-index: 9990;          /* above content, below the focused skip-link */
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.82  0 0 0 0 0.78  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  animation: filmGrainShift 0.6s steps(8) infinite;
+  will-change: transform;
+}
+@keyframes filmGrainShift {
+  0%   { transform: translate(0px, 0px); }
+  12%  { transform: translate(-3px, 1px); }
+  25%  { transform: translate(2px, -2px); }
+  37%  { transform: translate(-1px, 3px); }
+  50%  { transform: translate(3px, 2px); }
+  62%  { transform: translate(-2px, -3px); }
+  75%  { transform: translate(1px, -1px); }
+  87%  { transform: translate(-3px, 0px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.letterbox {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 6vh;
+  pointer-events: none;
+  z-index: 9985;          /* below film-grain (9990), above page content */
+  will-change: transform;
+  transition: transform 700ms cubic-bezier(.6,.05,.3,1);
+}
+.letterbox.top {
+  top: 0;
+  background: linear-gradient(180deg, #0a0805 60%, rgba(10,8,5,0.4) 100%);
+  transform: translateY(-100%);
+}
+.letterbox.bottom {
+  bottom: 0;
+  background: linear-gradient(0deg,   #0a0805 60%, rgba(10,8,5,0.4) 100%);
+  transform: translateY(100%);
+}
+body.aria-playing .letterbox.top    { transform: translateY(0); }
+body.aria-playing .letterbox.bottom { transform: translateY(0); }
+
+/* Global paper-noise parallax layer. Drifts at 0.3× scroll for a sense of
+   depth behind the page. Sits at z-index 0 — page sections own their own
+   stacking contexts above. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -5% 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  background-size: 320px 320px;
+  background-position: 0 calc(var(--scroll-y, 0px) * -0.3);
+  opacity: 0.55;
+  z-index: 0;
+}
+
+/* Evening (post-7pm / pre-6am) — paper warms toward candlelight.
+   Subtle: the same page, lit by lamps, not a dark theme. */
+body.is-evening {
+  --paper:      #EDD9A8;
+  --paper-2:    #E3CB95;
+  --paper-rule: #B89968;
+  --ink:        #1C1812;
+  --ink-2:      #281F15;
+}
+body.is-evening .title       { color: #3a2812; }
+body.is-evening .tagline em  { color: #8a5e1c; }
+
+@media (prefers-reduced-motion: reduce) {
+  .film-grain { animation: none; opacity: 0.07; }
+  .letterbox  { transition: none; }
+}
+
 /* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1782,6 +1874,11 @@ body.is-investigation .egg-progress {
 </style>
 </head>
 <body class="is-hero">
+
+<!-- Cinematic atmosphere — purely decorative, pointer-events: none. -->
+<div class="film-grain" aria-hidden="true"></div>
+<div class="letterbox top" aria-hidden="true"></div>
+<div class="letterbox bottom" aria-hidden="true"></div>
 
 <a class="skip-link" href="#bridge">Skip to film</a>
 
@@ -3320,6 +3417,9 @@ function setUiPlaying(on){
   // Swap the visible icon: triangle ▶ when stopped, two bars ‖ when playing.
   if (iconPlay)  iconPlay.style.display  = on ? 'none' : '';
   if (iconPause) iconPause.style.display = on ? '' : 'none';
+  // Letterbox bars slide in/out with the Aria audio — cinematic framing
+  // for when the music is the score.
+  document.body.classList.toggle('aria-playing', !!on);
 }
 
 function ensureFallback(){
@@ -4081,6 +4181,31 @@ function setupHookReveal(){
   }
 }
 
+// Cinematic atmosphere — parallax + time-of-day.
+// (Film grain and letterbox are CSS-only; letterbox is hooked from
+// setUiPlaying so it follows the Aria audio state.)
+function setupParallax(){
+  let raf = 0;
+  function update(){
+    raf = 0;
+    document.documentElement.style.setProperty(
+      '--scroll-y', window.scrollY + 'px'
+    );
+  }
+  window.addEventListener('scroll', () => {
+    if (!raf) raf = requestAnimationFrame(update);
+  }, { passive: true });
+  update();
+}
+
+function setupTimeOfDay(){
+  // After 7pm or before 6am → candlelit paper.
+  const h = new Date().getHours();
+  if (h >= 19 || h < 6) {
+    document.body.classList.add('is-evening');
+  }
+}
+
 function boot(){
   initCipherTargets();
   setupDecryptObserver();
@@ -4097,6 +4222,8 @@ function boot(){
   setupSoundFx();
   setupDeskCipher();
   setupHookReveal();
+  setupParallax();
+  setupTimeOfDay();
 }
 if (document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', boot);
