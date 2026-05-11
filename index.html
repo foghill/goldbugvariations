@@ -2944,16 +2944,16 @@ function bridgeMorph(opts){
   //
   // x is centre of the note head in viewBox units (the bar spans x ≈ 76 → 344).
   const MUSIC_BAR = [
-    // Shifted right and compressed so the first note clears the treble clef
-    // (which renders ~x=14 → ~x=110 at font-size 200 in this 360-wide viewBox).
+    // Evenly spaced across x=130..340 (≈26.25 unit gap, 9 notes, 8 gaps).
+    // Bar starts past the treble clef (rendered ~x=14 → ~x=110 at font-size 200).
     { x: 130, slot:  2, kind: 'q'  },
     { x: 156, slot: -1, kind: 'b0' },
-    { x: 180, slot:  1, kind: 'b1' },
-    { x: 206, slot: -3, kind: 'q'  },
-    { x: 230, slot:  0, kind: 'e'  },
-    { x: 274, slot:  1, kind: 'b0' },
-    { x: 292, slot:  2, kind: 'b1' },
-    { x: 316, slot: -2, kind: 'q'  },
+    { x: 183, slot:  1, kind: 'b1' },
+    { x: 209, slot: -3, kind: 'q'  },
+    { x: 236, slot:  0, kind: 'e'  },
+    { x: 262, slot:  1, kind: 'b0' },
+    { x: 288, slot:  2, kind: 'b1' },
+    { x: 314, slot: -2, kind: 'q'  },
     { x: 340, slot: -4, kind: 'e'  }
   ];
 
