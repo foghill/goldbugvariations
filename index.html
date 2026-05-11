@@ -2206,25 +2206,180 @@ body.is-evening .tagline em  { color: #8a5e1c; }
             <div class="photo">
               <svg viewBox="0 0 240 260" preserveAspectRatio="xMidYMid slice">
                 <defs>
-                  <radialGradient id="lens" cx="0.5" cy="0.4" r="0.5">
-                    <stop offset="0%" stop-color="#d8d2c4"/><stop offset="60%" stop-color="#605648"/><stop offset="100%" stop-color="#1a1612"/>
+                  <radialGradient id="lens" cx="0.5" cy="0.4" r="0.55">
+                    <stop offset="0%" stop-color="#e8dfc8"/>
+                    <stop offset="35%" stop-color="#8a7a52"/>
+                    <stop offset="75%" stop-color="#3a2e1c"/>
+                    <stop offset="100%" stop-color="#0e0a06"/>
                   </radialGradient>
-                  <linearGradient id="brass" x1="0" x2="1">
-                    <stop offset="0" stop-color="#5a4a30"/><stop offset="0.5" stop-color="#9a7a40"/><stop offset="1" stop-color="#3a2e1c"/>
+                  <linearGradient id="brass" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#3a2e1c"/>
+                    <stop offset="0.32" stop-color="#7a6238"/>
+                    <stop offset="0.55" stop-color="#b89656"/>
+                    <stop offset="0.78" stop-color="#7a6238"/>
+                    <stop offset="1" stop-color="#2a2010"/>
                   </linearGradient>
+                  <linearGradient id="brassDark" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#1f180e"/>
+                    <stop offset="0.5" stop-color="#5a4828"/>
+                    <stop offset="1" stop-color="#1a1308"/>
+                  </linearGradient>
+                  <linearGradient id="brassV" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#9a7c46"/>
+                    <stop offset="0.5" stop-color="#6a5430"/>
+                    <stop offset="1" stop-color="#2a2010"/>
+                  </linearGradient>
+                  <radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stop-color="#f4d890" stop-opacity="0.35"/>
+                    <stop offset="60%" stop-color="#7a5418" stop-opacity="0.08"/>
+                    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                  </radialGradient>
                 </defs>
-                <ellipse cx="120" cy="240" rx="80" ry="10" fill="#0a0805" opacity="0.7"/>
-                <rect x="50" y="215" width="140" height="22" rx="4" fill="url(#brass)"/>
-                <rect x="100" y="120" width="40" height="100" fill="url(#brass)"/>
-                <rect x="60" y="195" width="120" height="22" rx="3" fill="url(#brass)"/>
-                <rect x="78" y="180" width="84" height="8" fill="#2a2218"/>
-                <rect x="106" y="40" width="28" height="120" rx="6" fill="url(#brass)"/>
-                <rect x="102" y="20" width="36" height="22" rx="3" fill="#3a2e1c"/>
-                <circle cx="120" cy="20" r="9" fill="url(#lens)"/>
-                <circle cx="106" cy="170" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
-                <circle cx="120" cy="174" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
-                <circle cx="134" cy="170" r="11" fill="#2a2218" stroke="#6a5630" stroke-width="1.5"/>
-                <text x="120" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#d8d2c4" opacity="0.6">E. coli — plate 17</text>
+
+                <!-- Soft lamp glow behind the instrument -->
+                <ellipse cx="120" cy="180" rx="110" ry="80" fill="url(#lamp)"/>
+
+                <!-- Drop shadow at the base -->
+                <ellipse cx="120" cy="246" rx="78" ry="7" fill="#000" opacity="0.55"/>
+
+                <!-- Horseshoe base: heavy, slightly raised front -->
+                <path d="M 52 240
+                         C 52 226, 64 222, 80 222
+                         L 160 222
+                         C 176 222, 188 226, 188 240
+                         C 188 246, 178 248, 168 248
+                         L 72 248
+                         C 62 248, 52 246, 52 240 Z"
+                      fill="url(#brass)"/>
+                <!-- Base top highlight ridge -->
+                <path d="M 60 224 C 80 220, 160 220, 180 224 L 178 228 C 158 224, 82 224, 62 228 Z"
+                      fill="#d8b270" opacity="0.55"/>
+
+                <!-- Substage mirror, tilted -->
+                <g transform="translate(120 215) rotate(-14)">
+                  <ellipse cx="0" cy="0" rx="16" ry="5" fill="#1a1410"/>
+                  <ellipse cx="0" cy="-0.8" rx="14" ry="3.6" fill="url(#lens)"/>
+                  <ellipse cx="-3" cy="-1.4" rx="4" ry="1.2" fill="#f4ecd2" opacity="0.55"/>
+                  <!-- Mirror fork arms -->
+                  <rect x="-17" y="-1.5" width="3" height="9" fill="#2a2010"/>
+                  <rect x="14" y="-1.5" width="3" height="9" fill="#2a2010"/>
+                </g>
+
+                <!-- Vertical pillar / limb rising from back-left of base -->
+                <path d="M 92 222 L 96 130 Q 96 124 102 124 L 118 124 Q 124 124 124 130 L 122 222 Z"
+                      fill="url(#brassV)"/>
+                <!-- Pillar bright edge -->
+                <path d="M 96 222 L 100 130 Q 100 128 104 128 L 108 128 L 105 222 Z"
+                      fill="#c9a368" opacity="0.45"/>
+                <!-- Pillar shadow edge -->
+                <path d="M 118 128 L 122 128 L 124 222 L 120 222 Z" fill="#1a1308" opacity="0.7"/>
+
+                <!-- Coarse focus knob (large, behind) -->
+                <circle cx="138" cy="178" r="14" fill="url(#brassDark)"/>
+                <circle cx="138" cy="178" r="14" fill="none" stroke="#0a0805" stroke-width="0.8"/>
+                <circle cx="138" cy="178" r="11" fill="none" stroke="#3a2e1c" stroke-width="0.6" stroke-dasharray="1 1.4"/>
+                <circle cx="138" cy="178" r="4" fill="#1a1308"/>
+                <circle cx="136" cy="176" r="1.5" fill="#d8b270" opacity="0.7"/>
+
+                <!-- Fine focus knob (smaller, in front) -->
+                <circle cx="138" cy="198" r="9" fill="url(#brassDark)"/>
+                <circle cx="138" cy="198" r="9" fill="none" stroke="#0a0805" stroke-width="0.7"/>
+                <circle cx="138" cy="198" r="6.5" fill="none" stroke="#3a2e1c" stroke-width="0.5" stroke-dasharray="1 1.2"/>
+                <circle cx="138" cy="198" r="2.5" fill="#1a1308"/>
+
+                <!-- Mechanical stage platform -->
+                <rect x="58" y="158" width="104" height="14" rx="2" fill="url(#brass)"/>
+                <!-- Stage top edge highlight -->
+                <rect x="60" y="158" width="100" height="2" fill="#e0bc7c" opacity="0.6"/>
+                <!-- Stage shadow underside -->
+                <rect x="58" y="170" width="104" height="3" fill="#0a0805" opacity="0.7"/>
+                <!-- Stage clip (left) -->
+                <rect x="78" y="154" width="14" height="6" rx="1.5" fill="url(#brassDark)"/>
+                <!-- Glass slide on stage -->
+                <rect x="90" y="155" width="36" height="4" fill="#1a1410"/>
+                <rect x="92" y="156" width="32" height="2" fill="#c9b078" opacity="0.55"/>
+                <!-- Stage translation knob (tiny on side) -->
+                <circle cx="55" cy="165" r="3.5" fill="url(#brassDark)"/>
+                <circle cx="55" cy="165" r="3.5" fill="none" stroke="#0a0805" stroke-width="0.5"/>
+
+                <!-- Substage condenser cylinder under the stage -->
+                <rect x="110" y="173" width="20" height="14" rx="1.5" fill="url(#brassV)"/>
+                <rect x="113" y="187" width="14" height="4" fill="#1a1308"/>
+                <ellipse cx="120" cy="190" rx="6" ry="1.6" fill="url(#lens)" opacity="0.85"/>
+
+                <!-- Curving arm reaching forward from pillar over the stage -->
+                <path d="M 108 124
+                         C 108 110, 96 102, 86 102
+                         L 78 102
+                         C 70 102, 66 106, 66 114
+                         L 66 128
+                         C 66 134, 70 136, 76 136
+                         L 96 136
+                         C 104 136, 108 132, 108 124 Z"
+                      fill="url(#brassV)"/>
+                <!-- Arm top highlight -->
+                <path d="M 80 104 C 92 104, 104 110, 106 122 L 102 122 C 100 112, 90 108, 80 108 Z"
+                      fill="#c9a368" opacity="0.55"/>
+
+                <!-- Body tube — angled forward ~12 degrees -->
+                <g transform="rotate(-12 86 102)">
+                  <!-- Tube body -->
+                  <rect x="76" y="34" width="20" height="74" rx="2" fill="url(#brass)"/>
+                  <!-- Tube bright stripe -->
+                  <rect x="79" y="36" width="3" height="70" fill="#e0bc7c" opacity="0.55"/>
+                  <!-- Tube shadow stripe -->
+                  <rect x="91" y="36" width="3" height="70" fill="#1a1308" opacity="0.7"/>
+                  <!-- Decorative collar near top -->
+                  <rect x="74" y="44" width="24" height="4" fill="url(#brassDark)"/>
+                  <!-- Decorative collar near bottom (just above nosepiece) -->
+                  <rect x="74" y="96" width="24" height="4" fill="url(#brassDark)"/>
+
+                  <!-- Eyepiece — wider cylinder atop the tube -->
+                  <rect x="72" y="22" width="28" height="14" rx="2" fill="url(#brass)"/>
+                  <rect x="72" y="22" width="28" height="3" fill="url(#brassDark)"/>
+                  <!-- Eyepiece glass disc -->
+                  <ellipse cx="86" cy="22" rx="13" ry="3.5" fill="#1a1308"/>
+                  <ellipse cx="86" cy="21" rx="11.5" ry="2.6" fill="url(#lens)"/>
+                  <ellipse cx="82" cy="20.4" rx="3.5" ry="0.9" fill="#f4ecd2" opacity="0.7"/>
+
+                  <!-- Revolving nosepiece (turret) at the bottom -->
+                  <ellipse cx="86" cy="110" rx="18" ry="6" fill="url(#brassDark)"/>
+                  <ellipse cx="86" cy="108.5" rx="18" ry="5.5" fill="url(#brassV)"/>
+                  <ellipse cx="86" cy="107" rx="15" ry="3" fill="#3a2e1c" opacity="0.6"/>
+
+                  <!-- Three objective lenses dangling from nosepiece -->
+                  <!-- Low-power (short) -->
+                  <g transform="translate(72 113)">
+                    <path d="M -3 0 L 3 0 L 2 9 L -2 9 Z" fill="url(#brassV)"/>
+                    <rect x="-2" y="9" width="4" height="1.5" fill="#1a1308"/>
+                    <circle cx="0" cy="10.5" r="1.2" fill="url(#lens)"/>
+                  </g>
+                  <!-- Medium-power (mid) -->
+                  <g transform="translate(86 113)">
+                    <path d="M -3.5 0 L 3.5 0 L 2.6 14 L -2.6 14 Z" fill="url(#brassV)"/>
+                    <rect x="-2.6" y="14" width="5.2" height="1.5" fill="#1a1308"/>
+                    <circle cx="0" cy="15.6" r="1.4" fill="url(#lens)"/>
+                    <!-- Mid-tube ring -->
+                    <rect x="-3.2" y="6" width="6.4" height="1.2" fill="#1a1308" opacity="0.7"/>
+                  </g>
+                  <!-- High-power (longest) -->
+                  <g transform="translate(100 113)">
+                    <path d="M -3 0 L 3 0 L 2.4 19 L -2.4 19 Z" fill="url(#brassV)"/>
+                    <rect x="-2.4" y="19" width="4.8" height="1.5" fill="#1a1308"/>
+                    <circle cx="0" cy="20.6" r="1.3" fill="url(#lens)"/>
+                    <rect x="-2.8" y="8" width="5.6" height="1" fill="#1a1308" opacity="0.7"/>
+                    <rect x="-2.8" y="13" width="5.6" height="1" fill="#1a1308" opacity="0.7"/>
+                  </g>
+                </g>
+
+                <!-- Subtle catchlight on the pillar shoulder -->
+                <ellipse cx="103" cy="130" rx="4" ry="1.5" fill="#f4ecd2" opacity="0.35"/>
+
+                <!-- Caption: E. coli plate label, set above the slide on the stage -->
+                <text x="120" y="152" text-anchor="middle"
+                      font-family="JetBrains Mono, monospace" font-size="8"
+                      fill="#d8c896" opacity="0.55"
+                      letter-spacing="0.6">E. coli — plate 17</text>
               </svg>
             </div>
             <div class="pcap">— Urbana, Aug 1957 —</div>
