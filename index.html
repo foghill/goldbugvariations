@@ -1745,8 +1745,6 @@ body.is-investigation .egg-progress {
                       (body.aria-playing).
      3. parallax    — body::before paper-noise drifts at 0.3× scroll via
                       a --scroll-y custom property updated by JS.
-     4. is-evening  — after 7pm / before 6am the paper warms toward
-                      candlelight (subtle — NOT a dark mode).
 */
 
 .film-grain {
@@ -1811,18 +1809,6 @@ body::before {
   opacity: 0.55;
   z-index: 0;
 }
-
-/* Evening (post-7pm / pre-6am) — paper warms toward candlelight.
-   Subtle: the same page, lit by lamps, not a dark theme. */
-body.is-evening {
-  --paper:      #EDD9A8;
-  --paper-2:    #E3CB95;
-  --paper-rule: #B89968;
-  --ink:        #1C1812;
-  --ink-2:      #281F15;
-}
-/* Title stays the cold-ink #14202E even in evening mode (director's call). */
-body.is-evening .tagline em  { color: #8a5e1c; }
 
 @media (prefers-reduced-motion: reduce) {
   .film-grain { animation: none; opacity: 0.07; }
@@ -4348,14 +4334,6 @@ function setupParallax(){
   update();
 }
 
-function setupTimeOfDay(){
-  // After 7pm or before 6am → candlelit paper.
-  const h = new Date().getHours();
-  if (h >= 19 || h < 6) {
-    document.body.classList.add('is-evening');
-  }
-}
-
 function boot(){
   initCipherTargets();
   setupDecryptObserver();
@@ -4373,7 +4351,6 @@ function boot(){
   setupDeskCipher();
   setupHookReveal();
   setupParallax();
-  setupTimeOfDay();
 }
 if (document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', boot);
