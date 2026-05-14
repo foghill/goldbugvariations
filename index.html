@@ -586,17 +586,24 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .audio-btn.playing .b4 { animation-delay: .25s; }
 @keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
 
-/* ---------- §5 Detective board: walnut desk + cards + beetle ---------- */
+/* ---------- §5 Detective board: walnut desk + cards + beetle ----------
+   Site Polish §6 — the desk now has a lamp on it. A soft warm radial
+   over the wood centres on the vinyl record (the spread's natural
+   focal point) and falls off into deep walnut at the edges, so cards
+   near the centre feel illuminated rather than just placed. */
 .investigation {
   position: relative;
   background:
-    radial-gradient(ellipse at 35% 25%, #3a3128 0%, #2B2620 40%, #1B1814 100%),
-    var(--walnut);
+    radial-gradient(ellipse 60% 55% at 50% 48%,
+      rgba(58, 42, 29, 0.55) 0%,
+      rgba(28, 22, 18, 0.0) 65%),
+    linear-gradient(180deg, #1c1612 0%, #15110e 100%);
   color: var(--bone);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
+  /* desk-grain noise overlay */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
@@ -606,12 +613,15 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 .investigation::after {
-  /* warm spotlight */
+  /* warm lamp pool — soft tungsten halo radiating from the vinyl record */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(ellipse at 35% 25%, rgba(255,200,100,0.06) 0%, transparent 55%);
+  background: radial-gradient(ellipse 50% 45% at 50% 50%,
+    rgba(255, 196, 110, 0.10) 0%,
+    rgba(255, 196, 110, 0.04) 30%,
+    transparent 60%);
 }
 .desk {
   position: relative;
