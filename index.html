@@ -1907,7 +1907,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   letter-spacing: 0.01em;
   color: var(--ink);
 }
-.signup .envelope button {
+/* Submit-button only — must NOT cascade to the easter-egg ‡ button
+   (`<button class="egg">`) that the egg system injects into the
+   envelope eyebrow. */
+.signup .envelope button[type="submit"] {
   background: var(--ink);
   border: 0;
   font-family: var(--label);
@@ -1921,7 +1924,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   cursor: pointer;
   transition: opacity 180ms ease;
 }
-.signup .envelope button:hover { color: var(--cream); opacity: 0.78; }
+.signup .envelope button[type="submit"]:hover { color: var(--cream); opacity: 0.78; }
 
 /* ---------- Easter-egg ‡ glyphs scattered through the page ----------
    Was gold; now cream-on-context. Reads the same on walnut / dusk-teal,
