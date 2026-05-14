@@ -525,6 +525,85 @@ input[type="email"], input[type="text"], textarea {
   .td-pb { transform: rotate(2deg); }
   .td-pc { transform: rotate(-1deg); }
 }
+
+/* ---------- §2b Music → DNA helix morph (restored) ----------
+   Standalone scroll lane between the transition desk and the thematic
+   section. Sits on dusk-teal (continuous with the desk above and the
+   thematic floor below). The renderer (bridgeMorph + setupHelixMorph,
+   §B in the script) reactivates the moment #morph is back in the DOM. */
+.music-morph {
+  position: relative;
+  height: 160vh;          /* tall scroll lane: t = 0 → 1 */
+  background: var(--dusk-teal);
+  color: var(--cloud-body);
+  z-index: 2;
+  isolation: isolate;
+}
+.mm-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 380px) 1fr;
+  align-items: start;
+  padding-top: clamp(40px, 6vh, 90px);
+  pointer-events: none;
+}
+.mm-caption {
+  position: sticky;
+  top: 24vh;
+  grid-column: 1;
+  justify-self: end;
+  align-self: start;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 1.7vw, 24px);
+  line-height: 1.45;
+  color: var(--cloud-body);
+  opacity: 0.92;
+  max-width: 320px;
+  padding: 0 var(--margin) 0 0;
+  margin: 0;
+  text-align: right;
+}
+.mm-cap-body { margin: 0; }
+.mm-svg-wrap {
+  grid-column: 2;
+  height: 80vh;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+  position: relative;
+  color: var(--cloud-body);
+}
+#morph {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+#morph .clef-glyph {
+  font-family: 'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol',
+               'STIX Two Math', 'Cambria Math', serif;
+  font-weight: 400;
+  font-size: 200px;
+  fill: currentColor;
+  dominant-baseline: alphabetic;
+  text-anchor: start;
+}
+@media (max-width: 820px) {
+  .music-morph { height: 140vh; }
+  .mm-stage { grid-template-columns: 1fr; padding: 0 24px; }
+  .mm-caption {
+    grid-column: 1;
+    justify-self: center;
+    text-align: center;
+    max-width: 100%;
+    padding: 12vh 0 0;
+    position: relative; top: auto;
+  }
+  .mm-svg-wrap { grid-column: 1; height: 60vh; }
+}
+
 .bridge-aria {
   position: fixed;
   bottom: calc(22px + env(safe-area-inset-bottom, 0px));
@@ -2687,6 +2766,36 @@ body::before {
 
 
 <!-- ============================================================
+     §2b  MUSIC → DNA HELIX MORPH (restored, recoloured)
+     A scroll-driven SVG that begins as a stylised bar of music (treble
+     clef + 5 staff lines + a phrase of mixed notes) and bends into a
+     DNA double helix as the user scrolls. Carried by the bridgeMorph()
+     renderer; same primitives at every t — no cross-fade. Recoloured
+     ink + warm-dark (no gold per the gold-budget rule).
+     ============================================================ -->
+<section class="music-morph" id="music-morph" aria-label="A music staff bending into a DNA double helix">
+  <div class="mm-stage">
+    <div class="mm-caption" aria-hidden="false">
+      <p class="mm-cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
+    </div>
+    <div class="mm-svg-wrap">
+      <svg id="morph" viewBox="0 0 360 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- Back-to-front z-order: staff lines, beams, stems, heads, flags, clef. -->
+        <g id="lines"      stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"></g>
+        <g id="goldStrand" stroke="#8a6f3a"      stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
+        <g id="rungs"      stroke="currentColor" stroke-width="1"   opacity="0"></g>
+        <g id="beams"      fill="currentColor"></g>
+        <g id="stems"      fill="currentColor"></g>
+        <g id="notes"      fill="currentColor"></g>
+        <g id="flags"      fill="currentColor"></g>
+        <g id="clef"></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
      §3  AFTER-TRANSITION CARDS — the second voice arrives, and the
      logline that connects the two strands. The lens reveal lives on
      the second card.
@@ -4174,7 +4283,7 @@ function bridgeMorph(opts){
       ln.setAttribute('y1', y.toFixed(2));
       ln.setAttribute('x2', x2.toFixed(2));
       ln.setAttribute('y2', y.toFixed(2));
-      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#D4AF37');
+      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#8a6f3a');
       ln.setAttribute('stroke-width', '1');
     }
   }
@@ -4183,39 +4292,34 @@ function bridgeMorph(opts){
 }
 
 function setupHelixMorph(){
-  // Site Polish §4 — the scroll-driven music-staff → DNA helix morph
-  // was retired in favour of the new transition desk (a triptych of
-  // polaroids that carry the Music · Four / Life · Four / And · Two
-  // beats across the seam between sky and case-file). The morph SVG
-  // (#morph + child layers) is gone from the DOM; this function now
-  // bails out so the legacy renderer doesn't run against null nodes.
-  // bridgeMorph() is left in place but never invoked.
-  const bridge = document.getElementById('bridge');
-  if (!bridge) return;
+  // The morph was retired during Site Polish §4 (the transition desk
+  // took its place) but has been brought back as its own dedicated
+  // section (.music-morph), with the gold strand recoloured warm-dark
+  // (#8a6f3a) so it sits inside the gold-budget rule. The renderer
+  // hooks back up the moment #morph + #music-morph are in the DOM.
+  const lane = document.getElementById('music-morph');
+  if (!lane) return;
   const morphSvg = document.getElementById('morph');
-  if (!morphSvg) return;     // <-- the polish removed #morph; bail early.
+  if (!morphSvg) return;
 
   const morph = bridgeMorph();
 
   function getT(){
-    const r = bridge.getBoundingClientRect();
-    const total = bridge.offsetHeight - window.innerHeight;
+    const r = lane.getBoundingClientRect();
+    const total = lane.offsetHeight - window.innerHeight;
     if (total <= 0) return 0;
     const scrolled = -r.top;
     return Math.max(0, Math.min(1, scrolled / total));
   }
 
   function tintBridge(t){
-    // Top of the bridge (teal) → ink (warm near-black, visible on teal).
-    // Bottom (walnut) → cream (visible on walnut). The morph stays legible
-    // across both backgrounds.
-    const inkR = 0x1f, inkG = 0x1a, inkB = 0x16;
-    const crR  = 0xf0, crG  = 0xe8, crB  = 0xd6;
-    const r = Math.round(inkR + (crR - inkR) * t);
-    const g = Math.round(inkG + (crG - inkG) * t);
-    const b = Math.round(inkB + (crB - inkB) * t);
-    bridge.style.setProperty('--bridge-fg', `rgb(${r},${g},${b})`);
-    bridge.style.setProperty('--bridge-fg-mute', `rgba(${r},${g},${b},0.7)`);
+    // The morph lives on dusk-teal end-to-end now, so the foreground
+    // colour is constant cream (`--cloud-body`) regardless of t — no
+    // need to interpolate from ink-on-teal at top to cream-on-walnut
+    // at bottom, that legacy gradient is gone. Keeping the function so
+    // future tinting (e.g. fading out at the seams) has a hook.
+    lane.style.setProperty('--bridge-fg', 'var(--cloud-body)');
+    lane.style.setProperty('--bridge-fg-mute', 'rgba(240,232,214,0.7)');
   }
 
   const reducedMotion =
