@@ -684,19 +684,17 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 @keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
 
 /* ---------- §5 Detective board: dusk-teal ground + paper artifact cards
-   The desk surface used to be warm walnut wood with a tungsten lamp
-   pool. Per latest mockup, the case file now sits on the same dusk-teal
-   ground that carries the rest of the page — paper artifacts on a deep
-   blue desk rather than on wood. The lamp pool is gone (the mockup
-   shows a flat surface); a faint cool-light vignette replaces it just
-   enough to keep cards from disappearing into the corners. */
+   Background lock: starts at exact --dusk-teal (matches .thematic above)
+   and ends at exact --dusk-teal (matches the signup's dusk-teal opening
+   below). The faint cool-light vignette in the centre is unchanged so
+   cards still feel slightly lifted off the ground. */
 .investigation {
   position: relative;
   background:
     radial-gradient(ellipse 70% 60% at 50% 50%,
       rgba(255,255,255,0.04) 0%,
       transparent 70%),
-    linear-gradient(180deg, var(--dusk-teal) 0%, #233a4d 100%);
+    var(--dusk-teal);
   color: var(--cloud-body);
   z-index: 2;
   overflow: hidden;
@@ -712,16 +710,11 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 .investigation::after {
-  /* Subtle bottom-edge fade into deeper dusk so the desk meets the
-     return-to-sky panel below without a hard seam. */
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: linear-gradient(180deg,
-    transparent 0%,
-    transparent 78%,
-    rgba(0,0,0,0.25) 100%);
+  /* No bottom-edge fade — both .investigation and .signup now start
+     and end at exact --dusk-teal, so the seam is invisible without
+     any vignette. Kept the rule (empty) so any future tinting has a
+     ready hook. */
+  content: none;
 }
 .desk {
   position: relative;
@@ -1406,11 +1399,11 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    horizon left by the bridge. The second carries the magnifying-glass
    reveal that used to live in the standalone hook. */
 .thematic {
-  /* Site Polish §3 — dusk-teal floor between transition desk and the
-     case-file. Was walnut→walnut-2 (near-black). Cream text remains
-     legible on dusk-teal; the case-file's lamp-light radial below eases
-     the dusk → walnut handoff at section seam. */
-  background: linear-gradient(180deg, var(--dusk-teal) 0%, #1f3445 100%);
+  /* Seam smoothing — thematic now stays at exact --dusk-teal end-to-end
+     so it matches both the music-morph above (also dusk-teal) AND the
+     case-file desk below (which now starts at dusk-teal). No more
+     #1f3445 step that produced the visible cut. */
+  background: var(--dusk-teal);
   color: var(--cloud-body);
   padding: clamp(80px, 14vh, 160px) var(--margin);
   position: relative;
@@ -1927,28 +1920,41 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    cleanly. The envelope CTA stays — cream paper card on ink border —
    but loses the walnut backdrop. */
 .signup {
+  /* Seam smoothing — frame the sky INSIDE the signup section so it
+     doesn't hard-cut from the dusk-teal desk above. The panel opens
+     at dusk-teal (matching .investigation's floor), eases up through
+     a mid-teal into the sky-top peak around 38–58%, then descends
+     through sky-bottom and back into dusk-teal at 100% (matching
+     footer.masthead's flat dusk-teal). The "return to sky" reads as
+     a moment of opening and closing, not a hard cut. */
   position: relative;
   z-index: 2;
   background: linear-gradient(180deg,
-    var(--sky-top)     0%,
-    var(--sky-bottom)  62%,
-    #5d7f8a            88%,
-    var(--dusk-teal)   100%);
-  padding: clamp(70px, 10vh, 130px) var(--margin) clamp(60px, 8vh, 110px);
+    var(--dusk-teal)  0%,
+    #3a596d          14%,
+    #5d7f8a          26%,
+    var(--sky-bottom) 38%,
+    var(--sky-top)    52%,
+    var(--sky-bottom) 70%,
+    #5d7f8a          84%,
+    #3a596d          94%,
+    var(--dusk-teal) 100%);
+  padding: clamp(110px, 14vh, 170px) var(--margin) clamp(110px, 14vh, 170px);
   overflow: hidden;
   isolation: isolate;
 }
 .signup::before {
-  /* Two big painterly clouds — left-mid + right-mid, mirroring the
-     hero's cover-cloud composition. Bigger and softer than the
-     previous pass to match the new mockup. */
+  /* Two painterly clouds positioned IN the bright middle band of the
+     new sky-frame gradient (38–58% from top), where the sky-top peak
+     lives. Outside that band the clouds would fight the dusk-teal
+     bookends. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
   background-image:
-    radial-gradient(ellipse 50vw 18vh at 12% 26%, rgba(240,232,214,0.92), transparent 65%),
-    radial-gradient(ellipse 46vw 16vh at 88% 32%, rgba(240,232,214,0.85), transparent 65%);
+    radial-gradient(ellipse 48vw 14vh at 14% 42%, rgba(240,232,214,0.90), transparent 65%),
+    radial-gradient(ellipse 44vw 12vh at 86% 50%, rgba(240,232,214,0.84), transparent 65%);
   background-repeat: no-repeat;
   filter: blur(0.5px);
   mix-blend-mode: screen;
@@ -1968,11 +1974,13 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 }
 .signup .sky-bug svg { width: 100%; height: 100%; display: block; }
 .signup .folio {
+  /* Sits on the dusk-teal opening of the new gradient — cream text,
+     no ink chip (which would feel heavy against the dark blue). */
   position: relative;
   z-index: 2;
   text-align: center;
   max-width: 720px;
-  margin: 0 auto clamp(28px, 4vh, 44px);
+  margin: 0 auto clamp(40px, 6vh, 70px);
 }
 .signup .folio .folio-tag {
   display: inline-block;
@@ -1981,18 +1989,22 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--cream);
-  background: var(--ink);
-  padding: 6px 14px;
+  background: transparent;
+  padding: 6px 0;
+  opacity: 0.85;
 }
 .signup .folio .folio-sub {
   display: block;
-  margin-top: 14px;
+  margin-top: 10px;
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(17px, 1.6vw, 21px);
-  color: var(--ink);
-  opacity: 0.78;
+  color: var(--cream);
+  opacity: 0.7;
 }
+/* Bottom disclaimer also lands in dusk-teal at the section floor —
+   keep it cream-on-dusk for legibility. */
+.signup .disclaimer { color: var(--cream); opacity: 0.55; }
 /* ----------------------------------------------------------------
    §7 RETURN-TO-SKY — full mockup-fidelity rebuild.
    The envelope's grid + stamp + inner frame chrome was decorative
