@@ -81,30 +81,44 @@
    Cipher key, mobile
    ============================================================ */
 
-/* ---------- Tokens ---------- */
-:root {
-  --paper:       #F2EAD3;
-  --paper-2:     #E8DEC0;
-  --paper-rule:  #C8B98C;
-  --ink:         #0E1626;
-  --ink-2:       #1A2436;
-  --ink-rule:    #2A3A55;
-  --walnut:      #2B2620;
-  --walnut-2:    #1B1814;
-  --walnut-rule: #4a3d2a;
-  --gold:        #B08D2E;
-  --gold-warm:   #C9A227;
-  --gold-bright: #D4AF37;
-  --bone:        #F0E6D2;
+/* ---------- Tokens ----------
+   Site Polish v5 — gold-budget enforced. Gold appears on EXACTLY two
+   things site-wide: the Gold Bug character (.beetle gradient) and the
+   vinyl record label (.canister .label-strip). Every other "gold" UI
+   accent — section labels, link hovers, footer column heads, cipher-key
+   widget, easter-egg badge, focus outlines — uses cream or dusk-teal.
 
-  /* v4 — Postcard-Noon palette, sampled off the source-novel cover.
-     Dusty teal sky, warm-cream painterly clouds, warm near-black ink. */
-  --sky-top:      #a3c2cb;
-  --sky-bottom:   #7a9faa;
-  --cloud-body:   #f0e8d6;
+   Palette swatches taken verbatim from Site Polish Brief.md. */
+:root {
+  /* Sky / atmosphere (hero + return-to-sky panel) */
+  --sky-top:      #a3c2cb;   /* dusty pale teal */
+  --sky-bottom:   #7a9faa;   /* denser teal */
+  --dusk-teal:    #2a4458;   /* below-the-sky dark — replaces near-black */
+
+  /* Paper / ink / cream */
+  --cloud-body:   #f0e8d6;   /* warm cream highlight, also the "cream" UI token */
+  --cream:        #f0e8d6;   /* alias — explicit name for non-cloud uses */
   --cloud-shadow: #b3c3c9;
-  --ink:          #1f1a16;
+  --paper:        #ede4cd;   /* warm cream for desk artifacts */
+  --paper-2:      #E8DEC0;
+  --paper-rule:   #C8B98C;
+  --ink:          #1f1a16;   /* warm near-black for display type */
   --ink-2:        #3a3128;
+  --ink-rule:     #2A3A55;
+  --bone:         #F0E6D2;
+
+  /* Desk surface (case-file) — kept warm walnut, lamp-light added in §6 */
+  --walnut:       #2B2620;
+  --walnut-2:     #1B1814;
+  --walnut-rule:  #4a3d2a;
+
+  /* Gold — RESERVED for bug + vinyl ONLY (see comment above). */
+  --gold:         #c9a961;
+  --gold-warm:    #C9A227;
+  --gold-bright:  #D4AF37;
+
+  /* Stamps & grain */
+  --stamp-red:    #b34a3a;
   --grain-tint:   rgb(242,230,199);
 
   /* EB Garamond — warm Italian serif, italic-friendly. Stardos Stencil
@@ -541,7 +555,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   color: rgba(240,230,210,0.55);
   line-height: 2;
 }
-.desk-head .marque b { color: var(--gold-bright); font-weight: 500; }
+.desk-head .marque b { color: var(--cream); font-weight: 500; }
 .desk-head h2 {
   font-family: var(--grot);
   font-weight: 700;
@@ -571,7 +585,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   text-transform: uppercase;
   transition: all 0.2s;
 }
-.desk-head .reset-btn:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+.desk-head .reset-btn:hover { border-color: var(--cream); color: var(--cream); }
 
 .case-board {
   position: relative;
@@ -612,7 +626,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   position: absolute;
   font-family: var(--mono);
   font-weight: 700;
-  color: var(--gold);
+  color: var(--cream);
   opacity: 0;
   transition: opacity 240ms ease;
   user-select: none;
@@ -679,7 +693,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   background: radial-gradient(circle, transparent 55%, rgba(120,70,20,0.18) 60%, rgba(120,70,20,0.08) 70%, transparent 78%);
   pointer-events: none;
 }
-.notebook .nb-arrow { color: var(--gold); }
+.notebook .nb-arrow { color: var(--stamp-red); }
 .notebook .back { padding: 38px 34px; font-size: 19px; line-height: 1.6; overflow-y: auto; }
 .notebook .back h3 { font-family: var(--grot); font-stretch: 125%; font-weight: 700; font-size: 19px; text-transform: uppercase; letter-spacing: 0.1em; color: #5a3a14; margin: 0 0 18px; }
 
@@ -732,7 +746,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .catalog .cat-body {
   font-family: var(--serif); font-size: 20px; line-height: 1.5; color: #3a2e1c;
 }
-.catalog .cat-body em { color: var(--gold); }
+.catalog .cat-body em { color: var(--stamp-red); font-style: italic; }
 .catalog .cat-stamp {
   position: absolute;
   right: 28px; bottom: 22px;
@@ -932,8 +946,8 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   display: inline-block;
   font-family: var(--mono); font-size: 11px;
   letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--paper);
-  background: var(--gold);
+  color: var(--cream);
+  background: var(--ink);
   padding: 4px 10px;
   margin-bottom: 14px;
   transform: rotate(-1.5deg);
@@ -952,7 +966,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   font-family: var(--serif); font-style: italic;
   font-size: 15px; line-height: 1.4;
   color: #5a3a14;
-  border-left: 2px solid var(--gold);
+  border-left: 2px solid var(--ink);
   padding-left: 10px;
 }
 .tools-card .back {
@@ -1034,7 +1048,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   content: "";
   position: absolute;
   inset: 14px;
-  border: 1px solid rgba(176,141,46,0.32);
+  border: 1px solid rgba(31,26,22,0.22);
   pointer-events: none;
 }
 .envelope .eyebrow {
@@ -1043,7 +1057,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   font-size: 13px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink);
   font-weight: 500;
 }
 .envelope h2 {
@@ -1065,7 +1079,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   font-weight: 500;
   font-stretch: 100%;
   text-transform: lowercase;
-  color: var(--gold);
+  color: var(--ink);
   letter-spacing: 0;
 }
 .envelope p.intro {
@@ -1077,7 +1091,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   max-width: 56ch;
   color: #3a2e1c;
 }
-.envelope p.intro em { color: var(--gold); font-style: italic; }
+.envelope p.intro em { color: var(--ink); font-style: italic; }
 .envelope form {
   grid-area: form;
   display: flex;
@@ -1100,7 +1114,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   background: transparent; border: 0;
   font-family: var(--mono); font-size: 14px;
   letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink);
   padding: 14px 0 14px 24px;
   cursor: pointer;
 }
@@ -1497,9 +1511,9 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
-.cipher-key .key-head b { color: var(--gold); font-weight: 500; opacity: 1; }
+.cipher-key .key-head b { color: var(--cream); font-weight: 500; opacity: 1; }
 .cipher-key .key-head .x { padding: 2px 6px; }
-.cipher-key .key-head .x:hover { color: var(--gold); }
+.cipher-key .key-head .x:hover { color: var(--cream); }
 .cipher-key .key-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -1512,14 +1526,14 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   border: 1px solid currentColor;
   opacity: 0.85;
 }
-.cipher-key .key-cell .sym { color: var(--gold); font-weight: 700; font-size: 14px; line-height: 1; }
+.cipher-key .key-cell .sym { color: var(--cream); font-weight: 700; font-size: 14px; line-height: 1; }
 .cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
 .cipher-key .key-foot { margin-top: 12px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; line-height: 1.6; }
 .cipher-key .key-decoder { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid currentColor; opacity: 0.95; }
 .cipher-key .key-decoder label {
   display: block; font-family: var(--mono);
   font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold); font-weight: 600; margin-bottom: 6px;
+  color: var(--cream); font-weight: 600; margin-bottom: 6px;
 }
 .cipher-key .key-decoder input {
   width: 100%;
@@ -1529,13 +1543,13 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   padding: 6px 0;
   font-family: var(--mono); font-size: 14px; font-weight: 500;
   color: inherit;
-  caret-color: var(--gold);
+  caret-color: var(--cream);
 }
 .cipher-key .key-decoder input::placeholder { color: currentColor; opacity: 0.45; font-style: italic; }
 .cipher-key .key-decoder .key-output {
   display: block; margin-top: 8px; min-height: 22px;
   font-family: var(--mono); font-size: 15px; font-weight: 700;
-  color: var(--gold); letter-spacing: 0.04em; word-break: break-word;
+  color: var(--cream); letter-spacing: 0.04em; word-break: break-word;
 }
 
 footer {
@@ -1558,18 +1572,18 @@ footer {
 .foot-press-item .lbl {
   font-family: var(--mono); font-size: 11px; font-weight: 600;
   letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--cream);
 }
 .foot-press-item a {
   font-family: var(--serif); font-style: italic;
   font-size: clamp(18px, 1.5vw, 22px);
   color: var(--bone); text-decoration: none;
-  border-bottom: 1px solid rgba(212,175,55,0.32);
+  border-bottom: 1px solid rgba(240,232,214,0.32);
   padding-bottom: 4px;
   align-self: start;
   transition: color 200ms, border-color 200ms;
 }
-.foot-press-item a:hover { color: var(--gold-bright); border-color: var(--gold-bright); }
+.foot-press-item a:hover { color: var(--cream); border-color: var(--cream); }
 @media (max-width: 820px) {
   .foot-press { grid-template-columns: 1fr; gap: 18px; }
 }
@@ -1592,18 +1606,19 @@ footer {
 }
 .foot-col h4 {
   margin: 0 0 14px;
-  color: var(--gold-bright);
+  color: var(--cream);
   font-weight: 500;
   font-size: 11px;
   letter-spacing: 0.22em;
   border-bottom: 1px solid var(--walnut-rule);
   padding-bottom: 10px;
 }
-.foot-col a { color: var(--bone); text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.25); padding-bottom: 1px; }
-.foot-col a:hover { color: var(--gold-bright); }
+.foot-col a { color: var(--bone); text-decoration: none; border-bottom: 1px solid rgba(240,232,214,0.22); padding-bottom: 1px; }
+.foot-col a:hover { color: var(--cream); }
 .foot-cipher {
   font-family: var(--mono);
-  color: var(--gold-bright);
+  color: var(--cream);
+  opacity: 0.7;
   font-weight: 700;
   letter-spacing: 0.06em;
   font-size: clamp(13px, 1.1vw, 16px);
@@ -1625,7 +1640,7 @@ footer {
 .foot-cipher .ch.peek { color: var(--bone); }
 .foot-cipher {
   /* Magnifying-glass cursor over the buried message — invites probing. */
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23D4AF37' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(212,175,55,0.08)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23D4AF37' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23f0e8d6' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,232,214,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23f0e8d6' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
 }
 .foot-meta {
   margin-top: 36px;
@@ -1662,7 +1677,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 
 /* ---------- Investigation desk header ---------- */
 .desk-head .marque { font-size: 14px; font-weight: 500; line-height: 2; color: rgba(240,230,210,0.78); }
-.desk-head .marque b { color: var(--gold-bright); font-weight: 600; }
+.desk-head .marque b { color: var(--cream); font-weight: 600; }
 .desk-head .sub { font-size: clamp(20px, 1.7vw, 26px); font-weight: 500; }
 .desk-head .reset-btn { font-size: 13px; font-weight: 600; }
 .hint { font-size: 28px; }
@@ -1776,11 +1791,13 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   border-radius: 4px;
 }
 
-/* ---------- Easter-egg ‡ glyphs scattered through the page ---------- */
+/* ---------- Easter-egg ‡ glyphs scattered through the page ----------
+   Was gold; now cream-on-context. Reads the same on walnut / dusk-teal,
+   and on paper sections we use --ink so the glyph is visible on cream. */
 .egg {
   display: inline-block;
   font-family: var(--mono); font-weight: 700;
-  color: var(--gold);
+  color: currentColor;
   font-size: 14px;
   background: transparent;
   border: 0;
@@ -1800,18 +1817,18 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   50%      { opacity: 0.9; }
 }
 .egg:hover { opacity: 1 !important; transform: translateY(-1px) scale(1.2); animation-play-state: paused; }
-.egg:focus-visible { opacity: 1 !important; outline: 1px solid var(--gold); outline-offset: 2px; animation-play-state: paused; }
+.egg:focus-visible { opacity: 1 !important; outline: 1px solid currentColor; outline-offset: 2px; animation-play-state: paused; }
 .egg.found {
-  color: var(--gold-bright);
+  color: currentColor;
   opacity: 1;
   cursor: default;
   pointer-events: none;
-  text-shadow: 0 0 10px rgba(212,175,55,0.7);
+  text-shadow: 0 0 10px rgba(240,232,214,0.55);
   animation: eggFlash 800ms cubic-bezier(.2,.7,.2,1);
 }
 @keyframes eggFlash {
   0%   { transform: scale(1); }
-  40%  { transform: scale(1.9); text-shadow: 0 0 22px var(--gold-bright); }
+  40%  { transform: scale(1.9); text-shadow: 0 0 22px rgba(240,232,214,0.85); }
   100% { transform: scale(1.15); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1865,21 +1882,21 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   position: relative;
   max-width: 640px;
   background: var(--paper);
-  color: #14202E;
+  color: var(--ink);
   padding: clamp(48px, 6vw, 72px) clamp(32px, 5vw, 64px);
-  border: 1px solid var(--gold);
+  border: 1px solid var(--ink);
   text-align: center;
   box-shadow: 0 28px 60px rgba(0,0,0,0.6);
 }
 .egg-modal .panel::before, .egg-modal .panel::after {
   content: ""; display: block; width: 60px; height: 1px;
-  background: var(--gold); margin: 0 auto 28px;
+  background: var(--ink); margin: 0 auto 28px;
 }
 .egg-modal .panel::after { margin: 28px auto 0; }
 .egg-modal .panel .label {
   font-family: var(--mono); font-size: 11px; font-weight: 600;
   letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 18px;
+  color: var(--ink); margin-bottom: 18px;
 }
 .egg-modal .panel blockquote {
   font-family: var(--serif); font-style: italic;
@@ -1892,20 +1909,19 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   font-family: var(--mono); font-style: normal;
   font-size: 12px; font-weight: 600;
   letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink);
 }
 .egg-modal .panel .close {
   position: absolute; top: 14px; right: 16px;
   background: transparent; border: 0;
   font-family: var(--mono); font-size: 28px;
-  color: var(--gold); cursor: pointer; padding: 4px 10px;
+  color: var(--ink); cursor: pointer; padding: 4px 10px;
 }
-.egg-modal .panel .close:hover { color: #14202E; }
+.egg-modal .panel .close:hover { opacity: 0.6; }
 .egg-progress {
   /* Bottom-left so it doesn't collide with the topbar on the right
      ("SHOOTING · Q3 2026") or the audio pill / cipher key at the bottom.
-     Styled to match the floating cipher-key panel: paper / walnut bg with
-     a thin gold rule, no grey. */
+     Cream-on-ink badge, no gold per gold-budget rule. */
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   left:   calc(24px + env(safe-area-inset-left,   0px));
@@ -1913,18 +1929,18 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   display: flex; gap: 6px; align-items: baseline;
   font-family: var(--mono); font-size: 11px; font-weight: 600;
   letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink);
   padding: 10px 14px;
   background: var(--paper);
-  border: 1px solid var(--gold);
+  border: 1px solid var(--ink);
   pointer-events: none;
   opacity: 0;
   transition: opacity 320ms ease, background 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 body.is-investigation .egg-progress {
   background: var(--walnut-2);
-  color: var(--gold-bright);
-  border-color: var(--gold-bright);
+  color: var(--cream);
+  border-color: var(--cream);
 }
 .egg-progress.visible { opacity: 1; }
 
@@ -1959,14 +1975,14 @@ top: -40px; left: 8px;
 }
 .skip-link:focus { top: 8px; outline: none; }
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--cream);
   outline-offset: 3px;
 }
 .artifact:focus-visible {
-  outline: 2px solid var(--gold-bright);
+  outline: 2px solid var(--cream);
   outline-offset: 6px;
   filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55))
-          drop-shadow(0 0 14px rgba(212,175,55,0.4));
+          drop-shadow(0 0 14px rgba(240,232,214,0.35));
 }
 
 /* ---------- §7 Cinematic atmosphere ----------
@@ -3309,7 +3325,7 @@ function setupCursorTrail(){
     t.style.top  = (e.clientY + jy) + 'px';
     t.style.fontSize = (10 + Math.random() * 6) + 'px';
     // tint trail color based on which section we're over
-    if (document.body.classList.contains('is-investigation')) t.style.color = '#D4AF37';
+    if (document.body.classList.contains('is-investigation')) t.style.color = '#f0e8d6';
     document.body.appendChild(t);
     const dx = (Math.random() - 0.5) * 30;
     const dy = -10 - Math.random() * 18;
