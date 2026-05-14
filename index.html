@@ -437,16 +437,34 @@ input[type="email"], input[type="text"], textarea {
   will-change: transform;
 }
 .td-polaroid .td-photo {
+  /* Portrait photo area on a slightly warmer cream than the polaroid
+     body, with an inset hairline rectangle — matches the artboards. */
   width: 100%;
-  aspect-ratio: 4 / 3;
-  background: #1c1612;
+  aspect-ratio: 4 / 5;
+  background: var(--paper);
   overflow: hidden;
   display: block;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
 }
 .td-polaroid .td-photo svg {
   width: 100%;
   height: 100%;
   display: block;
+}
+.td-polaroid .td-photo .td-photo-sub {
+  /* Italic Garamond subtitle that sits INSIDE the photo (below the
+     illustration), e.g. "— Aria · BWV 988 —", "A · T · G · C". */
+  position: absolute;
+  left: 0; right: 0; bottom: 8%;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: var(--ink);
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+  pointer-events: none;
 }
 .td-polaroid .td-cap {
   margin: 14px 0 0;
@@ -2345,31 +2363,62 @@ body::before {
   <!-- Three polaroids — the triptych. Each tilted, slight overlap. -->
   <div class="td-polaroids">
 
-    <!-- Polaroid A · MUSIC · FOUR — the sky as a photograph -->
+    <!-- Polaroid A · MUSIC · FOUR — bass clef + Goldberg ground bass tetrachord (G F# E D) -->
     <figure class="td-polaroid td-pa">
-      <div class="td-photo td-photo-sky" aria-hidden="true">
-        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+      <div class="td-photo td-photo-music" aria-hidden="true">
+        <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <filter id="td-cloud-a" x="-30%" y="-30%" width="160%" height="160%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="3" result="t"/>
-              <feDisplacementMap in="SourceGraphic" in2="t" scale="22"/>
-              <feGaussianBlur stdDeviation="2.2"/>
+            <filter id="td-music-shiver" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="5" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="0.9"/>
             </filter>
           </defs>
-          <rect width="240" height="180" fill="url(#td-sky-grad)"/>
-          <defs>
-            <linearGradient id="td-sky-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#a3c2cb"/>
-              <stop offset="100%" stop-color="#7a9faa"/>
-            </linearGradient>
-          </defs>
-          <g filter="url(#td-cloud-a)">
-            <ellipse cx="80"  cy="78"  rx="62" ry="22" fill="#b3c3c9"/>
-            <ellipse cx="86"  cy="68"  rx="60" ry="22" fill="#f0e8d6"/>
-            <ellipse cx="170" cy="120" rx="54" ry="18" fill="#b3c3c9"/>
-            <ellipse cx="176" cy="112" rx="52" ry="18" fill="#f0e8d6"/>
+          <g filter="url(#td-music-shiver)" stroke="#1f1a16" stroke-linecap="round">
+            <!-- 5-line staff (centered vertically in upper half) -->
+            <g stroke-width="1.1" fill="none">
+              <line x1="22" y1="105" x2="218" y2="105"/>
+              <line x1="22" y1="120" x2="218" y2="120"/>
+              <line x1="22" y1="135" x2="218" y2="135"/>
+              <line x1="22" y1="150" x2="218" y2="150"/>
+              <line x1="22" y1="165" x2="218" y2="165"/>
+              <!-- bar at the right edge -->
+              <line x1="218" y1="105" x2="218" y2="165" stroke-width="1.4"/>
+            </g>
+            <!-- Bass clef (hand-drawn approximation: an open-ended F-clef spiral with 2 dots) -->
+            <g fill="none" stroke-width="1.8">
+              <path d="M 32 120 Q 64 96 64 124 Q 64 154 36 158 Q 26 160 28 148 Q 32 138 44 142 Q 54 146 52 154"/>
+            </g>
+            <g fill="#1f1a16">
+              <circle cx="74" cy="115" r="2"/>
+              <circle cx="74" cy="128" r="2"/>
+            </g>
+
+            <!-- 4 quarter notes G F# E D — descending. Filled note-heads with stems DOWN. -->
+            <!-- G (line 4 from top, top-of-staff area). The 4 notes sit on lines 4,3,2,1 from the top going DOWN visually -->
+            <g fill="#1f1a16">
+              <ellipse cx="106" cy="155" rx="6.2" ry="4.6" transform="rotate(-18 106 155)"/>
+              <ellipse cx="138" cy="160" rx="6.2" ry="4.6" transform="rotate(-18 138 160)"/>
+              <ellipse cx="170" cy="165" rx="6.2" ry="4.6" transform="rotate(-18 170 165)"/>
+              <ellipse cx="200" cy="170" rx="6.2" ry="4.6" transform="rotate(-18 200 170)"/>
+            </g>
+            <!-- Stems pointing DOWN from the right side of each note-head -->
+            <g stroke="#1f1a16" stroke-width="1.5" fill="none">
+              <line x1="111" y1="156" x2="111" y2="195"/>
+              <line x1="143" y1="161" x2="143" y2="200"/>
+              <line x1="175" y1="166" x2="175" y2="205"/>
+              <line x1="205" y1="171" x2="205" y2="210"/>
+            </g>
+
+            <!-- Letter labels below each note -->
+            <g fill="#1f1a16" font-family="'EB Garamond', Georgia, serif" font-size="14" text-anchor="middle">
+              <text x="106" y="232">G</text>
+              <text x="138" y="232">F♯</text>
+              <text x="170" y="232">E</text>
+              <text x="200" y="232">D</text>
+            </g>
           </g>
         </svg>
+        <span class="td-photo-sub">— Aria · BWV 988 —</span>
       </div>
       <figcaption class="td-cap">
         <span class="td-cap-num">MUSIC · FOUR</span>
@@ -2377,42 +2426,47 @@ body::before {
       </figcaption>
     </figure>
 
-    <!-- Polaroid B · LIFE · FOUR — painterly cream+ink helix on lab notebook paper -->
+    <!-- Polaroid B · LIFE · FOUR — painterly cream+ink VERTICAL double helix on lined notebook paper, ATGC tick labels along the left rail -->
     <figure class="td-polaroid td-pb">
       <div class="td-photo td-photo-helix" aria-hidden="true">
-        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+        <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="helix-shiver" x="-10%" y="-10%" width="120%" height="120%">
               <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="22" result="t"/>
-              <feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>
-              <feGaussianBlur stdDeviation="0.55"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="3"/>
+              <feGaussianBlur stdDeviation="0.45"/>
             </filter>
-            <pattern id="td-notebook" patternUnits="userSpaceOnUse" width="240" height="14">
-              <rect width="240" height="14" fill="#ede4cd"/>
-              <line x1="0" y1="13" x2="240" y2="13" stroke="#b3c3c9" stroke-width="0.6" opacity="0.55"/>
+            <pattern id="td-notebook" patternUnits="userSpaceOnUse" width="240" height="22">
+              <rect width="240" height="22" fill="#ede4cd"/>
+              <line x1="0" y1="21" x2="240" y2="21" stroke="#b3c3c9" stroke-width="0.7" opacity="0.6"/>
             </pattern>
           </defs>
-          <rect width="240" height="180" fill="url(#td-notebook)"/>
+          <rect width="240" height="300" fill="url(#td-notebook)"/>
           <g filter="url(#helix-shiver)" stroke-linecap="round" fill="none">
-            <!-- Two interleaved sine strands, ink + warm dark, painterly. -->
-            <path d="M 50 16 Q 110 38 50 60 Q 0 82 50 104 Q 110 126 50 148 Q 0 170 50 178"
-                  stroke="#1f1a16" stroke-width="2.1"/>
-            <path d="M 190 16 Q 130 38 190 60 Q 240 82 190 104 Q 130 126 190 148 Q 240 170 190 178"
-                  stroke="#8a6f3a" stroke-width="2.1"/>
-            <!-- Rungs where the strands cross -->
-            <line x1="60"  y1="38"  x2="180" y2="38"  stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
-            <line x1="60"  y1="82"  x2="180" y2="82"  stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
-            <line x1="60"  y1="126" x2="180" y2="126" stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
-            <line x1="60"  y1="170" x2="180" y2="170" stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
-            <!-- ATGC tick letters along the inner rail -->
-            <g fill="#1f1a16" font-family="ui-monospace, Menlo, monospace" font-size="9">
-              <text x="36" y="42">A</text>
-              <text x="36" y="86">T</text>
-              <text x="36" y="130">G</text>
-              <text x="36" y="174">C</text>
+            <!-- Two intertwined sine strands, vertical orientation. Centred at x=120, amplitude 38, 4 full periods top-to-bottom. -->
+            <!-- Strand A — warm dark/brass -->
+            <path d="M 120 24 C 158 38, 158 66, 120 80 C 82 94, 82 122, 120 136 C 158 150, 158 178, 120 192 C 82 206, 82 234, 120 248"
+                  stroke="#8a6f3a" stroke-width="2.4"/>
+            <!-- Strand B — ink, opposite phase -->
+            <path d="M 120 24 C 82 38, 82 66, 120 80 C 158 94, 158 122, 120 136 C 82 150, 82 178, 120 192 C 158 206, 158 234, 120 248"
+                  stroke="#1f1a16" stroke-width="2.4"/>
+            <!-- Rungs at the crossings (horizontal lines connecting the strands at maximum width) -->
+            <g stroke="#1f1a16" stroke-width="0.9" opacity="0.55">
+              <line x1="92" y1="52" x2="148" y2="52"/>
+              <line x1="92" y1="108" x2="148" y2="108"/>
+              <line x1="92" y1="164" x2="148" y2="164"/>
+              <line x1="92" y1="220" x2="148" y2="220"/>
             </g>
           </g>
+          <!-- ATGC tick letters along the LEFT rail, aligned with the rungs -->
+          <g fill="#1f1a16" font-family="'Special Elite', 'Courier Prime', ui-monospace, Menlo, monospace" font-size="13" text-anchor="start">
+            <text x="40" y="56">A</text>
+            <text x="40" y="112">T</text>
+            <text x="40" y="168">G</text>
+            <text x="40" y="224">C</text>
+          </g>
         </svg>
+        <span class="td-photo-sub">A · T · G · C</span>
       </div>
       <figcaption class="td-cap">
         <span class="td-cap-num">LIFE · FOUR</span>
@@ -2420,21 +2474,68 @@ body::before {
       </figcaption>
     </figure>
 
-    <!-- Polaroid C · AND · TWO — two interlocked rings -->
+    <!-- Polaroid C · AND · TWO — two interlocking ovals containing two facing silhouettes, red ampersand at the meeting, φ above -->
     <figure class="td-polaroid td-pc">
       <div class="td-photo td-photo-rings" aria-hidden="true">
-        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+        <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <filter id="rings-shiver" x="-10%" y="-10%" width="120%" height="120%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="14" result="t"/>
-              <feDisplacementMap in="SourceGraphic" in2="t" scale="2"/>
+            <filter id="rings-shiver" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="14" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="1.6"/>
             </filter>
+            <!-- Clip each silhouette to its own oval so the heads stay inside their lens -->
+            <clipPath id="td-clip-left"><ellipse cx="92" cy="150" rx="56" ry="72"/></clipPath>
+            <clipPath id="td-clip-right"><ellipse cx="148" cy="150" rx="56" ry="72"/></clipPath>
           </defs>
-          <rect width="240" height="180" fill="#ede4cd"/>
-          <g filter="url(#rings-shiver)" fill="none" stroke="#1f1a16" stroke-width="2.2">
-            <circle cx="100" cy="90" r="48"/>
-            <circle cx="142" cy="90" r="48"/>
+
+          <!-- Two interlocking ovals (line drawings, slightly hand-drawn) -->
+          <g filter="url(#rings-shiver)" fill="none" stroke="#1f1a16" stroke-width="1.6">
+            <ellipse cx="92"  cy="150" rx="56" ry="72"/>
+            <ellipse cx="148" cy="150" rx="56" ry="72"/>
+            <!-- A second pair, slightly offset and lighter, hints at the &-as-Venn -->
+            <ellipse cx="92"  cy="150" rx="50" ry="66" opacity="0.45"/>
+            <ellipse cx="148" cy="150" rx="50" ry="66" opacity="0.45"/>
           </g>
+
+          <!-- LEFT silhouette — facing right, clipped to left oval -->
+          <g clip-path="url(#td-clip-left)" fill="#1f1a16">
+            <!-- Hair / head profile facing right: drawn as a single closed path -->
+            <path d="M 40 232
+                     C 52 200, 56 174, 56 152
+                     C 56 124, 64 100, 78 92
+                     C 86 88, 96 88, 102 96
+                     C 106 102, 108 110, 108 120
+                     C 108 134, 102 148, 100 158
+                     C 99 166, 102 174, 106 178
+                     C 110 182, 116 184, 116 190
+                     C 116 198, 108 204, 96 210
+                     C 84 216, 70 222, 60 232
+                     Z"/>
+          </g>
+          <!-- RIGHT silhouette — facing left (mirror of the left), clipped to right oval -->
+          <g clip-path="url(#td-clip-right)" fill="#1f1a16">
+            <path d="M 200 232
+                     C 188 200, 184 174, 184 152
+                     C 184 124, 176 100, 162 92
+                     C 154 88, 144 88, 138 96
+                     C 134 102, 132 110, 132 120
+                     C 132 134, 138 148, 140 158
+                     C 141 166, 138 174, 134 178
+                     C 130 182, 124 184, 124 190
+                     C 124 198, 132 204, 144 210
+                     C 156 216, 170 222, 180 232
+                     Z"/>
+          </g>
+
+          <!-- φ glyph above the intersection -->
+          <text x="120" y="76" text-anchor="middle"
+                font-family="'EB Garamond', Georgia, serif" font-style="italic"
+                font-size="14" fill="#1f1a16" opacity="0.85">φ</text>
+
+          <!-- Red stylised ampersand at the meeting point of the two ovals -->
+          <text x="120" y="174" text-anchor="middle"
+                font-family="'EB Garamond', Georgia, serif" font-style="italic"
+                font-size="32" fill="#b34a3a" font-weight="500">&amp;</text>
         </svg>
       </div>
       <figcaption class="td-cap">
