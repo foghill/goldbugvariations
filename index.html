@@ -139,9 +139,21 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; background: var(--sky-bottom); }
+html { scroll-behavior: smooth; background: var(--sky-top); }
 body {
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  /* ONE continuous gradient down the entire document — light sky at
+     the top, descending into dusk-teal at the middle of the scroll,
+     returning to light sky at the bottom. Every section sits on top
+     of this body gradient with `background: transparent`, so the page
+     reads as a single sky journey rather than stacked panels. */
+  background: linear-gradient(180deg,
+    var(--sky-top)    0%,
+    var(--sky-bottom) 18%,
+    #4a6c80           35%,
+    var(--dusk-teal)  50%,
+    #4a6c80           65%,
+    var(--sky-bottom) 82%,
+    var(--sky-top)   100%);
   color: var(--ink);
   font-family: var(--serif);
   font-size: 19px;
@@ -149,6 +161,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  position: relative;     /* anchors body::before clouds across the whole document */
 }
 ::selection { background: var(--ink); color: var(--cloud-body); }
 
@@ -209,9 +222,12 @@ input[type="email"], input[type="text"], textarea {
      5. Type stack      (centred title + EB Garamond italic subtitle +
                          Allerta Stencil credit) */
 .hero {
+  /* Background removed — body gradient now provides the sky. The hero
+     keeps its painterly cloud SVG (.sky-clouds) on top of the body
+     clouds for the feature-cloud composition at the top of the page. */
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  background: transparent;
   color: var(--ink);
   z-index: 2;
   overflow: hidden;
@@ -343,21 +359,12 @@ input[type="email"], input[type="text"], textarea {
 .scroll-cue .arrow { display: block; margin-top: 8px; font-size: 14px; }
 @keyframes cueBlink { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
 
-/* ---------- §2 Bridge: staff → helix scroll morph ---------- */
+/* ---------- §2 Bridge / Transition desk: section now transparent;
+   body gradient + cloud layer provide the sky beneath the polaroids. */
 .bridge {
-  /* Site Polish §3 — sky → dusk-teal gradient (was hero-sky → walnut).
-     Step 4 will repurpose the bridge as the new transition desk; this
-     gradient is the floor for that. */
   position: relative;
   height: 180vh;          /* tall scroll lane: t = 0 → 1 across this section */
-  background: linear-gradient(
-    180deg,
-    var(--sky-bottom) 0%,
-    #5d7f8a 22%,
-    #3f5e72 50%,
-    var(--dusk-teal) 82%,
-    var(--dusk-teal) 100%
-  );
+  background: transparent;
   z-index: 2;
 }
 .bridge::before {
@@ -533,9 +540,12 @@ input[type="email"], input[type="text"], textarea {
    thematic floor below). The renderer (bridgeMorph + setupHelixMorph,
    §B in the script) reactivates the moment #morph is back in the DOM. */
 .music-morph {
+  /* Section transparent — body gradient is darkest at this y-position
+     (the morph lives in the dusk-teal middle band, ~30–45% of body
+     height), so the cream helix pops naturally against it. */
   position: relative;
   height: 160vh;          /* tall scroll lane: t = 0 → 1 */
-  background: var(--dusk-teal);
+  background: transparent;
   color: var(--cloud-body);
   z-index: 2;
   isolation: isolate;
@@ -690,12 +700,13 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    below). The faint cool-light vignette in the centre is unchanged so
    cards still feel slightly lifted off the ground. */
 .investigation {
+  /* Section transparent — body gradient (which lands on its darkest
+     value, dusk-teal, at this y-position) provides the desk surface.
+     The cream artifact cards still pop on the dark middle band. The
+     subtle centre vignette is preserved via .investigation::before
+     (the grain noise overlay) for ambient desk feel. */
   position: relative;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 50%,
-      rgba(255,255,255,0.04) 0%,
-      transparent 70%),
-    var(--dusk-teal);
+  background: transparent;
   color: var(--cloud-body);
   z-index: 2;
   overflow: hidden;
@@ -1399,11 +1410,10 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    horizon left by the bridge. The second carries the magnifying-glass
    reveal that used to live in the standalone hook. */
 .thematic {
-  /* Seam smoothing — thematic now stays at exact --dusk-teal end-to-end
-     so it matches both the music-morph above (also dusk-teal) AND the
-     case-file desk below (which now starts at dusk-teal). No more
-     #1f3445 step that produced the visible cut. */
-  background: var(--dusk-teal);
+  /* Section transparent — sits on the body gradient's dark middle band
+     between the music-morph above and the case-file below. The
+     magnifier/lens reveal still reads cleanly on the dark sky. */
+  background: transparent;
   color: var(--cloud-body);
   padding: clamp(80px, 14vh, 160px) var(--margin);
   position: relative;
@@ -1642,9 +1652,12 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
    cipher row at the very bottom stays — recolored cream at 0.7
    opacity per the gold-budget rule. */
 footer.masthead {
+  /* Background removed — footer sits on the body gradient's bright
+     bottom band (sky-bottom → sky-top). Text recolored cream → ink
+     throughout the masthead so it reads against the light sky. */
   position: relative; z-index: 3;
-  background: var(--dusk-teal);
-  color: var(--cream);
+  background: transparent;
+  color: var(--ink);
   padding: clamp(60px, 10vh, 100px) var(--margin) clamp(40px, 6vh, 70px);
 }
 .mast-inner {
@@ -1655,7 +1668,7 @@ footer.masthead {
 .mast-rule {
   border: 0;
   height: 1px;
-  background: rgba(240,232,214,0.22);
+  background: rgba(31,26,22,0.22);     /* ink hairline on light sky */
   margin: clamp(28px, 4vh, 44px) auto;
   width: 100%;
 }
@@ -1668,7 +1681,7 @@ footer.masthead {
   font-weight: 400;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.7;
 }
 .mast-h {
@@ -1678,7 +1691,7 @@ footer.masthead {
   line-height: 1.1;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   margin: 14px 0 8px;
 }
 .mast-h em {
@@ -1688,13 +1701,13 @@ footer.masthead {
   font-weight: 500;
   text-transform: lowercase;
   letter-spacing: 0;
-  color: var(--cream);
+  color: var(--ink);
 }
 .mast-sub {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(15px, 1.4vw, 18px);
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.78;
 }
 
@@ -1715,24 +1728,24 @@ footer.masthead {
   font-size: 11px;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.72;
 }
 .mast-val {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(16px, 1.4vw, 19px);
-  color: var(--cream);
+  color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid rgba(240,232,214,0.32);
+  border-bottom: 1px solid rgba(31,26,22,0.32);
   padding-bottom: 2px;
   transition: border-color 180ms ease, opacity 180ms ease;
 }
-.mast-val:hover { border-bottom-color: var(--cream); opacity: 0.92; }
+.mast-val:hover { border-bottom-color: var(--ink); opacity: 0.92; }
 .mast-divider {
   height: 1px;
   width: 36px;
-  background: rgba(240,232,214,0.18);
+  background: rgba(31,26,22,0.18);
   margin: 0 auto;
 }
 
@@ -1744,11 +1757,11 @@ footer.masthead {
   font-size: 11px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.55;
 }
 .mast-sitemap a {
-  color: var(--cream);
+  color: var(--ink);
   text-decoration: none;
   transition: opacity 180ms ease;
 }
@@ -1758,9 +1771,11 @@ footer.masthead {
 .foot-cipher {
   /* Mockup 04 — typewriter face for the cipher row. Special Elite first;
      JetBrains Mono / Courier Prime fallbacks keep it stable across
-     Firefox + Safari where Special Elite occasionally hiccups. */
+     Firefox + Safari where Special Elite occasionally hiccups.
+     Recoloured ink-on-sky now that the footer sits on the bright body
+     gradient bottom band. */
   font-family: "Special Elite", "JetBrains Mono", "Courier Prime", "Courier New", ui-monospace, Menlo, monospace;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.62;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -1772,18 +1787,18 @@ footer.masthead {
   padding: 0 clamp(20px, 6vw, 80px);
   margin: 0;
   /* Magnifying-glass cursor over the buried message — invites probing. */
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23f0e8d6' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,232,214,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23f0e8d6' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%231f1a16' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(31,26,22,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%231f1a16' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
 }
 .foot-cipher::before, .foot-cipher::after {
   content: "————————";
   display: block;
-  color: rgba(240,232,214,0.32);
+  color: rgba(31,26,22,0.32);
   margin: 14px 0;
   font-weight: 400;
   letter-spacing: 0.4em;
 }
 .foot-cipher .ch { transition: color 220ms ease; }
-.foot-cipher .ch.peek { color: var(--cream); opacity: 1; }
+.foot-cipher .ch.peek { color: var(--ink); opacity: 1; }
 
 .mast-legal {
   margin-top: clamp(20px, 3vh, 32px);
@@ -1793,7 +1808,7 @@ footer.masthead {
   font-size: 10px;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.45;
 }
 @media (max-width: 600px) {
@@ -2012,45 +2027,22 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    cleanly. The envelope CTA stays — cream paper card on ink border —
    but loses the walnut backdrop. */
 .signup {
-  /* Seam smoothing — frame the sky INSIDE the signup section so it
-     doesn't hard-cut from the dusk-teal desk above. The panel opens
-     at dusk-teal (matching .investigation's floor), eases up through
-     a mid-teal into the sky-top peak around 38–58%, then descends
-     through sky-bottom and back into dusk-teal at 100% (matching
-     footer.masthead's flat dusk-teal). The "return to sky" reads as
-     a moment of opening and closing, not a hard cut. */
+  /* Section transparent — the body gradient at this y-position is in
+     its "returning-to-sky" upswing, going from mid-teal back through
+     sky-bottom toward sky-top. The signup naturally lands in the
+     bright lower band of the page. */
   position: relative;
   z-index: 2;
-  background: linear-gradient(180deg,
-    var(--dusk-teal)  0%,
-    #3a596d          14%,
-    #5d7f8a          26%,
-    var(--sky-bottom) 38%,
-    var(--sky-top)    52%,
-    var(--sky-bottom) 70%,
-    #5d7f8a          84%,
-    #3a596d          94%,
-    var(--dusk-teal) 100%);
+  background: transparent;
   padding: clamp(110px, 14vh, 170px) var(--margin) clamp(110px, 14vh, 170px);
   overflow: hidden;
   isolation: isolate;
 }
 .signup::before {
-  /* Two painterly clouds positioned IN the bright middle band of the
-     new sky-frame gradient (38–58% from top), where the sky-top peak
-     lives. Outside that band the clouds would fight the dusk-teal
-     bookends. */
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background-image:
-    radial-gradient(ellipse 48vw 14vh at 14% 42%, rgba(240,232,214,0.90), transparent 65%),
-    radial-gradient(ellipse 44vw 12vh at 86% 50%, rgba(240,232,214,0.84), transparent 65%);
-  background-repeat: no-repeat;
-  filter: blur(0.5px);
-  mix-blend-mode: screen;
-  opacity: 0.9;
+  /* Cloud overlay removed — body::before clouds now cover the entire
+     page including the signup. Empty rule kept as a hook for future
+     section-specific tinting. */
+  content: none;
 }
 /* Tiny gold bug top-right — sole authorized gold per gold-budget rule.
    Pure decoration; pointer-events:none so it doesn't block clicks. */
@@ -2066,8 +2058,8 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 }
 .signup .sky-bug svg { width: 100%; height: 100%; display: block; }
 .signup .folio {
-  /* Sits on the dusk-teal opening of the new gradient — cream text,
-     no ink chip (which would feel heavy against the dark blue). */
+  /* Sits on the LIGHT sky band of the body gradient — every text
+     element uses ink for legibility on light blue. */
   position: relative;
   z-index: 2;
   text-align: center;
@@ -2080,10 +2072,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   font-size: 12px;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--ink);
   background: transparent;
   padding: 6px 0;
-  opacity: 0.85;
+  opacity: 0.78;
 }
 .signup .folio .folio-sub {
   display: block;
@@ -2091,14 +2083,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(17px, 1.6vw, 21px);
-  color: var(--cream);
-  opacity: 0.7;
+  color: var(--ink);
+  opacity: 0.72;
 }
-/* Bottom disclaimer also lands in dusk-teal at the section floor —
-   keep it cream-on-dusk for legibility. */
-/* Disclaimer line beneath the email pill — full styles restored
-   (these were lost during the §7 envelope rewrite). Centered, small
-   stencil caps, cream on the dusk-teal floor of the panel. */
+/* Disclaimer beneath the email pill — also on light sky, ink for contrast. */
 .signup .disclaimer {
   display: block;
   position: relative;
@@ -2111,7 +2099,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   letter-spacing: 0.42em;
   text-transform: uppercase;
   font-style: normal;
-  color: var(--cream);
+  color: var(--ink);
   opacity: 0.55;
 }
 /* ----------------------------------------------------------------
@@ -2495,28 +2483,51 @@ top: -40px; left: 8px;
   100% { transform: translate(0px, 0px); }
 }
 
-/* Global drifting-cloud parallax layer — soft non-tiling radial puffs
-   over a blue ground. Inspired by the brochure p.2 cover-cloud motif.
-   No SVG noise tile (which would show seams) — just large soft
-   gradients that drift at 0.3× scroll via background-position. */
+/* Document-wide cloud layer.
+   Was a fixed-viewport parallax tile (only 4 puffs that followed
+   the viewport). Now an absolute layer covering the entire body
+   height, with painterly cloud puffs at specific Y-positions
+   (0%–100% of the body). Opacity tapers across the dark middle so
+   clouds read brightly against the light sky-top + sky-bottom
+   bookends and dimly against the dusk-teal mid-page band. As the
+   user scrolls, different clouds come into view at different times
+   — feels like flying through a sky, not a parallax wallpaper. */
 body::before {
   content: "";
-  position: fixed;
-  inset: -5% 0;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(ellipse 70vw 24vh at 18% 8%,  rgba(245,232,200,0.10), transparent 70%),
-    radial-gradient(ellipse 60vw 22vh at 82% 30%, rgba(245,232,200,0.08), transparent 70%),
-    radial-gradient(ellipse 80vw 26vh at 12% 58%, rgba(245,232,200,0.07), transparent 70%),
-    radial-gradient(ellipse 55vw 20vh at 88% 78%, rgba(245,232,200,0.09), transparent 70%);
-  background-repeat: no-repeat;
-  background-position:
-    0 calc(var(--scroll-y, 0px) * -0.30),
-    0 calc(var(--scroll-y, 0px) * -0.30),
-    0 calc(var(--scroll-y, 0px) * -0.30),
-    0 calc(var(--scroll-y, 0px) * -0.30);
-  mix-blend-mode: screen;
   z-index: 0;
+  background-image:
+    /* Top — bright sky / hero band (0–22%) */
+    radial-gradient(ellipse 60vw 7vh at 14%  3%,  rgba(245,232,200,0.92), transparent 65%),
+    radial-gradient(ellipse 52vw 6vh at 82%  7%,  rgba(245,232,200,0.85), transparent 65%),
+    radial-gradient(ellipse 48vw 6vh at 26% 13%,  rgba(245,232,200,0.70), transparent 65%),
+    radial-gradient(ellipse 56vw 7vh at 78% 19%,  rgba(245,232,200,0.62), transparent 65%),
+
+    /* Descending into dusk (22–48%) — clouds get fainter */
+    radial-gradient(ellipse 50vw 6vh at 18% 27%,  rgba(245,232,200,0.45), transparent 65%),
+    radial-gradient(ellipse 44vw 5vh at 80% 33%,  rgba(245,232,200,0.36), transparent 65%),
+    radial-gradient(ellipse 52vw 6vh at 28% 41%,  rgba(245,232,200,0.26), transparent 65%),
+    radial-gradient(ellipse 46vw 5vh at 76% 47%,  rgba(245,232,200,0.20), transparent 65%),
+
+    /* Dark middle (48–60%) — minimal cloud presence, just hints */
+    radial-gradient(ellipse 40vw 4vh at 22% 54%,  rgba(245,232,200,0.14), transparent 60%),
+    radial-gradient(ellipse 42vw 4vh at 78% 60%,  rgba(245,232,200,0.16), transparent 60%),
+
+    /* Returning to light (60–82%) — clouds re-emerge */
+    radial-gradient(ellipse 48vw 6vh at 24% 67%,  rgba(245,232,200,0.30), transparent 65%),
+    radial-gradient(ellipse 52vw 6vh at 76% 73%,  rgba(245,232,200,0.45), transparent 65%),
+
+    /* Bottom — bright sky / footer band (82–100%) */
+    radial-gradient(ellipse 56vw 7vh at 18% 80%,  rgba(245,232,200,0.62), transparent 65%),
+    radial-gradient(ellipse 50vw 6vh at 82% 86%,  rgba(245,232,200,0.78), transparent 65%),
+    radial-gradient(ellipse 60vw 7vh at 26% 93%,  rgba(245,232,200,0.85), transparent 65%),
+    radial-gradient(ellipse 52vw 6vh at 78% 98%,  rgba(245,232,200,0.78), transparent 65%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  filter: blur(1.5px);
+  mix-blend-mode: screen;
 }
 
 @media (prefers-reduced-motion: reduce) {
