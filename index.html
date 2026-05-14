@@ -232,11 +232,18 @@ input[type="email"], input[type="text"], textarea {
   z-index: 2;
   overflow: hidden;
 }
-.hero .sky-clouds {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
+/* Site-wide painterly cloud SVG — moved out of .hero to body level so
+   the same painterly clouds drift across every section, not just the
+   hero. Position absolute on body, full document height; viewBox
+   stretches via preserveAspectRatio="none" so the cloud distribution
+   maps proportionally to body height. */
+.sky-clouds {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
   display: block;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 .hero .grain {
@@ -2483,52 +2490,12 @@ top: -40px; left: 8px;
   100% { transform: translate(0px, 0px); }
 }
 
-/* Document-wide cloud layer.
-   Was a fixed-viewport parallax tile (only 4 puffs that followed
-   the viewport). Now an absolute layer covering the entire body
-   height, with painterly cloud puffs at specific Y-positions
-   (0%–100% of the body). Opacity tapers across the dark middle so
-   clouds read brightly against the light sky-top + sky-bottom
-   bookends and dimly against the dusk-teal mid-page band. As the
-   user scrolls, different clouds come into view at different times
-   — feels like flying through a sky, not a parallax wallpaper. */
-body::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    /* Top — bright sky / hero band (0–22%) */
-    radial-gradient(ellipse 60vw 7vh at 14%  3%,  rgba(245,232,200,0.92), transparent 65%),
-    radial-gradient(ellipse 52vw 6vh at 82%  7%,  rgba(245,232,200,0.85), transparent 65%),
-    radial-gradient(ellipse 48vw 6vh at 26% 13%,  rgba(245,232,200,0.70), transparent 65%),
-    radial-gradient(ellipse 56vw 7vh at 78% 19%,  rgba(245,232,200,0.62), transparent 65%),
-
-    /* Descending into dusk (22–48%) — clouds get fainter */
-    radial-gradient(ellipse 50vw 6vh at 18% 27%,  rgba(245,232,200,0.45), transparent 65%),
-    radial-gradient(ellipse 44vw 5vh at 80% 33%,  rgba(245,232,200,0.36), transparent 65%),
-    radial-gradient(ellipse 52vw 6vh at 28% 41%,  rgba(245,232,200,0.26), transparent 65%),
-    radial-gradient(ellipse 46vw 5vh at 76% 47%,  rgba(245,232,200,0.20), transparent 65%),
-
-    /* Dark middle (48–60%) — minimal cloud presence, just hints */
-    radial-gradient(ellipse 40vw 4vh at 22% 54%,  rgba(245,232,200,0.14), transparent 60%),
-    radial-gradient(ellipse 42vw 4vh at 78% 60%,  rgba(245,232,200,0.16), transparent 60%),
-
-    /* Returning to light (60–82%) — clouds re-emerge */
-    radial-gradient(ellipse 48vw 6vh at 24% 67%,  rgba(245,232,200,0.30), transparent 65%),
-    radial-gradient(ellipse 52vw 6vh at 76% 73%,  rgba(245,232,200,0.45), transparent 65%),
-
-    /* Bottom — bright sky / footer band (82–100%) */
-    radial-gradient(ellipse 56vw 7vh at 18% 80%,  rgba(245,232,200,0.62), transparent 65%),
-    radial-gradient(ellipse 50vw 6vh at 82% 86%,  rgba(245,232,200,0.78), transparent 65%),
-    radial-gradient(ellipse 60vw 7vh at 26% 93%,  rgba(245,232,200,0.85), transparent 65%),
-    radial-gradient(ellipse 52vw 6vh at 78% 98%,  rgba(245,232,200,0.78), transparent 65%);
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  filter: blur(1.5px);
-  mix-blend-mode: screen;
-}
+/* The radial-gradient cloud-blob layer was deleted — those puffs
+   read as cheap soft circles, not painterly clouds. Painterly clouds
+   are now the .sky-clouds SVG that lives at the body level (above)
+   and uses the same feTurbulence + feDisplacementMap + feGaussianBlur
+   chain the hero originally used, with cloud groups distributed
+   across the entire document. */
 
 @media (prefers-reduced-motion: reduce) {
   .film-grain { animation: none; opacity: 0.07; }
@@ -2579,67 +2546,192 @@ body::before {
 <!-- ============================================================
      §1  HERO — Postcard-Noon: painterly-cloud SVG behind black stencil
      ============================================================ -->
+<!-- ============================================================
+     SITE-WIDE PAINTERLY CLOUDS — covers the entire body, not just
+     the hero. Same exact filter chain (feTurbulence + feDisplacementMap
+     + feGaussianBlur) used for the original hero clouds. ~24 cloud
+     groups distributed top-to-bottom across viewBox 1440 × 9000. The
+     top + bottom bands are bright fluffy clouds (matches what's at the
+     top of the page); the middle band is muted (the body gradient is
+     darkest there). One continuous sky.
+     ============================================================ -->
+<svg class="sky-clouds" viewBox="0 0 1440 9000"
+     preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <filter id="painterly-1" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="3"  result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="60"/>
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="painterly-2" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="11" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="55"/>
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="painterly-3" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="7"  result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="65"/>
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="painterly-4" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="21" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="75"/>
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="painterly-5" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="33" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="62"/>
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="painterly-6" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013" numOctaves="3" seed="47" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="70"/>
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+
+  <!-- ===== TOP BAND (y 0–1500) — bright sky, fluffy clouds. The hero
+       sits here. Same 4 cloud compositions the hero used originally. ===== -->
+  <g filter="url(#painterly-1)" opacity="0.90">
+    <ellipse cx="220"   cy="334"  rx="266"   ry="44"   fill="#b3c3c9"/>
+    <ellipse cx="237"   cy="314"  rx="258"   ry="46"   fill="#f0e8d6"/>
+    <ellipse cx="276"   cy="296"  rx="140"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-2)" opacity="0.85">
+    <ellipse cx="1180"  cy="273"  rx="228"   ry="39"   fill="#b3c3c9"/>
+    <ellipse cx="1194"  cy="254"  rx="221"   ry="41"   fill="#f0e8d6"/>
+    <ellipse cx="1228"  cy="239"  rx="120"   ry="18"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-3)" opacity="0.95">
+    <ellipse cx="760"   cy="554"  rx="304"   ry="44"   fill="#b3c3c9"/>
+    <ellipse cx="779"   cy="534"  rx="294"   ry="46"   fill="#f0e8d6"/>
+    <ellipse cx="824"   cy="516"  rx="160"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-4)" opacity="0.70">
+    <ellipse cx="380"   cy="733"  rx="342"   ry="39"   fill="#b3c3c9"/>
+    <ellipse cx="402"   cy="714"  rx="331"   ry="41"   fill="#f0e8d6"/>
+    <ellipse cx="452"   cy="699"  rx="180"   ry="18"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+
+  <!-- Mid-top band (y 1500–3000) — clouds drifting through transition desk + morph. Body sky here is mid-blue, clouds slightly cooler. -->
+  <g filter="url(#painterly-5)" opacity="0.75">
+    <ellipse cx="280"   cy="1620" rx="320"   ry="42"   fill="#9bb3bd"/>
+    <ellipse cx="296"   cy="1600" rx="306"   ry="44"   fill="#e6dec8"/>
+    <ellipse cx="332"   cy="1582" rx="160"   ry="20"   fill="#e6dec8" opacity="0.55"/>
+  </g>
+  <g filter="url(#painterly-6)" opacity="0.70">
+    <ellipse cx="1100"  cy="1880" rx="290"   ry="40"   fill="#9bb3bd"/>
+    <ellipse cx="1116"  cy="1860" rx="278"   ry="42"   fill="#e6dec8"/>
+    <ellipse cx="1148"  cy="1842" rx="148"   ry="18"   fill="#e6dec8" opacity="0.55"/>
+  </g>
+  <g filter="url(#painterly-1)" opacity="0.65">
+    <ellipse cx="640"   cy="2200" rx="340"   ry="44"   fill="#8aa3ac"/>
+    <ellipse cx="660"   cy="2180" rx="324"   ry="46"   fill="#dbd2bc"/>
+    <ellipse cx="700"   cy="2162" rx="170"   ry="21"   fill="#dbd2bc" opacity="0.5"/>
+  </g>
+  <g filter="url(#painterly-2)" opacity="0.55">
+    <ellipse cx="220"   cy="2520" rx="260"   ry="38"   fill="#7c95a0"/>
+    <ellipse cx="236"   cy="2502" rx="248"   ry="40"   fill="#cdc4ad"/>
+    <ellipse cx="270"   cy="2486" rx="130"   ry="18"   fill="#cdc4ad" opacity="0.5"/>
+  </g>
+  <g filter="url(#painterly-3)" opacity="0.55">
+    <ellipse cx="1180"  cy="2760" rx="270"   ry="40"   fill="#7c95a0"/>
+    <ellipse cx="1196"  cy="2742" rx="258"   ry="42"   fill="#cdc4ad"/>
+    <ellipse cx="1228"  cy="2724" rx="135"   ry="18"   fill="#cdc4ad" opacity="0.5"/>
+  </g>
+
+  <!-- Mid band (y 3000–4500) — descending into dusk. Clouds fade. -->
+  <g filter="url(#painterly-4)" opacity="0.40">
+    <ellipse cx="540"   cy="3160" rx="320"   ry="42"   fill="#5e7782"/>
+    <ellipse cx="556"   cy="3142" rx="306"   ry="44"   fill="#b8b09a"/>
+  </g>
+  <g filter="url(#painterly-5)" opacity="0.35">
+    <ellipse cx="1080"  cy="3460" rx="280"   ry="38"   fill="#54707b"/>
+    <ellipse cx="1096"  cy="3442" rx="266"   ry="40"   fill="#a8a08c"/>
+  </g>
+  <g filter="url(#painterly-6)" opacity="0.30">
+    <ellipse cx="320"   cy="3760" rx="300"   ry="42"   fill="#4a6772"/>
+    <ellipse cx="336"   cy="3742" rx="288"   ry="44"   fill="#988f7c"/>
+  </g>
+  <g filter="url(#painterly-1)" opacity="0.28">
+    <ellipse cx="900"   cy="4080" rx="260"   ry="38"   fill="#43606b"/>
+    <ellipse cx="916"   cy="4062" rx="248"   ry="40"   fill="#8a8270"/>
+  </g>
+  <g filter="url(#painterly-2)" opacity="0.22">
+    <ellipse cx="420"   cy="4400" rx="240"   ry="36"   fill="#3c5862"/>
+    <ellipse cx="436"   cy="4384" rx="230"   ry="38"   fill="#7a7264"/>
+  </g>
+
+  <!-- DARK MIDDLE BAND (y 4500–5500) — barely-visible cloud hints
+       across the dusk-teal floor. Mostly empty sky. -->
+  <g filter="url(#painterly-3)" opacity="0.18">
+    <ellipse cx="700"   cy="4720" rx="280"   ry="36"   fill="#385059"/>
+    <ellipse cx="716"   cy="4704" rx="266"   ry="38"   fill="#6c6557"/>
+  </g>
+  <g filter="url(#painterly-4)" opacity="0.16">
+    <ellipse cx="1140"  cy="5040" rx="240"   ry="34"   fill="#385059"/>
+    <ellipse cx="1156"  cy="5024" rx="228"   ry="36"   fill="#6c6557"/>
+  </g>
+  <g filter="url(#painterly-5)" opacity="0.18">
+    <ellipse cx="320"   cy="5320" rx="260"   ry="34"   fill="#385059"/>
+    <ellipse cx="336"   cy="5304" rx="248"   ry="36"   fill="#6c6557"/>
+  </g>
+
+  <!-- Returning to light (y 5500–7000) — clouds re-emerge. -->
+  <g filter="url(#painterly-6)" opacity="0.32">
+    <ellipse cx="780"   cy="5660" rx="280"   ry="40"   fill="#43606b"/>
+    <ellipse cx="796"   cy="5642" rx="268"   ry="42"   fill="#8a8270"/>
+  </g>
+  <g filter="url(#painterly-1)" opacity="0.42">
+    <ellipse cx="240"   cy="5980" rx="300"   ry="40"   fill="#54707b"/>
+    <ellipse cx="256"   cy="5962" rx="288"   ry="42"   fill="#a89e88"/>
+  </g>
+  <g filter="url(#painterly-2)" opacity="0.55">
+    <ellipse cx="1140"  cy="6300" rx="280"   ry="40"   fill="#5e7782"/>
+    <ellipse cx="1156"  cy="6282" rx="268"   ry="42"   fill="#bfb59c"/>
+  </g>
+  <g filter="url(#painterly-3)" opacity="0.65">
+    <ellipse cx="540"   cy="6620" rx="320"   ry="44"   fill="#7c95a0"/>
+    <ellipse cx="560"   cy="6600" rx="306"   ry="46"   fill="#cdc4ad"/>
+    <ellipse cx="600"   cy="6582" rx="160"   ry="20"   fill="#cdc4ad" opacity="0.5"/>
+  </g>
+  <g filter="url(#painterly-4)" opacity="0.78">
+    <ellipse cx="1100"  cy="6940" rx="300"   ry="42"   fill="#9bb3bd"/>
+    <ellipse cx="1116"  cy="6920" rx="288"   ry="44"   fill="#dbd2bc"/>
+    <ellipse cx="1148"  cy="6902" rx="150"   ry="20"   fill="#dbd2bc" opacity="0.55"/>
+  </g>
+
+  <!-- BOTTOM BAND (y 7000–9000) — bright sky, fluffy clouds. The
+       footer sits here. Mirrors the top-band brightness. -->
+  <g filter="url(#painterly-5)" opacity="0.85">
+    <ellipse cx="320"   cy="7280" rx="320"   ry="44"   fill="#b3c3c9"/>
+    <ellipse cx="340"   cy="7260" rx="306"   ry="46"   fill="#f0e8d6"/>
+    <ellipse cx="380"   cy="7242" rx="160"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-6)" opacity="0.90">
+    <ellipse cx="1140"  cy="7600" rx="280"   ry="42"   fill="#b3c3c9"/>
+    <ellipse cx="1156"  cy="7580" rx="268"   ry="44"   fill="#f0e8d6"/>
+    <ellipse cx="1188"  cy="7562" rx="140"   ry="20"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-1)" opacity="0.85">
+    <ellipse cx="700"   cy="7920" rx="340"   ry="44"   fill="#b3c3c9"/>
+    <ellipse cx="720"   cy="7900" rx="324"   ry="46"   fill="#f0e8d6"/>
+    <ellipse cx="760"   cy="7882" rx="170"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-2)" opacity="0.88">
+    <ellipse cx="240"   cy="8240" rx="300"   ry="42"   fill="#b3c3c9"/>
+    <ellipse cx="256"   cy="8220" rx="288"   ry="44"   fill="#f0e8d6"/>
+    <ellipse cx="296"   cy="8202" rx="150"   ry="20"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+  <g filter="url(#painterly-3)" opacity="0.90">
+    <ellipse cx="1100"  cy="8580" rx="320"   ry="44"   fill="#b3c3c9"/>
+    <ellipse cx="1120"  cy="8560" rx="306"   ry="46"   fill="#f0e8d6"/>
+    <ellipse cx="1160"  cy="8542" rx="160"   ry="20"   fill="#f0e8d6" opacity="0.6"/>
+  </g>
+</svg>
+
+
 <header class="hero">
-
-  <!-- Layer 2: painterly clouds. Each <g> is two stacked ovals (shadow
-       underbelly + cream highlight) passed through a per-cloud filter:
-         feTurbulence → feDisplacementMap → feGaussianBlur.
-       That sequence converts smooth ellipses into wispy painterly forms;
-       each cloud uses a unique seed so they don't read as repeats. -->
-  <svg class="sky-clouds" viewBox="0 0 1440 900"
-       preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <filter id="painterly-1" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
-                      numOctaves="3" seed="3" result="t"/>
-        <feDisplacementMap in="SourceGraphic" in2="t" scale="60"/>
-        <feGaussianBlur stdDeviation="8"/>
-      </filter>
-      <filter id="painterly-2" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
-                      numOctaves="3" seed="11" result="t"/>
-        <feDisplacementMap in="SourceGraphic" in2="t" scale="55"/>
-        <feGaussianBlur stdDeviation="7"/>
-      </filter>
-      <filter id="painterly-3" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
-                      numOctaves="3" seed="7" result="t"/>
-        <feDisplacementMap in="SourceGraphic" in2="t" scale="65"/>
-        <feGaussianBlur stdDeviation="8"/>
-      </filter>
-      <filter id="painterly-4" x="-30%" y="-30%" width="160%" height="160%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
-                      numOctaves="3" seed="21" result="t"/>
-        <feDisplacementMap in="SourceGraphic" in2="t" scale="75"/>
-        <feGaussianBlur stdDeviation="10"/>
-      </filter>
-    </defs>
-
-    <!-- Cloud 1: upper-left -->
-    <g filter="url(#painterly-1)" opacity="0.90">
-      <ellipse cx="220" cy="334.4" rx="266"   ry="44"    fill="#b3c3c9"/>
-      <ellipse cx="236.8" cy="313.6" rx="257.6" ry="46.4" fill="#f0e8d6"/>
-      <ellipse cx="276" cy="296" rx="140" ry="20.8" fill="#f0e8d6" opacity="0.6"/>
-    </g>
-    <!-- Cloud 2: upper-right -->
-    <g filter="url(#painterly-2)" opacity="0.85">
-      <ellipse cx="1180" cy="272.6" rx="228"   ry="38.5"  fill="#b3c3c9"/>
-      <ellipse cx="1194.4" cy="254.4" rx="220.8" ry="40.6" fill="#f0e8d6"/>
-      <ellipse cx="1228" cy="239" rx="120" ry="18.2" fill="#f0e8d6" opacity="0.6"/>
-    </g>
-    <!-- Cloud 3: mid -->
-    <g filter="url(#painterly-3)" opacity="0.95">
-      <ellipse cx="760" cy="554.4" rx="304"   ry="44"    fill="#b3c3c9"/>
-      <ellipse cx="779.2" cy="533.6" rx="294.4" ry="46.4" fill="#f0e8d6"/>
-      <ellipse cx="824" cy="516" rx="160" ry="20.8" fill="#f0e8d6" opacity="0.6"/>
-    </g>
-    <!-- Cloud 4: lower-left -->
-    <g filter="url(#painterly-4)" opacity="0.70">
-      <ellipse cx="380" cy="732.6" rx="342"   ry="38.5"  fill="#b3c3c9"/>
-      <ellipse cx="401.6" cy="714.4" rx="331.2" ry="40.6" fill="#f0e8d6"/>
-      <ellipse cx="452" cy="699" rx="180" ry="18.2" fill="#f0e8d6" opacity="0.6"/>
-    </g>
-  </svg>
 
   <!-- Layer 3: cream-tinted film grain over the sky + clouds. -->
   <svg class="grain" aria-hidden="true">
