@@ -1296,9 +1296,10 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .thematic-card {
   position: relative;
   padding: clamp(32px, 4.5vw, 56px) clamp(28px, 4vw, 56px);
-  background: var(--blue);
-  color: var(--bone);
-  border: 1.5px solid var(--gold-bright);
+  background: var(--paper);
+  color: var(--blue-deep);
+  border: 1.5px solid var(--gold);
+  border-radius: 4px;
   box-shadow: 0 16px 40px rgba(0,0,0,0.45);
 }
 .thematic-card .eyebrow {
@@ -1307,7 +1308,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--gold);
   margin-bottom: 12px;
 }
 .thematic-card .num {
@@ -1317,7 +1318,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-weight: 600;
   font-size: clamp(48px, 6vw, 80px);
   line-height: 1;
-  color: var(--gold-bright);
+  color: var(--gold);
   margin-bottom: 8px;
 }
 .thematic-card h3 {
@@ -1327,27 +1328,21 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-size: clamp(22px, 2.2vw, 32px);
   line-height: 1.25;
   margin: 0;
-  color: var(--bone);
+  color: var(--blue-deep);
 }
-/* Card A — Two intertwined love stories. Tilted rounded-square, off-centre. */
+/* Card A — Two intertwined love stories. Tilted, off-centre. */
 .thematic-card.love {
   justify-self: start;
   width: min(560px, 92%);
-  border-radius: 12px;
   transform: rotate(-1.5deg);
 }
-/* Card B — the mystery logline. Wider, contrasting fill, with a hook stage. */
+/* Card B — the mystery logline. Wider, with a hook stage. */
 .thematic-card.logline {
   justify-self: end;
   width: min(720px, 96%);
-  background: var(--paper);
-  color: var(--blue-deep);
-  border-color: var(--gold);
-  border-radius: 4px;
   transform: rotate(1deg);
   padding-top: clamp(40px, 6vw, 64px);
 }
-.thematic-card.logline .eyebrow { color: var(--gold); }
 .hook-stage {
   position: relative;
   max-width: 880px;
@@ -1877,7 +1872,7 @@ body.is-investigation .egg-progress {
    WCAG AA threshold of 4.5:1 for small text. Reassign --gold inside paper
    contexts to a darker gold (#7C5F18, ~4.9:1). Blue and walnut sections
    keep the original / bright gold which already has good contrast there. */
-.thematic-card.logline,
+.thematic-card,
 .notebook .side, .polaroid .side, .catalog .side,
 .cast-card .side, .envelope .side,
 .leibniz .side, .tools-card .side, .leads .side {
