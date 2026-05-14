@@ -1909,13 +1909,11 @@ body.is-investigation .egg-progress {
 }
 
 /* ---------- §7 Cinematic atmosphere ----------
-   Four layers that sell the "this is film" framing:
-     1. film-grain  — fixed-position SVG fractal-noise overlay, low opacity,
-                      staccato CSS animation (steps()), respects rm-motion.
-     2. letterbox   — top/bottom 6vh bars that slide in when Aria audio plays
-                      (body.aria-playing).
-     3. parallax    — body::before paper-noise drifts at 0.3× scroll via
-                      a --scroll-y custom property updated by JS.
+   Two layers that sell the "this is film" framing:
+     1. film-grain — fixed-position SVG fractal-noise overlay, low opacity,
+                     staccato CSS animation (steps()), respects rm-motion.
+     2. parallax   — body::before cloud layer drifts at 0.3× scroll via
+                     a --scroll-y custom property updated by JS.
 */
 
 .film-grain {
@@ -1943,29 +1941,6 @@ body.is-investigation .egg-progress {
   100% { transform: translate(0px, 0px); }
 }
 
-.letterbox {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 6vh;
-  pointer-events: none;
-  z-index: 9985;          /* below film-grain (9990), above page content */
-  will-change: transform;
-  transition: transform 700ms cubic-bezier(.6,.05,.3,1);
-}
-.letterbox.top {
-  top: 0;
-  background: linear-gradient(180deg, #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(-100%);
-}
-.letterbox.bottom {
-  bottom: 0;
-  background: linear-gradient(0deg,   #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(100%);
-}
-body.aria-playing .letterbox.top    { transform: translateY(0); }
-body.aria-playing .letterbox.bottom { transform: translateY(0); }
-
 /* Global drifting-cloud parallax layer — soft non-tiling radial puffs
    over a blue ground. Inspired by the brochure p.2 cover-cloud motif.
    No SVG noise tile (which would show seams) — just large soft
@@ -1992,7 +1967,6 @@ body::before {
 
 @media (prefers-reduced-motion: reduce) {
   .film-grain { animation: none; opacity: 0.07; }
-  .letterbox  { transition: none; }
 }
 
 /* prefers-reduced-motion */
@@ -2043,8 +2017,6 @@ body::before {
 
 <!-- Cinematic atmosphere — purely decorative, pointer-events: none. -->
 <div class="film-grain" aria-hidden="true"></div>
-<div class="letterbox top" aria-hidden="true"></div>
-<div class="letterbox bottom" aria-hidden="true"></div>
 
 <a class="skip-link" href="#bridge">Skip to film</a>
 
@@ -3769,9 +3741,6 @@ function setUiPlaying(on){
   // Swap the visible icon: triangle ▶ when stopped, two bars ‖ when playing.
   if (iconPlay)  iconPlay.style.display  = on ? 'none' : '';
   if (iconPause) iconPause.style.display = on ? '' : 'none';
-  // Letterbox bars slide in/out with the Aria audio — cinematic framing
-  // for when the music is the score.
-  document.body.classList.toggle('aria-playing', !!on);
 }
 
 function ensureFallback(){
@@ -4533,9 +4502,7 @@ function setupHookReveal(){
   }
 }
 
-// Cinematic atmosphere — parallax + time-of-day.
-// (Film grain and letterbox are CSS-only; letterbox is hooked from
-// setUiPlaying so it follows the Aria audio state.)
+// Cinematic atmosphere — parallax cloud drift.
 function setupParallax(){
   let raf = 0;
   function update(){
