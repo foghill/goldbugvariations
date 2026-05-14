@@ -1296,9 +1296,10 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .thematic-card {
   position: relative;
   padding: clamp(32px, 4.5vw, 56px) clamp(28px, 4vw, 56px);
-  background: var(--blue);
-  color: var(--bone);
-  border: 1.5px solid var(--gold-bright);
+  background: var(--paper);
+  color: var(--blue-deep);
+  border: 1.5px solid var(--gold);
+  border-radius: 4px;
   box-shadow: 0 16px 40px rgba(0,0,0,0.45);
 }
 .thematic-card .eyebrow {
@@ -1307,7 +1308,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--gold);
   margin-bottom: 12px;
 }
 .thematic-card .num {
@@ -1317,7 +1318,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-weight: 600;
   font-size: clamp(48px, 6vw, 80px);
   line-height: 1;
-  color: var(--gold-bright);
+  color: var(--gold);
   margin-bottom: 8px;
 }
 .thematic-card h3 {
@@ -1327,27 +1328,21 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-size: clamp(22px, 2.2vw, 32px);
   line-height: 1.25;
   margin: 0;
-  color: var(--bone);
+  color: var(--blue-deep);
 }
-/* Card A — Two intertwined love stories. Tilted rounded-square, off-centre. */
+/* Card A — Two intertwined love stories. Tilted, off-centre. */
 .thematic-card.love {
   justify-self: start;
   width: min(560px, 92%);
-  border-radius: 12px;
   transform: rotate(-1.5deg);
 }
-/* Card B — the mystery logline. Wider, contrasting fill, with a hook stage. */
+/* Card B — the mystery logline. Wider, with a hook stage. */
 .thematic-card.logline {
   justify-self: end;
   width: min(720px, 96%);
-  background: var(--paper);
-  color: var(--blue-deep);
-  border-color: var(--gold);
-  border-radius: 4px;
   transform: rotate(1deg);
   padding-top: clamp(40px, 6vw, 64px);
 }
-.thematic-card.logline .eyebrow { color: var(--gold); }
 .hook-stage {
   position: relative;
   max-width: 880px;
@@ -1877,7 +1872,7 @@ body.is-investigation .egg-progress {
    WCAG AA threshold of 4.5:1 for small text. Reassign --gold inside paper
    contexts to a darker gold (#7C5F18, ~4.9:1). Blue and walnut sections
    keep the original / bright gold which already has good contrast there. */
-.thematic-card.logline,
+.thematic-card,
 .notebook .side, .polaroid .side, .catalog .side,
 .cast-card .side, .envelope .side,
 .leibniz .side, .tools-card .side, .leads .side {
@@ -1914,13 +1909,11 @@ body.is-investigation .egg-progress {
 }
 
 /* ---------- §7 Cinematic atmosphere ----------
-   Four layers that sell the "this is film" framing:
-     1. film-grain  — fixed-position SVG fractal-noise overlay, low opacity,
-                      staccato CSS animation (steps()), respects rm-motion.
-     2. letterbox   — top/bottom 6vh bars that slide in when Aria audio plays
-                      (body.aria-playing).
-     3. parallax    — body::before paper-noise drifts at 0.3× scroll via
-                      a --scroll-y custom property updated by JS.
+   Two layers that sell the "this is film" framing:
+     1. film-grain — fixed-position SVG fractal-noise overlay, low opacity,
+                     staccato CSS animation (steps()), respects rm-motion.
+     2. parallax   — body::before cloud layer drifts at 0.3× scroll via
+                     a --scroll-y custom property updated by JS.
 */
 
 .film-grain {
@@ -1948,29 +1941,6 @@ body.is-investigation .egg-progress {
   100% { transform: translate(0px, 0px); }
 }
 
-.letterbox {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 6vh;
-  pointer-events: none;
-  z-index: 9985;          /* below film-grain (9990), above page content */
-  will-change: transform;
-  transition: transform 700ms cubic-bezier(.6,.05,.3,1);
-}
-.letterbox.top {
-  top: 0;
-  background: linear-gradient(180deg, #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(-100%);
-}
-.letterbox.bottom {
-  bottom: 0;
-  background: linear-gradient(0deg,   #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(100%);
-}
-body.aria-playing .letterbox.top    { transform: translateY(0); }
-body.aria-playing .letterbox.bottom { transform: translateY(0); }
-
 /* Global drifting-cloud parallax layer — soft non-tiling radial puffs
    over a blue ground. Inspired by the brochure p.2 cover-cloud motif.
    No SVG noise tile (which would show seams) — just large soft
@@ -1997,7 +1967,6 @@ body::before {
 
 @media (prefers-reduced-motion: reduce) {
   .film-grain { animation: none; opacity: 0.07; }
-  .letterbox  { transition: none; }
 }
 
 /* prefers-reduced-motion */
@@ -2048,8 +2017,6 @@ body::before {
 
 <!-- Cinematic atmosphere — purely decorative, pointer-events: none. -->
 <div class="film-grain" aria-hidden="true"></div>
-<div class="letterbox top" aria-hidden="true"></div>
-<div class="letterbox bottom" aria-hidden="true"></div>
 
 <a class="skip-link" href="#bridge">Skip to film</a>
 
@@ -3774,9 +3741,6 @@ function setUiPlaying(on){
   // Swap the visible icon: triangle ▶ when stopped, two bars ‖ when playing.
   if (iconPlay)  iconPlay.style.display  = on ? 'none' : '';
   if (iconPause) iconPause.style.display = on ? '' : 'none';
-  // Letterbox bars slide in/out with the Aria audio — cinematic framing
-  // for when the music is the score.
-  document.body.classList.toggle('aria-playing', !!on);
 }
 
 function ensureFallback(){
@@ -4538,9 +4502,7 @@ function setupHookReveal(){
   }
 }
 
-// Cinematic atmosphere — parallax + time-of-day.
-// (Film grain and letterbox are CSS-only; letterbox is hooked from
-// setUiPlaying so it follows the Aria audio state.)
+// Cinematic atmosphere — parallax cloud drift.
 function setupParallax(){
   let raf = 0;
   function update(){
