@@ -782,31 +782,56 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 /* 1) Notebook */
 .notebook { width: 480px; height: 620px; left: 2%; top: 30px; transform: rotate(-6deg); }
 .notebook .side {
-  padding: 38px 34px;
+  /* Lab-notebook paper: warmer cream with COOL BLUE horizontal rules.
+     No red margin rule, no brown ledger lines — the mockup is a single
+     calm artifact, not a busy ledger. */
+  padding: 38px 36px;
   font-family: var(--serif);
-  color: #2a2218;
+  color: var(--ink);
   background:
-    repeating-linear-gradient(180deg, transparent 0 36px, rgba(120,90,30,0.08) 36px 37px),
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.05)),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.3 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
-    #e8d9b0;
-  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.18), inset 12px 0 0 -10px rgba(180,40,40,0.45);
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(122,159,170,0.32) 27px 28px),
+    var(--paper);
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.12);
+  display: flex;
+  flex-direction: column;
 }
-.notebook .nb-title { font-family: var(--hand); font-size: 42px; color: #5a3a14; margin-bottom: 8px; }
-.notebook .nb-sub { font-family: var(--mono); font-size: 14px; letter-spacing: 0.18em; color: #6e5a32; margin-bottom: 26px; }
-.notebook .nb-line { font-size: 22px; line-height: 1.7; margin: 8px 0; }
-.notebook .nb-line.tilt { transform: rotate(-1.2deg) translateX(-2px); }
-.notebook .nb-line.indent { padding-left: 32px; }
-.notebook .nb-mono { font-family: var(--mono); font-size: 15px; letter-spacing: 0.16em; color: #2a1f10; margin: 8px 0; }
-.notebook .coffee-ring {
-  position: absolute;
-  right: 32px; bottom: 44px;
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  background: radial-gradient(circle, transparent 55%, rgba(120,70,20,0.18) 60%, rgba(120,70,20,0.08) 70%, transparent 78%);
+.notebook .nb-head {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: 0.01em;
+}
+.notebook .nb-helix {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0;
   pointer-events: none;
 }
-.notebook .nb-arrow { color: var(--stamp-red); }
+.notebook .nb-helix svg {
+  width: 78%;
+  height: 100%;
+  display: block;
+}
+.notebook .nb-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: 0.01em;
+  margin-top: 6px;
+}
+.notebook .nb-foot u {
+  text-decoration: underline;
+  text-decoration-color: var(--ink);
+  text-underline-offset: 3px;
+}
 .notebook .back { padding: 38px 34px; font-size: 19px; line-height: 1.6; overflow-y: auto; }
 .notebook .back h3 { font-family: var(--grot); font-stretch: 125%; font-weight: 700; font-size: 19px; text-transform: uppercase; letter-spacing: 0.1em; color: #5a3a14; margin: 0 0 18px; }
 
@@ -1738,11 +1763,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .desk-head .reset-btn { font-size: 13px; font-weight: 600; }
 .hint { font-size: 28px; }
 
-/* ---------- Cards (fronts + backs) — uniform readable sizes ---------- */
-.notebook .nb-title { font-size: 44px; }
-.notebook .nb-sub { font-size: 14px; font-weight: 600; }
-.notebook .nb-line { font-size: 22px; font-weight: 500; line-height: 1.7; }
-.notebook .nb-mono { font-size: 15px; font-weight: 600; }
+/* ---------- Cards (fronts + backs) — uniform readable sizes ----------
+   Notebook front is now header + helix illustration + footer caption
+   (.nb-head / .nb-helix / .nb-foot) — typography defined alongside
+   the layout above. The synopsis lives on the back. */
 .notebook .back { font-size: 19px; line-height: 1.6; font-weight: 500; }
 .notebook .back h3 { font-size: 17px; font-weight: 700; }
 
@@ -2855,18 +2879,52 @@ body::before {
       <div class="artifact notebook" data-art="notebook">
         <div class="face">
           <div class="side front">
-            <div class="coffee-ring"></div>
-            <div class="nb-title">The Gold Bug Variations</div>
-            <div class="nb-sub">— lab journal · S.R. · Aug. 1957 —</div>
-            <p class="nb-line tilt">A — T &nbsp;·&nbsp; G — C</p>
-            <p class="nb-mono">5'&nbsp;A T G C T A G G T C A A G&nbsp;3'</p>
-            <p class="nb-mono" style="color:#6e5a32;">3'&nbsp;T A C G A T C C A G T T C&nbsp;5'</p>
-            <p class="nb-line indent">codon &nbsp;<span class="nb-arrow">→</span>&nbsp; amino acid?</p>
-            <p class="nb-line">if 4³ = 64, only 20 a.a.…</p>
-            <p class="nb-line tilt indent">— the cipher must be <u>degenerate</u></p>
-            <p class="nb-line">Goldberg playing again. Glenn G.</p>
-            <p class="nb-line tilt">— 30 variations on one bass.</p>
-            <p class="nb-line">life · music · the <u>same</u> trick.</p>
+            <div class="nb-head">— lab notebook · S.R. · Aug. 1957 —</div>
+            <div class="nb-helix" aria-hidden="true">
+              <svg viewBox="0 0 200 480" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <filter id="nb-helix-shiver" x="-10%" y="-5%" width="120%" height="110%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="31" result="t"/>
+                    <feDisplacementMap in="SourceGraphic" in2="t" scale="4"/>
+                    <feGaussianBlur stdDeviation="0.4"/>
+                  </filter>
+                </defs>
+                <g filter="url(#nb-helix-shiver)" stroke-linecap="round" fill="none">
+                  <!-- 6 full periods, vertical. Strand A — warm dark (#8a6f3a) -->
+                  <path d="M 100 16
+                           C 158 36, 158 60, 100 80
+                           C 42 100, 42 124, 100 144
+                           C 158 164, 158 188, 100 208
+                           C 42 228, 42 252, 100 272
+                           C 158 292, 158 316, 100 336
+                           C 42 356, 42 380, 100 400
+                           C 158 420, 158 444, 100 464"
+                        stroke="#8a6f3a" stroke-width="2.6"/>
+                  <!-- Strand B — ink, opposite phase -->
+                  <path d="M 100 16
+                           C 42 36, 42 60, 100 80
+                           C 158 100, 158 124, 100 144
+                           C 42 164, 42 188, 100 208
+                           C 158 228, 158 252, 100 272
+                           C 42 292, 42 316, 100 336
+                           C 158 356, 158 380, 100 400
+                           C 42 420, 42 444, 100 464"
+                        stroke="#1f1a16" stroke-width="2.6"/>
+                </g>
+                <!-- ATGC ticks at each crossing (4 visible bases repeating) -->
+                <g fill="#1f1a16" font-family="'Special Elite', 'Courier Prime', ui-monospace, Menlo, monospace" font-size="10" text-anchor="middle">
+                  <text x="100" y="22">A</text>
+                  <text x="100" y="84">T</text>
+                  <text x="100" y="148">G</text>
+                  <text x="100" y="212">C</text>
+                  <text x="100" y="276">A</text>
+                  <text x="100" y="340">T</text>
+                  <text x="100" y="404">G</text>
+                  <text x="100" y="468">C</text>
+                </g>
+              </svg>
+            </div>
+            <div class="nb-foot">if 4³ = 64, only 20 a.a. … <u>the cipher must be degenerate</u></div>
           </div>
           <div class="side back">
             <h3>Synopsis</h3>
