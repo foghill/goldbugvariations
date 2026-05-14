@@ -970,46 +970,6 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   color: #2a2218; background: #d9c89b;
 }
 
-/* Miró-inspired decorative shapes scattered behind the artifacts.
-   Pointer-events: none so they don't intercept drags. */
-.miro-shape {
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.85;
-}
-.miro-shape.dot-gold {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #f5d060, #c9a227 65%, #6b5210 100%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
-}
-.miro-shape.dot-red {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #d54a3a, #8a1a18 70%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
-}
-.miro-shape.tri-blue {
-  width: 0; height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 52px solid #22467D;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45));
-}
-.miro-shape.line-gold {
-  width: 120px; height: 2px;
-  background: var(--gold-bright);
-  transform-origin: center;
-}
-.miro-shape.crescent {
-  width: 70px; height: 70px;
-  border-radius: 50%;
-  background: var(--gold-bright);
-  -webkit-mask: radial-gradient(circle at 65% 50%, transparent 28px, #000 30px);
-          mask: radial-gradient(circle at 65% 50%, transparent 28px, #000 30px);
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45));
-}
 
 /* 9) Envelope / signup — featured CTA, big and centered at the bottom of the desk */
 .envelope {
@@ -2078,7 +2038,7 @@ body::before {
     margin: 0 auto;
     width: min(360px, 92vw);
   }
-  .red-string-svg, .beetle, .hint, .miro-shape { display: none; }
+  .red-string-svg, .beetle, .hint { display: none; }
   .foot-col { grid-column: span 6; margin-bottom: 18px; }
   .cipher-key { right: 12px; bottom: 12px; }
 }
@@ -2762,14 +2722,6 @@ body::before {
           </div>
         </div>
       </div>
-
-      <!-- Decorative Miró-inspired shapes scattered behind the artifacts. -->
-      <span class="miro-shape dot-gold"    style="top:170px; left:42%;" aria-hidden="true"></span>
-      <span class="miro-shape dot-red"     style="top:680px; right:30%;" aria-hidden="true"></span>
-      <span class="miro-shape tri-blue"    style="top:1180px; left:30%;" aria-hidden="true"></span>
-      <span class="miro-shape line-gold"   style="top:520px; left:18%; transform: rotate(-20deg);" aria-hidden="true"></span>
-      <span class="miro-shape crescent"    style="top:1280px; right:38%; transform: rotate(20deg);" aria-hidden="true"></span>
-      <span class="miro-shape dot-gold"    style="top:1500px; left:46%; width:34px; height:34px;" aria-hidden="true"></span>
 
     </div>
   </div>
