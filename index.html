@@ -141,18 +141,18 @@
 html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; background: var(--sky-top); }
 body {
-  /* ONE continuous gradient down the entire document — light sky at
-     the top, descending into dusk-teal at the middle of the scroll,
-     returning to light sky at the bottom. Every section sits on top
-     of this body gradient with `background: transparent`, so the page
-     reads as a single sky journey rather than stacked panels. */
+  /* ONE continuous sky gradient down the entire document, all in the
+     same hue family as the hero sky (sky-top → sky-bottom). The
+     middle anchor is a deeper sky-evening shade (#3f5e72), NOT the
+     dusk-teal navy — that earlier choice was perceptibly off-hue and
+     created the subtle break the user spotted. Three colors in the
+     same family interpolate smoothly with no perceptible kinks at
+     the stop boundaries. */
   background: linear-gradient(180deg,
-    var(--sky-top)    0%,
-    var(--sky-bottom) 18%,
-    #4a6c80           35%,
-    var(--dusk-teal)  50%,
-    #4a6c80           65%,
-    var(--sky-bottom) 82%,
+    var(--sky-top)     0%,
+    var(--sky-bottom) 25%,
+    #3f5e72           50%,
+    var(--sky-bottom) 75%,
     var(--sky-top)   100%);
   color: var(--ink);
   font-family: var(--serif);
