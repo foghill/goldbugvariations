@@ -426,7 +426,7 @@ input[type="email"], input[type="text"], textarea {
   --polaroid-w: clamp(220px, 24vw, 320px);
   width: var(--polaroid-w);
   margin: 0;
-  padding: 14px 14px 22px;
+  padding: 16px 16px 56px;       /* tall bottom strip — real polaroid proportions */
   background: var(--cloud-body);
   box-shadow:
     0 18px 36px rgba(8,14,22,0.55),
@@ -454,16 +454,17 @@ input[type="email"], input[type="text"], textarea {
 }
 .td-polaroid .td-photo .td-photo-sub {
   /* Italic Garamond subtitle that sits INSIDE the photo (below the
-     illustration), e.g. "— Aria · BWV 988 —", "A · T · G · C". */
+     illustration), e.g. "— Aria · BWV 988 —", "A · T · G · C".
+     Bumped scale per reference — was clamp(11–14), now 16–20px. */
   position: absolute;
-  left: 0; right: 0; bottom: 8%;
+  left: 0; right: 0; bottom: 10%;
   text-align: center;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(16px, 1.5vw, 20px);
   color: var(--ink);
-  opacity: 0.85;
-  letter-spacing: 0.04em;
+  opacity: 0.92;
+  letter-spacing: 0.02em;
   pointer-events: none;
 }
 .td-polaroid .td-cap {
@@ -1912,11 +1913,14 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    on the transition-desk polaroids also bumped.
    ==================================================================== */
 
-/* Transition-desk polaroid captions (MUSIC · FOUR / LIFE · FOUR / AND · TWO) */
-.td-polaroid .td-cap          { font-size: 16px; letter-spacing: 0.32em; }
+/* Transition-desk polaroid captions (MUSIC · FOUR / LIFE · FOUR / AND · TWO)
+   — Bumped per the Music · Four reference. Caption now reads at
+   real polaroid-handwriting scale (~22 px stencil), with the italic
+   sub-line slightly smaller. */
+.td-polaroid .td-cap          { font-size: 22px; letter-spacing: 0.32em; margin-top: 22px; }
 .td-polaroid .td-cap-num      { font-weight: 500; }
-.td-polaroid .td-cap-sub      { font-size: 16px; opacity: 0.78; margin-top: 6px; }
-.td-polaroid .td-photo-sub    { font-size: clamp(13px, 1.2vw, 16px); }
+.td-polaroid .td-cap-sub      { font-size: 18px; opacity: 0.82; margin-top: 8px; font-weight: 500; }
+.td-polaroid .td-photo-sub    { font-size: clamp(15px, 1.4vw, 19px); opacity: 0.92; }
 
 /* Notebook (front body) — fill the card; readable lab-journal text */
 .notebook .nb-head            { font-size: 19px; }
@@ -2679,59 +2683,72 @@ body::before {
   <!-- Three polaroids — the triptych. Each tilted, slight overlap. -->
   <div class="td-polaroids">
 
-    <!-- Polaroid A · MUSIC · FOUR — bass clef + Goldberg ground bass tetrachord (G F# E D) -->
+    <!-- Polaroid A · MUSIC · FOUR — bass clef + Goldberg ground bass tetrachord (G F# E D)
+         Reference rebuild: real Unicode bass clef glyph (U+1D122 = 𝄢, with music-font
+         fallback stack), 5-line staff with hand-drawn shiver, 4 stem-down quarter notes
+         descending diagonally, letter labels below each note. -->
     <figure class="td-polaroid td-pa">
       <div class="td-photo td-photo-music" aria-hidden="true">
         <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="td-music-shiver" x="-5%" y="-5%" width="110%" height="110%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="5" result="t"/>
-              <feDisplacementMap in="SourceGraphic" in2="t" scale="0.9"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="0.7"/>
             </filter>
           </defs>
+
+          <!-- Staff + clef + notes — all run through the shiver filter for hand-drawn feel -->
           <g filter="url(#td-music-shiver)" stroke="#1f1a16" stroke-linecap="round">
-            <!-- 5-line staff (centered vertically in upper half) -->
-            <g stroke-width="1.1" fill="none">
-              <line x1="22" y1="105" x2="218" y2="105"/>
-              <line x1="22" y1="120" x2="218" y2="120"/>
-              <line x1="22" y1="135" x2="218" y2="135"/>
-              <line x1="22" y1="150" x2="218" y2="150"/>
-              <line x1="22" y1="165" x2="218" y2="165"/>
-              <!-- bar at the right edge -->
-              <line x1="218" y1="105" x2="218" y2="165" stroke-width="1.4"/>
-            </g>
-            <!-- Bass clef (hand-drawn approximation: an open-ended F-clef spiral with 2 dots) -->
-            <g fill="none" stroke-width="1.8">
-              <path d="M 32 120 Q 64 96 64 124 Q 64 154 36 158 Q 26 160 28 148 Q 32 138 44 142 Q 54 146 52 154"/>
-            </g>
-            <g fill="#1f1a16">
-              <circle cx="74" cy="115" r="2"/>
-              <circle cx="74" cy="128" r="2"/>
+            <!-- 5-line staff -->
+            <g stroke-width="1.05" fill="none">
+              <line x1="32"  y1="100" x2="218" y2="100"/>
+              <line x1="32"  y1="118" x2="218" y2="118"/>
+              <line x1="32"  y1="136" x2="218" y2="136"/>
+              <line x1="32"  y1="154" x2="218" y2="154"/>
+              <line x1="32"  y1="172" x2="218" y2="172"/>
+              <!-- right-edge bar -->
+              <line x1="218" y1="100" x2="218" y2="172" stroke-width="1.4"/>
             </g>
 
-            <!-- 4 quarter notes G F# E D — descending. Filled note-heads with stems DOWN. -->
-            <!-- G (line 4 from top, top-of-staff area). The 4 notes sit on lines 4,3,2,1 from the top going DOWN visually -->
-            <g fill="#1f1a16">
-              <ellipse cx="106" cy="155" rx="6.2" ry="4.6" transform="rotate(-18 106 155)"/>
-              <ellipse cx="138" cy="160" rx="6.2" ry="4.6" transform="rotate(-18 138 160)"/>
-              <ellipse cx="170" cy="165" rx="6.2" ry="4.6" transform="rotate(-18 170 165)"/>
-              <ellipse cx="200" cy="170" rx="6.2" ry="4.6" transform="rotate(-18 200 170)"/>
-            </g>
-            <!-- Stems pointing DOWN from the right side of each note-head -->
-            <g stroke="#1f1a16" stroke-width="1.5" fill="none">
-              <line x1="111" y1="156" x2="111" y2="195"/>
-              <line x1="143" y1="161" x2="143" y2="200"/>
-              <line x1="175" y1="166" x2="175" y2="205"/>
-              <line x1="205" y1="171" x2="205" y2="210"/>
-            </g>
+            <!-- Bass clef — Unicode 𝄢 (U+1D122). Apple Symbols / Bravura render this as
+                 a real F-clef glyph; older systems fall back through the music-font stack. -->
+            <text x="32" y="158"
+                  font-family="'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol', 'STIX Two Math', 'Cambria Math', serif"
+                  font-size="64"
+                  fill="#1f1a16"
+                  dominant-baseline="alphabetic"
+                  text-anchor="start">&#x1D122;</text>
 
-            <!-- Letter labels below each note -->
-            <g fill="#1f1a16" font-family="'EB Garamond', Georgia, serif" font-size="14" text-anchor="middle">
-              <text x="106" y="232">G</text>
-              <text x="138" y="232">F♯</text>
-              <text x="170" y="232">E</text>
-              <text x="200" y="232">D</text>
+            <!-- 4 quarter notes — Goldberg ground bass tetrachord G F♯ E D, descending.
+                 Each note one staff-step lower than the last; all four sit above middle
+                 line, so stems point DOWN per standard notation. -->
+            <g fill="#1f1a16">
+              <ellipse cx="120" cy="127" rx="7.2" ry="5.2" transform="rotate(-22 120 127)"/>
+              <ellipse cx="148" cy="136" rx="7.2" ry="5.2" transform="rotate(-22 148 136)"/>
+              <ellipse cx="176" cy="145" rx="7.2" ry="5.2" transform="rotate(-22 176 145)"/>
+              <ellipse cx="204" cy="154" rx="7.2" ry="5.2" transform="rotate(-22 204 154)"/>
             </g>
+            <!-- Stems — descend from the right edge of each note-head ~50px down -->
+            <g stroke="#1f1a16" stroke-width="1.6" fill="none">
+              <line x1="126" y1="127" x2="126" y2="186"/>
+              <line x1="154" y1="136" x2="154" y2="195"/>
+              <line x1="182" y1="145" x2="182" y2="204"/>
+              <line x1="210" y1="154" x2="210" y2="213"/>
+            </g>
+          </g>
+
+          <!-- Letter labels below each note (OUTSIDE the shiver filter so the
+               type stays crisp). EB Garamond serif, no italic. -->
+          <g fill="#1f1a16"
+             font-family="'EB Garamond', Georgia, serif"
+             font-size="14"
+             font-weight="500"
+             text-anchor="middle"
+             letter-spacing="0.02em">
+            <text x="120" y="232">G</text>
+            <text x="148" y="232">F♯</text>
+            <text x="176" y="232">E</text>
+            <text x="204" y="232">D</text>
           </g>
         </svg>
         <span class="td-photo-sub">— Aria · BWV 988 —</span>
