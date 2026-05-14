@@ -1516,104 +1516,172 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   color: var(--cream); letter-spacing: 0.04em; word-break: break-word;
 }
 
-footer {
+/* ---------- §8 Footer — TYPESET MASTHEAD COLOPHON (Site Polish) ----------
+   Replaces the prior 4-column WordPress-style grid with a single
+   centered narrow column on dusk-teal. Reads like the back colophon
+   of a 1985 small-press paperback. Allerta Stencil micro-labels, EB
+   Garamond italic body, hairline rules between sections. The Poe
+   cipher row at the very bottom stays — recolored cream at 0.7
+   opacity per the gold-budget rule. */
+footer.masthead {
   position: relative; z-index: 3;
-  padding: clamp(60px, 10vh, 100px) var(--margin) 60px;
-  background: var(--walnut-2);
-  color: var(--bone);
-  border-top: 1px solid var(--walnut-rule);
+  background: var(--dusk-teal);
+  color: var(--cream);
+  padding: clamp(60px, 10vh, 100px) var(--margin) clamp(40px, 6vh, 70px);
 }
-.foot-press {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(20px, 2vw, 40px);
-  margin: 0 0 clamp(40px, 6vh, 64px);
-  padding: clamp(24px, 4vh, 36px) 0;
-  border-top: 1px solid var(--walnut-rule);
-  border-bottom: 1px solid var(--walnut-rule);
+.mast-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
 }
-.foot-press-item { display: flex; flex-direction: column; gap: 8px; }
-.foot-press-item .lbl {
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.32em; text-transform: uppercase;
+.mast-rule {
+  border: 0;
+  height: 1px;
+  background: rgba(240,232,214,0.22);
+  margin: clamp(28px, 4vh, 44px) auto;
+  width: 100%;
+}
+.mast-title {
+  margin: 0;
+}
+.mast-eyebrow {
+  font-family: var(--label);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+}
+.mast-h {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 38px);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin: 14px 0 8px;
+}
+.mast-h em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-stretch: 100%;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0;
   color: var(--cream);
 }
-.foot-press-item a {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(18px, 1.5vw, 22px);
-  color: var(--bone); text-decoration: none;
-  border-bottom: 1px solid rgba(240,232,214,0.32);
-  padding-bottom: 4px;
-  align-self: start;
-  transition: color 200ms, border-color 200ms;
-}
-.foot-press-item a:hover { color: var(--cream); border-color: var(--cream); }
-@media (max-width: 820px) {
-  .foot-press { grid-template-columns: 1fr; gap: 18px; }
+.mast-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: var(--cream);
+  opacity: 0.78;
 }
 
-.foot-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--col-gap);
-  margin-bottom: clamp(40px, 8vh, 80px);
-  padding-left: var(--rail-inset);
+.mast-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
 }
-.foot-col {
-  grid-column: span 3;
-  font-family: var(--mono);
+.mast-row {
+  width: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  padding: 14px 0;
+}
+.mast-lbl {
+  font-family: var(--label);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--bone);
-  line-height: 2;
-}
-.foot-col h4 {
-  margin: 0 0 14px;
   color: var(--cream);
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  border-bottom: 1px solid var(--walnut-rule);
-  padding-bottom: 10px;
+  opacity: 0.72;
 }
-.foot-col a { color: var(--bone); text-decoration: none; border-bottom: 1px solid rgba(240,232,214,0.22); padding-bottom: 1px; }
-.foot-col a:hover { color: var(--cream); }
+.mast-val {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(240,232,214,0.32);
+  padding-bottom: 2px;
+  transition: border-color 180ms ease, opacity 180ms ease;
+}
+.mast-val:hover { border-bottom-color: var(--cream); opacity: 0.92; }
+.mast-divider {
+  height: 1px;
+  width: 36px;
+  background: rgba(240,232,214,0.18);
+  margin: 0 auto;
+}
+
+.mast-sitemap {
+  display: flex; flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.55;
+}
+.mast-sitemap a {
+  color: var(--cream);
+  text-decoration: none;
+  transition: opacity 180ms ease;
+}
+.mast-sitemap a:hover { opacity: 1; }
+.mast-sitemap span { opacity: 0.6; }
+
 .foot-cipher {
   font-family: var(--mono);
   color: var(--cream);
-  opacity: 0.7;
+  opacity: 0.62;
   font-weight: 700;
   letter-spacing: 0.06em;
-  font-size: clamp(13px, 1.1vw, 16px);
+  font-size: clamp(12px, 1vw, 15px);
   text-align: center;
   line-height: 1.7;
   word-break: break-word;
   user-select: none;
   padding: 0 clamp(20px, 6vw, 80px);
+  margin: 0;
+  /* Magnifying-glass cursor over the buried message — invites probing. */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23f0e8d6' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,232,214,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23f0e8d6' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
 }
 .foot-cipher::before, .foot-cipher::after {
-  content: "—————————";
+  content: "————————";
   display: block;
-  color: var(--walnut-rule);
-  margin: 18px 0;
+  color: rgba(240,232,214,0.32);
+  margin: 14px 0;
   font-weight: 400;
   letter-spacing: 0.4em;
 }
 .foot-cipher .ch { transition: color 220ms ease; }
-.foot-cipher .ch.peek { color: var(--bone); }
-.foot-cipher {
-  /* Magnifying-glass cursor over the buried message — invites probing. */
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23f0e8d6' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,232,214,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23f0e8d6' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
-}
-.foot-meta {
-  margin-top: 36px;
+.foot-cipher .ch.peek { color: var(--cream); opacity: 1; }
+
+.mast-legal {
+  margin-top: clamp(20px, 3vh, 32px);
   display: flex; justify-content: space-between;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.22em;
+  gap: 12px;
+  font-family: var(--label);
+  font-size: 10px;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: rgba(240,230,210,0.7);
+  color: var(--cream);
+  opacity: 0.45;
+}
+@media (max-width: 600px) {
+  .mast-legal {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .mast-sitemap { font-size: 10px; gap: 6px 10px; }
 }
 
 /* ====================================================================
@@ -1709,13 +1777,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .signup .envelope button { font-size: 14px; font-weight: 600; }
 
 /* ---------- Footer ---------- */
-.foot-col { font-size: 14px; font-weight: 500; line-height: 2.05; color: var(--bone); }
-.foot-col h4 { font-size: 14px; font-weight: 600; }
-.foot-col a { font-weight: 500; }
-.foot-cipher { font-size: clamp(16px, 1.2vw, 19px); font-weight: 700; }
-.foot-meta { font-size: 13px; font-weight: 500; }
-.foot-press-item .lbl { font-size: 12px; font-weight: 600; }
-.foot-press-item a { font-size: clamp(19px, 1.5vw, 23px); font-weight: 500; }
+/* The 4-column .foot-col / .foot-press-item / .foot-meta layout was
+   retired in Site Polish §8 in favour of the typeset masthead
+   colophon (.masthead .mast-*). Typography for the new layout is
+   defined alongside its layout rules above. */
 
 /* ---------- Cipher key + glyphs progress (small fixed widgets) ---------- */
 .cipher-key.collapsed { font-size: 22px; }
@@ -2106,7 +2171,6 @@ body::before {
     width: min(360px, 92vw);
   }
   .red-string-svg, .beetle, .hint { display: none; }
-  .foot-col { grid-column: span 6; margin-bottom: 18px; }
   .cipher-key { right: 12px; bottom: 12px; }
 }
 </style>
@@ -2939,60 +3003,64 @@ body::before {
 
 
 <!-- ============================================================
-     §8  FOOTER (encrypted message never decrypts)
+     §8  FOOTER — TYPESET MASTHEAD COLOPHON
+     Single centered column on dusk-teal; reads like the back colophon
+     of a 1985 small-press paperback. The Poe cipher row at the bottom
+     stays (cream at 70%, no gold).
      ============================================================ -->
-<footer>
-  <div class="foot-press">
-    <div class="foot-press-item">
-      <span class="lbl">Press kit</span>
-      <a href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Download (PDF)</a>
-    </div>
-    <div class="foot-press-item">
-      <span class="lbl">Festival programmers</span>
-      <a href="mailto:goldbugmovie@gmail.com">goldbugmovie@gmail.com</a>
-    </div>
-    <div class="foot-press-item">
-      <span class="lbl">Financing &amp; co-pro</span>
-      <a href="mailto:goldbugmovie@gmail.com?subject=Investor%20deck%20request">Request the deck</a>
-    </div>
-  </div>
+<footer class="masthead">
+  <div class="mast-inner">
 
-  <div class="foot-grid">
-    <div class="foot-col">
-      <h4>The Film</h4>
-      <a href="#bridge">Synopsis</a><br>
-      <a href="#investigation">Director's Note</a><br>
-      <a href="#investigation">Cast</a><br>
-      <a href="#investigation">Source Material</a>
+    <hr class="mast-rule"/>
+
+    <div class="mast-title">
+      <div class="mast-eyebrow">Folio I of IV · Site No. 0001</div>
+      <h2 class="mast-h">The Gold Bug <em>Variations</em></h2>
+      <div class="mast-sub">a feature film by Mark A. Levinson · after Richard Powers</div>
     </div>
-    <div class="foot-col">
-      <h4>Source</h4>
-      <a href="#investigation">Richard Powers · 1991</a><br>
-      <a href="#investigation">Poe — "The Gold-Bug"</a><br>
-      <a href="#investigation">Bach — Goldberg Variations</a><br>
-      <a href="#bridge">The cipher key</a>
+
+    <hr class="mast-rule"/>
+
+    <div class="mast-rows">
+      <div class="mast-row">
+        <span class="mast-lbl">Press kit</span>
+        <a class="mast-val" href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Download (PDF)</a>
+      </div>
+      <div class="mast-divider" aria-hidden="true"></div>
+      <div class="mast-row">
+        <span class="mast-lbl">Festival programmers</span>
+        <a class="mast-val" href="mailto:goldbugmovie@gmail.com">goldbugmovie@gmail.com</a>
+      </div>
+      <div class="mast-divider" aria-hidden="true"></div>
+      <div class="mast-row">
+        <span class="mast-lbl">Financing &amp; co-pro</span>
+        <a class="mast-val" href="mailto:goldbugmovie@gmail.com?subject=Investor%20deck%20request">Request the deck</a>
+      </div>
     </div>
-    <div class="foot-col">
-      <h4>Contact</h4>
-      <a href="mailto:goldbugmovie@gmail.com">General — goldbugmovie@gmail.com</a><br>
-      <a href="mailto:goldbugmovie@gmail.com?subject=Press%20inquiry">Press inquiries</a><br>
-      <a href="mailto:goldbugmovie@gmail.com?subject=Festival%20programmer%20inquiry">Festival programmers</a><br>
+
+    <hr class="mast-rule"/>
+
+    <nav class="mast-sitemap" aria-label="Sitemap">
+      <a href="#bridge">Synopsis</a>
+      <span aria-hidden="true">·</span>
+      <a href="#investigation">Cast</a>
+      <span aria-hidden="true">·</span>
+      <a href="#investigation">Source material</a>
+      <span aria-hidden="true">·</span>
+      <a href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Press</a>
+      <span aria-hidden="true">·</span>
       <a href="mailto:goldbugmovie@gmail.com?subject=Distribution">Distribution</a>
-    </div>
-    <div class="foot-col">
-      <h4>Honors</h4>
-      Sundance Lab<br>
-      Film Independent<br>
-      Sloan Foundation ×3<br>
-      Gotham (IFP) No Borders
-    </div>
-  </div>
+    </nav>
 
-  <div class="foot-cipher" id="footCipher" aria-label="Encrypted message"></div>
+    <hr class="mast-rule"/>
 
-  <div class="foot-meta">
-    <span>© MMXXVI · ALL RIGHTS RESERVED</span>
-    <span>SITE NO. 0001 · FOLIO I OF IV</span>
+    <div class="foot-cipher" id="footCipher" aria-label="Encrypted message"></div>
+
+    <div class="mast-legal">
+      <span>© MMXXVI · all rights reserved</span>
+      <span>Site No. 0001 · Folio I of IV</span>
+    </div>
+
   </div>
 </footer>
 
