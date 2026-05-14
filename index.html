@@ -61,7 +61,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Allerta+Stencil&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Courier+Prime:wght@400;700&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Allerta+Stencil&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Courier+Prime:wght@400;700&family=Caveat:wght@500&family=Special+Elite&display=swap" rel="stylesheet">
 
 <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%237a9faa'/><text x='16' y='24' text-anchor='middle' font-family='monospace' font-weight='700' font-size='24' fill='%231f1a16'>%E2%80%A1</text></svg>">
 
@@ -1638,14 +1638,17 @@ footer.masthead {
 .mast-sitemap span { opacity: 0.6; }
 
 .foot-cipher {
-  font-family: var(--mono);
+  /* Mockup 04 — typewriter face for the cipher row. Special Elite first;
+     JetBrains Mono / Courier Prime fallbacks keep it stable across
+     Firefox + Safari where Special Elite occasionally hiccups. */
+  font-family: "Special Elite", "JetBrains Mono", "Courier Prime", "Courier New", ui-monospace, Menlo, monospace;
   color: var(--cream);
   opacity: 0.62;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  font-size: clamp(13px, 1.1vw, 16px);
   text-align: center;
-  line-height: 1.7;
+  line-height: 1.75;
   word-break: break-word;
   user-select: none;
   padding: 0 clamp(20px, 6vw, 80px);
@@ -1880,6 +1883,45 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   text-align: center;
   max-width: 720px;
 }
+
+/* Mockup 05 fidelity — headline in Stardos Stencil (not Archivo grot),
+   italic "search" in EB Garamond, scaled larger; SEND button reads as a
+   real button (ink bg, cream Allerta Stencil "SEND ↗") not a transparent
+   text-link. Scoped to .signup so the artifact-style envelope (if it
+   ever returns to the desk) keeps its current treatment. */
+.signup .envelope h2 {
+  font-family: var(--stencil);
+  font-stretch: 100%;
+  font-weight: 700;
+  font-size: clamp(54px, 7vw, 92px);
+  letter-spacing: 0.04em;
+  line-height: 0.98;
+  color: var(--ink);
+}
+.signup .envelope h2 em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: 100%;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.signup .envelope button {
+  background: var(--ink);
+  border: 0;
+  font-family: var(--label);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--cream);
+  padding: 14px 22px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: opacity 180ms ease;
+}
+.signup .envelope button:hover { color: var(--cream); opacity: 0.78; }
 
 /* ---------- Easter-egg ‡ glyphs scattered through the page ----------
    Was gold; now cream-on-context. Reads the same on walnut / dusk-teal,
