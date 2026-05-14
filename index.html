@@ -2791,10 +2791,18 @@ body::before {
     </div>
     <div class="mm-svg-wrap">
       <svg id="morph" viewBox="0 0 360 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- Back-to-front z-order: staff lines, beams, stems, heads, flags, clef. -->
-        <g id="lines"      stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"></g>
-        <g id="goldStrand" stroke="#8a6f3a"      stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
-        <g id="rungs"      stroke="currentColor" stroke-width="1"   opacity="0"></g>
+        <!-- Back-to-front z-order: rungs (behind strands), back strand,
+             front strand, beams/stems/heads/flags/clef.
+             Both helix strands are cream (currentColor); depth comes from
+             stroke-width + opacity differential. The back-strand group
+             (#goldStrand — name kept for renderer compatibility) is
+             rendered thinner and at lower opacity so it visually recedes. -->
+        <g id="rungs"      stroke="currentColor" stroke-width="1.2" fill="none"
+                           stroke-linecap="round" opacity="0"></g>
+        <g id="goldStrand" stroke="currentColor" stroke-width="1.8" fill="none"
+                           stroke-linecap="round" stroke-linejoin="round" opacity="0"></g>
+        <g id="lines"      stroke="currentColor" stroke-width="2.6" fill="none"
+                           stroke-linecap="round" stroke-linejoin="round"></g>
         <g id="beams"      fill="currentColor"></g>
         <g id="stems"      fill="currentColor"></g>
         <g id="notes"      fill="currentColor"></g>
@@ -4106,10 +4114,15 @@ function bridgeMorph(opts){
       }
       p.setAttribute('opacity', op.toFixed(3));
     }
-    // Gold complementary strand fades in 0.40 → 0.80.
+    // Back-strand (#goldStrand kept for renderer compatibility — no
+    // longer gold). Fades in 0.40 → 0.80 like before, BUT capped at
+    // 0.55 max opacity so it visually recedes behind the front strand.
+    // Same cream colour as the front strand; depth = thinner stroke
+    // (1.8 vs front 2.6) + lower opacity.
     goldPath.setAttribute('d', strandPath(STRANDS - 1, clampedT));
-    const goldOp = Math.max(0, Math.min(1, (clampedT - 0.40) / 0.40));
-    goldG.setAttribute('opacity', goldOp.toFixed(3));
+    const backFadeIn = Math.max(0, Math.min(1, (clampedT - 0.40) / 0.40));
+    const backOp = backFadeIn * 0.55;
+    goldG.setAttribute('opacity', backOp.toFixed(3));
 
     // ---- Clef ----
     // Sits on the staff at t=0, slowly fades 0.0 → 0.40.
@@ -4277,9 +4290,14 @@ function bridgeMorph(opts){
       }
     }
 
-    // ---- Rungs (helix end-state). Fade in 0.65 → 0.95, so they don't
-    // appear as floating horizontal lines while the strands are still
-    // mid-bend. At t=1 they connect the two strands as base-pair markers. ----
+    // ---- Rungs (helix end-state) ----
+    // Fade in 0.65 → 0.95 so they don't appear mid-bend. At t=1 they
+    // connect the two strands as base-pair markers. Each rung's PER-
+    // RUNG opacity is now scaled by the horizontal separation between
+    // the strands at that y — wide separation (front of the twist)
+    // reads bold; narrow separation (where the strands cross at the
+    // back) fades out. This gives the helix a believable rotational
+    // depth without any 3D maths. All cream — no gold/warm-dark.
     const rungOp = Math.max(0, Math.min(1, (clampedT - 0.65) / 0.30));
     rungsG.setAttribute('opacity', rungOp.toFixed(3));
     for (let i = 0; i < BASE_COUNT; i++){
@@ -4294,8 +4312,16 @@ function bridgeMorph(opts){
       ln.setAttribute('y1', y.toFixed(2));
       ln.setAttribute('x2', x2.toFixed(2));
       ln.setAttribute('y2', y.toFixed(2));
-      ln.setAttribute('stroke', (i % 2 === 0) ? 'currentColor' : '#8a6f3a');
-      ln.setAttribute('stroke-width', '1');
+      ln.setAttribute('stroke', 'currentColor');
+      // Depth taper: |Δx| / (2·HELIX_AMP) ∈ [0,1].
+      // Wide rung → bold (1.0); crossed rung → faded (0.18).
+      const sep   = Math.abs(x1 - x2);
+      const norm  = sep / (HELIX_AMP * 2);
+      const depth = 0.18 + 0.82 * norm;
+      ln.setAttribute('opacity', depth.toFixed(3));
+      // Front rungs slightly thicker than crossed ones — visible but
+      // not heavy. Range 0.7 → 1.4 stroke-width.
+      ln.setAttribute('stroke-width', (0.7 + 0.7 * norm).toFixed(2));
     }
   }
 
