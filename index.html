@@ -1725,17 +1725,65 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 .cipher-key .key-foot { font-size: 11px; font-weight: 500; line-height: 1.7; }
 .egg-progress { font-size: 12px; font-weight: 600; letter-spacing: 0.22em; }
 
-/* ---------- Standalone signup section (static envelope above the footer) ----------
-   The envelope used to live on the investigation desk as a draggable card.
-   It now sits in its own section just above the footer's press strip,
-   re-using the .envelope visual styling but without the .artifact flip /
-   drag scaffolding. */
+/* ---------- §7 Signup — RETURN TO THE SKY (Site Polish) ----------
+   The newsletter signup now lives on a return-to-sky panel just above
+   the footer. The film is Aria → 30 Variations → Aria; the page
+   should rhyme, ending where it began. Background is the same dusty
+   teal gradient + painterly cloud composition as the hero, with a
+   FOLIO IV · DA CAPO eyebrow above the envelope. Bottom of the
+   section transitions to dusk-teal so the footer below picks up
+   cleanly. The envelope CTA stays — cream paper card on ink border —
+   but loses the walnut backdrop. */
 .signup {
   position: relative;
   z-index: 2;
-  background: var(--walnut-2);
-  padding: clamp(70px, 9vh, 110px) var(--margin) clamp(50px, 7vh, 90px);
-  border-top: 1px solid var(--walnut-rule);
+  background: linear-gradient(180deg,
+    var(--sky-top)     0%,
+    var(--sky-bottom)  62%,
+    #5d7f8a            88%,
+    var(--dusk-teal)   100%);
+  padding: clamp(70px, 10vh, 130px) var(--margin) clamp(60px, 8vh, 110px);
+  overflow: hidden;
+  isolation: isolate;
+}
+.signup::before {
+  /* Two painterly clouds — same DNA as the hero, smaller and fewer */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    radial-gradient(ellipse 38vw 12vh at 16% 22%, rgba(240,232,214,0.42), transparent 70%),
+    radial-gradient(ellipse 32vw 10vh at 84% 38%, rgba(240,232,214,0.34), transparent 70%);
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+.signup .folio {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto clamp(28px, 4vh, 44px);
+}
+.signup .folio .folio-tag {
+  display: inline-block;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--ink);
+  padding: 6px 14px;
+}
+.signup .folio .folio-sub {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.6vw, 21px);
+  color: var(--ink);
+  opacity: 0.78;
 }
 .signup .envelope {
   position: relative;
@@ -1745,14 +1793,27 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   margin: 0 auto;
   transform: rotate(-1.2deg);
   perspective: none;
-  z-index: 1;
-  filter: drop-shadow(0 24px 36px rgba(0,0,0,0.55));
+  z-index: 2;
+  filter: drop-shadow(0 22px 38px rgba(8,14,22,0.45));
 }
 .signup .envelope .side {
   position: relative;
   inset: auto;
   height: auto;
   border-radius: 4px;
+}
+.signup .disclaimer {
+  position: relative;
+  z-index: 2;
+  margin: clamp(28px, 4vh, 44px) auto 0;
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.6;
+  text-align: center;
+  max-width: 720px;
 }
 
 /* ---------- Easter-egg ‡ glyphs scattered through the page ----------
@@ -2848,9 +2909,17 @@ body::before {
 
 
 <!-- ============================================================
-     §6  SIGNUP — featured envelope CTA, just above the footer press strip
+     §6  SIGNUP — Return to the Sky panel (Goldberg da capo)
+     The Aria returns. Sky comes back; envelope sits on it like a
+     letter waiting in the air just above the typeset footer.
      ============================================================ -->
 <section class="signup" id="signup" aria-label="Join the search">
+
+  <header class="folio">
+    <span class="folio-tag">Folio IV · Da Capo</span>
+    <span class="folio-sub">— the aria returns —</span>
+  </header>
+
   <div class="envelope" id="envelopeArt">
     <div class="side front">
       <div class="eyebrow">Folio II · in the post</div>
@@ -2864,6 +2933,8 @@ body::before {
       <div class="ok" id="envOk">Thank you. The next letter is in the post.</div>
     </div>
   </div>
+
+  <p class="disclaimer">We will not write to you for any other reason</p>
 </section>
 
 
