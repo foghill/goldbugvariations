@@ -604,42 +604,45 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .audio-btn.playing .b4 { animation-delay: .25s; }
 @keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
 
-/* ---------- §5 Detective board: walnut desk + cards + beetle ----------
-   Site Polish §6 — the desk now has a lamp on it. A soft warm radial
-   over the wood centres on the vinyl record (the spread's natural
-   focal point) and falls off into deep walnut at the edges, so cards
-   near the centre feel illuminated rather than just placed. */
+/* ---------- §5 Detective board: dusk-teal ground + paper artifact cards
+   The desk surface used to be warm walnut wood with a tungsten lamp
+   pool. Per latest mockup, the case file now sits on the same dusk-teal
+   ground that carries the rest of the page — paper artifacts on a deep
+   blue desk rather than on wood. The lamp pool is gone (the mockup
+   shows a flat surface); a faint cool-light vignette replaces it just
+   enough to keep cards from disappearing into the corners. */
 .investigation {
   position: relative;
   background:
-    radial-gradient(ellipse 60% 55% at 50% 48%,
-      rgba(58, 42, 29, 0.55) 0%,
-      rgba(28, 22, 18, 0.0) 65%),
-    linear-gradient(180deg, #1c1612 0%, #15110e 100%);
-  color: var(--bone);
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      rgba(255,255,255,0.04) 0%,
+      transparent 70%),
+    linear-gradient(180deg, var(--dusk-teal) 0%, #233a4d 100%);
+  color: var(--cloud-body);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
-  /* desk-grain noise overlay */
+  /* very low-opacity grain so the dusk-teal doesn't read flat */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.32;
+  opacity: 0.22;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 .investigation::after {
-  /* warm lamp pool — soft tungsten halo radiating from the vinyl record */
+  /* Subtle bottom-edge fade into deeper dusk so the desk meets the
+     return-to-sky panel below without a hard seam. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(ellipse 50% 45% at 50% 50%,
-    rgba(255, 196, 110, 0.10) 0%,
-    rgba(255, 196, 110, 0.04) 30%,
-    transparent 60%);
+  background: linear-gradient(180deg,
+    transparent 0%,
+    transparent 78%,
+    rgba(0,0,0,0.25) 100%);
 }
 .desk {
   position: relative;
@@ -1833,18 +1836,34 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   isolation: isolate;
 }
 .signup::before {
-  /* Two painterly clouds — same DNA as the hero, smaller and fewer */
+  /* Two big painterly clouds — left-mid + right-mid, mirroring the
+     hero's cover-cloud composition. Bigger and softer than the
+     previous pass to match the new mockup. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
   background-image:
-    radial-gradient(ellipse 38vw 12vh at 16% 22%, rgba(240,232,214,0.42), transparent 70%),
-    radial-gradient(ellipse 32vw 10vh at 84% 38%, rgba(240,232,214,0.34), transparent 70%);
+    radial-gradient(ellipse 50vw 18vh at 12% 26%, rgba(240,232,214,0.92), transparent 65%),
+    radial-gradient(ellipse 46vw 16vh at 88% 32%, rgba(240,232,214,0.85), transparent 65%);
   background-repeat: no-repeat;
+  filter: blur(0.5px);
   mix-blend-mode: screen;
+  opacity: 0.9;
+}
+/* Tiny gold bug top-right — sole authorized gold per gold-budget rule.
+   Pure decoration; pointer-events:none so it doesn't block clicks. */
+.signup .sky-bug {
+  position: absolute;
+  top: clamp(110px, 16vh, 180px);
+  right: clamp(80px, 14vw, 200px);
+  width: 28px; height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  transform: rotate(18deg);
   opacity: 0.85;
 }
+.signup .sky-bug svg { width: 100%; height: 100%; display: block; }
 .signup .folio {
   position: relative;
   z-index: 2;
@@ -1871,63 +1890,131 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   color: var(--ink);
   opacity: 0.78;
 }
+/* ----------------------------------------------------------------
+   §7 RETURN-TO-SKY — full mockup-fidelity rebuild.
+   The envelope's grid + stamp + inner frame chrome was decorative
+   for the desk-card era. The mockup wants a clean centered stack
+   on the sky: huge JOIN / search headline, italic subhead, a single
+   cream pill form with the SEND button INSIDE the rectangle, and a
+   small disclaimer beneath. Achieved by neutralising the envelope's
+   grid layout and the bottom-border form rule, then layering the
+   pill styling on top — no markup change so the form binding +
+   easter-egg anchor stay intact.
+   ---------------------------------------------------------------- */
 .signup .envelope {
   position: relative;
   left: auto; top: auto;
-  width: min(900px, 94vw);
+  width: min(820px, 94vw);
   height: auto;
   margin: 0 auto;
-  transform: rotate(-1.2deg);
+  transform: none;          /* mockup is dead-centred, no tilt */
   perspective: none;
   z-index: 2;
-  filter: drop-shadow(0 22px 38px rgba(8,14,22,0.45));
+  filter: none;
 }
+/* Strip the envelope's 1px inset frame — the new design has no frame */
+.signup .envelope::before { display: none; }
 .signup .envelope .side {
   position: relative;
   inset: auto;
   height: auto;
-  border-radius: 4px;
-}
-.signup .disclaimer {
-  position: relative;
-  z-index: 2;
-  margin: clamp(28px, 4vh, 44px) auto 0;
-  font-family: var(--label);
-  font-size: 11px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.6;
+  border-radius: 0;
+  background: transparent;  /* envelope no longer reads as paper card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  max-width: 720px;
+  padding: 0;
+  box-shadow: none;
+  grid-template-areas: none;
+  grid-template-columns: none;
 }
+/* Mockup hides the inner eyebrow ("Folio II · in the post") and the
+   stamp graphic — the .folio header above the envelope already
+   carries the "FOLIO IV · DA CAPO" marker. The eyebrow span is kept
+   in the DOM (z. small + non-block) because it anchors the 5th
+   easter-egg ‡ glyph. */
+.signup .envelope .eyebrow {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  /* visually hidden but the egg button stays clickable: it's
+     inline-block inside this span and we restore its layout below */
+}
+.signup .envelope .eyebrow .egg {
+  position: fixed;
+  /* park the egg in the top-right corner of the signup section so it's
+     still discoverable but doesn't disturb the headline composition */
+  width: auto; height: auto;
+  clip: auto;
+  overflow: visible;
+}
+.signup .envelope .stamp { display: none; }
 
-/* Mockup 05 fidelity — headline in Stardos Stencil (not Archivo grot),
-   italic "search" in EB Garamond, scaled larger; SEND button reads as a
-   real button (ink bg, cream Allerta Stencil "SEND ↗") not a transparent
-   text-link. Scoped to .signup so the artifact-style envelope (if it
-   ever returns to the desk) keeps its current treatment. */
+/* Headline — two-line stack, big stencil over big italic Garamond */
 .signup .envelope h2 {
   font-family: var(--stencil);
   font-stretch: 100%;
   font-weight: 700;
-  font-size: clamp(54px, 7vw, 92px);
+  font-size: clamp(64px, 9vw, 124px);
   letter-spacing: 0.04em;
-  line-height: 0.98;
+  line-height: 0.96;
   color: var(--ink);
+  margin: 0 0 14px;
+  max-width: none;
 }
 .signup .envelope h2 em {
+  display: block;            /* force "search." onto its own line */
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
   font-stretch: 100%;
   text-transform: lowercase;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   color: var(--ink);
+  font-size: 0.95em;         /* slightly smaller than JOIN THE so the
+                                stencil weight wins, but still big */
+  margin-top: 4px;
 }
-/* Submit-button only — must NOT cascade to the easter-egg ‡ button
-   (`<button class="egg">`) that the egg system injects into the
-   envelope eyebrow. */
+
+/* Subhead */
+.signup .envelope p.intro {
+  max-width: 56ch;
+  margin: 18px auto 36px;
+  font-style: italic;
+}
+
+/* Pill form — cream rectangle holding input + ink SEND button */
+.signup .envelope form {
+  display: inline-flex;
+  align-items: stretch;
+  width: min(560px, 100%);
+  max-width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);   /* override the legacy 2px rule */
+  padding: 4px;
+  gap: 0;
+  box-shadow: 0 14px 28px rgba(8,14,22,0.35);
+}
+.signup .envelope input {
+  flex: 1;
+  background: transparent;
+  border: 0; outline: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.6vw, 20px);
+  padding: 14px 18px;
+  color: var(--ink);
+  min-width: 0;
+}
+.signup .envelope input::placeholder {
+  color: rgba(31,26,22,0.55);
+  font-style: italic;
+}
+
+/* SEND ↗ button INSIDE the cream rectangle */
 .signup .envelope button[type="submit"] {
   background: var(--ink);
   border: 0;
@@ -1937,12 +2024,20 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   letter-spacing: 0.38em;
   text-transform: uppercase;
   color: var(--cream);
-  padding: 14px 22px;
-  margin-left: 10px;
+  padding: 14px 26px;
+  margin-left: 0;            /* sits flush inside the pill */
   cursor: pointer;
   transition: opacity 180ms ease;
+  white-space: nowrap;
 }
-.signup .envelope button[type="submit"]:hover { color: var(--cream); opacity: 0.78; }
+.signup .envelope button[type="submit"]:hover { color: var(--cream); opacity: 0.82; }
+.signup .envelope .ok {
+  margin-top: 18px;
+  font-style: italic;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+}
 
 /* ---------- Easter-egg ‡ glyphs scattered through the page ----------
    Was gold; now cream-on-context. Reads the same on walnut / dusk-teal,
@@ -2091,9 +2186,10 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   transition: opacity 320ms ease, background 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 body.is-investigation .egg-progress {
-  background: var(--walnut-2);
+  /* Desk is now dusk-teal — match the badge to that, not walnut. */
+  background: rgba(15, 28, 40, 0.85);
   color: var(--cream);
-  border-color: var(--cream);
+  border-color: rgba(240,232,214,0.4);
 }
 .egg-progress.visible { opacity: 1; }
 
@@ -3134,10 +3230,10 @@ body::before {
     <div class="side front">
       <div class="eyebrow">Folio II · in the post</div>
       <div class="stamp" aria-hidden="true"></div>
-      <h2>Join the <em>search</em>.</h2>
-      <p class="intro">One letter per quarter — production notes, set photography from Urbana and Brooklyn, and an occasional clue. We will not write to you for any other reason.</p>
+      <h2>Join the<em>search.</em></h2>
+      <p class="intro">One letter per quarter — production notes, set photography from Urbana and Brooklyn, and an occasional clue.</p>
       <form id="signupForm" novalidate>
-        <input type="email" required placeholder="your.address@correspondent.com" id="emailInput" autocomplete="email">
+        <input type="email" required placeholder="name@somewhere" id="emailInput" autocomplete="email">
         <button type="submit">Send ↗</button>
       </form>
       <div class="ok" id="envOk">Thank you. The next letter is in the post.</div>
@@ -3145,6 +3241,18 @@ body::before {
   </div>
 
   <p class="disclaimer">We will not write to you for any other reason</p>
+
+  <!-- Sole authorised gold appearance on the return-to-sky panel -->
+  <span class="sky-bug" aria-hidden="true">
+    <svg viewBox="0 0 28 22">
+      <ellipse cx="14" cy="11" rx="11" ry="7" fill="#c9a961"/>
+      <line x1="14" y1="3" x2="14" y2="19" stroke="#1f1a16" stroke-width="0.7"/>
+      <ellipse cx="10" cy="8" rx="1.5" ry="1.1" fill="#1f1a16"/>
+      <ellipse cx="18" cy="8" rx="1.5" ry="1.1" fill="#1f1a16"/>
+      <path d="M 11 3 Q 8 0 5 1" stroke="#1f1a16" stroke-width="0.6" fill="none"/>
+      <path d="M 17 3 Q 20 0 23 1" stroke="#1f1a16" stroke-width="0.6" fill="none"/>
+    </svg>
+  </span>
 </section>
 
 
