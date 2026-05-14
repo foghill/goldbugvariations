@@ -1,5 +1,52 @@
 # Changelog — The Gold Bug Variations site
 
+## v4 — 2026-05-14 — Postcard Noon: painterly clouds + black stencil
+
+A full palette + typography pivot away from v3's blue/gold cover-design
+toward the dusty-teal sky and warm-cream painterly-cloud system
+specified in the Postcard-Noon brief (sampled off the novel cover).
+
+- **Palette** — v3's `--blue-*` tokens are gone. New tokens:
+  `--sky-top` `#a3c2cb`, `--sky-bottom` `#7a9faa`, `--cloud-body`
+  `#f0e8d6`, `--cloud-shadow` `#b3c3c9`, `--ink` `#1f1a16`,
+  `--grain-tint` cream. Gold is retained only inside the detective-board
+  artifact card surfaces (vintage paper) — nowhere in the global
+  typography system.
+- **Typography** — Stardos Stencil (700) for display titles; Allerta
+  Stencil (400) at 0.42em tracking for credit lines and eyebrows; EB
+  Garamond italic for subtitles. The body serif moves from Lora →
+  EB Garamond.
+- **Hero (§1)** — rebuilt as the Postcard-Noon component:
+    1. Sky linear-gradient (sky-top → sky-bottom)
+    2. Inline full-bleed SVG with **four painterly clouds**: each cloud
+       is two ellipses (cool underbelly + warm-cream highlight) passed
+       through a per-cloud `feTurbulence → feDisplacementMap →
+       feGaussianBlur` filter chain. Unique seed per cloud; clouds at
+       viewBox `1440×900` per the spec, with `preserveAspectRatio="xMidYMid slice"`.
+    3. Cream-tinted film grain overlay (low opacity, `mix-blend-mode:
+       overlay`).
+    4. Vignette (radial gradient, corner darken).
+    5. Type stack: title in Stardos Stencil uppercase, EB Garamond
+       italic tagline, Allerta Stencil credit.
+  No drifting cloud animation on the landing (per spec).
+- **Pre-bridge cards** — circle + square retained but recolored to cream
+  paper with ink rims and Stardos Stencil numerals. The music bar
+  between them switches from gold to ink.
+- **Bridge** — gradient retuned to sky-bottom → walnut. The morph tint
+  now ramps from `--ink` (visible against teal) to `--cloud-body`
+  (visible against walnut).
+- **After-transition cards** — cream paper, ink hairline rim, Stardos
+  Stencil numerals, EB Garamond italic headlines. The two cards
+  (intertwined love stories + the mystery logline) read as matched
+  paper inserts on the walnut horizon.
+- **Letterbox removed** — the body-class `aria-playing` toggle and the
+  top/bottom movie bars are gone. The brief explicitly asks for the
+  vintage-book-cover feel over the techy film-strip framing, and the
+  record-player click no longer drops black bars on top of the page.
+- **Cipher key + audio button + skip-link** — re-tinted to cream + ink
+  for the new system. WCAG `--gold` override scoped only to the
+  detective-board artifact card surfaces where gold still lives.
+
 ## v3 — 2026-05-14 — Blue / gold overhaul
 
 The v2-era paper/walnut version is the previous stable. To roll back,

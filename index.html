@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>The Gold Bug Variations — A film by Mark Levinson</title>
 <meta name="description" content="A feature film from Mark A. Levinson, based on Richard Powers's prize-winning novel. A code, a fugue, and a love letter that arrives too late.">
-<meta name="theme-color" content="#0E2A4A">
+<meta name="theme-color" content="#7a9faa">
 
 <!-- Mailing-list intake endpoint. Paste a Google Apps Script Web App
      deployment URL here (see MAILING_LIST.md for setup). Leave empty
@@ -61,9 +61,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=JetBrains+Mono:wght@500;600;700&family=Courier+Prime:wght@400;700&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Allerta+Stencil&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Courier+Prime:wght@400;700&family=Caveat:wght@500&display=swap" rel="stylesheet">
 
-<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230E2A4A'/><text x='16' y='24' text-anchor='middle' font-family='monospace' font-weight='700' font-size='24' fill='%23D4AF37'>%E2%80%A1</text></svg>">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%237a9faa'/><text x='16' y='24' text-anchor='middle' font-family='monospace' font-weight='700' font-size='24' fill='%231f1a16'>%E2%80%A1</text></svg>">
 
 <style>
 /* ============================================================
@@ -97,21 +97,26 @@
   --gold-bright: #D4AF37;
   --bone:        #F0E6D2;
 
-  /* Novel-cover blues — picked off the dust-jacket and brochure p.2 clouds.
-     Body & most sections live on --blue-deep with gold as the dominant
-     foreground. --blue-2 is for raised cards; --blue-rule is hairline. */
-  --blue-deep:   #0E2A4A;
-  --blue:        #16365E;
-  --blue-2:      #22467D;
-  --blue-rule:   #3D5F8A;
-  --blue-mist:   #6B8AB5;
+  /* v4 — Postcard-Noon palette, sampled off the source-novel cover.
+     Dusty teal sky, warm-cream painterly clouds, warm near-black ink. */
+  --sky-top:      #a3c2cb;
+  --sky-bottom:   #7a9faa;
+  --cloud-body:   #f0e8d6;
+  --cloud-shadow: #b3c3c9;
+  --ink:          #1f1a16;
+  --ink-2:        #3a3128;
+  --grain-tint:   rgb(242,230,199);
 
-  /* Lora — designed for on-screen reading, sturdier than Cormorant at
-     body sizes, same Italian-serif elegance. */
-  --serif: "Lora", "Charter", "Source Serif Pro", Georgia, serif;
-  --grot:  "Archivo", "Söhne", Inter, system-ui, sans-serif;
-  --mono:  "JetBrains Mono", "Courier Prime", ui-monospace, Menlo, monospace;
-  --hand:  "Caveat", cursive;
+  /* EB Garamond — warm Italian serif, italic-friendly. Stardos Stencil
+     is the display face (titles); Allerta Stencil is the micro-label
+     face (credits, eyebrows). Archivo & JetBrains Mono retained for
+     legacy detective-board pieces. */
+  --serif:   "EB Garamond", "Charter", "Source Serif Pro", Georgia, serif;
+  --stencil: "Stardos Stencil", "Stencil Std", "Arial Black", sans-serif;
+  --label:   "Allerta Stencil", "Stardos Stencil", "Arial Narrow", sans-serif;
+  --grot:    "Archivo", "Söhne", Inter, system-ui, sans-serif;
+  --mono:    "JetBrains Mono", "Courier Prime", ui-monospace, Menlo, monospace;
+  --hand:    "Caveat", cursive;
 
   --col-gap: 24px;
   --margin: clamp(20px, 4vw, 80px);
@@ -120,10 +125,10 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; background: var(--blue-deep); }
+html { scroll-behavior: smooth; background: var(--sky-bottom); }
 body {
-  background: var(--blue-deep);
-  color: var(--bone);
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  color: var(--ink);
   font-family: var(--serif);
   font-size: 19px;
   line-height: 1.55;
@@ -131,17 +136,17 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
-::selection { background: var(--gold-bright); color: var(--blue-deep); }
+::selection { background: var(--ink); color: var(--cloud-body); }
 
-/* ---------- Cipher cursor + trail ---------- */
+/* ---------- Cipher cursor + trail (warm-ink on the new sky) ---------- */
 body, .hero, .bridge {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%23D4AF37'>%E2%80%A1</text></svg>") 14 14, auto;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%231f1a16'>%E2%80%A1</text></svg>") 14 14, auto;
 }
 a, button, .toggle, .key, .word, summary, [role="button"], input[type="submit"], .audio-btn {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%23D4AF37'>%E2%80%A0</text></svg>") 14 14, pointer;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%231f1a16'>%E2%80%A0</text></svg>") 14 14, pointer;
 }
 input[type="email"], input[type="text"], textarea {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='28' viewBox='0 0 12 28'><line x1='6' y1='2' x2='6' y2='26' stroke='%23D4AF37' stroke-width='2'/></svg>") 6 14, text;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='28' viewBox='0 0 12 28'><line x1='6' y1='2' x2='6' y2='26' stroke='%231f1a16' stroke-width='2'/></svg>") 6 14, text;
 }
 .investigation, .investigation * {
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23F0E6D2' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,230,210,0.08)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23F0E6D2' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
@@ -150,11 +155,11 @@ input[type="email"], input[type="text"], textarea {
   position: fixed;
   pointer-events: none;
   z-index: 40;
-  color: var(--gold-bright);
+  color: var(--ink);
   font-family: var(--mono);
   font-weight: 700;
   font-size: 13px;
-  opacity: 0.85;
+  opacity: 0.55;
   will-change: transform, opacity;
   user-select: none;
 }
@@ -163,13 +168,13 @@ input[type="email"], input[type="text"], textarea {
 .cipher {
   font-family: var(--mono);
   font-weight: 700;
-  color: var(--gold);
+  color: var(--ink);
   letter-spacing: 0.04em;
 }
 .ch { display: inline-block; transition: color 220ms ease; }
 .ch.solved { color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit; }
 .word { display: inline-block; }
-.word.solved:hover .ch { color: var(--gold); font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; }
+.word.solved:hover .ch { color: var(--ink); font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; opacity: 0.75; }
 .sp { display: inline-block; width: 0.32em; }
 
 /* Card-back decoded state: keep the mono cipher typography (font / weight /
@@ -180,103 +185,127 @@ input[type="email"], input[type="text"], textarea {
   color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit;
 }
 
-/* ---------- §1 Hero (blue cover) ---------- */
+/* ---------- §1 Hero — Postcard-Noon painterly-cloud composition ----------
+   Layer stack (bottom → top, all full-bleed, absolutely positioned):
+     1. Sky gradient    (linear: --sky-top → --sky-bottom)
+     2. Cloud SVG       (4 painterly groups, each ovals passed through
+                         feTurbulence + feDisplacementMap + feGaussianBlur)
+     3. Film grain      (low-opacity overlay-blended noise)
+     4. Vignette        (corner-darken radial gradient)
+     5. Type stack      (centred title + EB Garamond italic subtitle +
+                         Allerta Stencil credit) */
 .hero {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 18% 14%, rgba(255,220,160,0.10) 0%, transparent 48%),
-    radial-gradient(ellipse at 82% 76%, rgba(110,160,220,0.18) 0%, transparent 55%),
-    linear-gradient(180deg, var(--blue-deep) 0%, var(--blue) 100%);
-  color: var(--bone);
-  padding-bottom: clamp(60px, 14vh, 160px);
-  border-bottom: 1px solid var(--blue-rule);
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  color: var(--ink);
   z-index: 2;
   overflow: hidden;
 }
-/* Soft cloud puffs over the cover-blue, no tiling — radial gradients
-   only, all single instances. */
-.hero::before {
+.hero .sky-clouds {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero .grain {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+.hero::after {
   content: "";
   position: absolute; inset: 0;
+  z-index: 3;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.85;
-  mix-blend-mode: screen;
-  background-image:
-    radial-gradient(ellipse 55% 22% at 14% 20%, rgba(245,232,200,0.14), transparent 70%),
-    radial-gradient(ellipse 45% 18% at 78% 16%, rgba(245,232,200,0.10), transparent 70%),
-    radial-gradient(ellipse 60% 24% at 28% 70%, rgba(245,232,200,0.09), transparent 70%),
-    radial-gradient(ellipse 38% 16% at 84% 84%, rgba(245,232,200,0.12), transparent 70%);
-  background-repeat: no-repeat;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%,
+                              transparent 40%, rgba(20,32,42,0.32) 100%);
 }
 .topbar {
-  position: relative; z-index: 3;
+  position: relative; z-index: 4;
   padding: 22px var(--margin) 0;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--ink);
+  opacity: 0.75;
 }
 .topbar .doc { display: flex; gap: 28px; flex-wrap: wrap; }
 
-.hero-grid {
-  position: relative; z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--col-gap);
-  padding: clamp(60px, 12vh, 140px) var(--margin) 0;
-}
-.title {
-  grid-column: 1 / span 12;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(64px, 13vw, 200px);
-  line-height: 0.92;
-  letter-spacing: -0.01em;
-  text-transform: none;
-  margin: 28px 0 0;
-  color: var(--gold-bright);
-  text-shadow: 0 2px 24px rgba(0,0,0,0.25);
-}
-.tagline {
-  grid-column: 2 / span 10;
-  margin-top: clamp(28px, 5vh, 56px);
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(18px, 1.6vw, 24px);
-  line-height: 1.45;
-  color: rgba(240,230,210,0.85);
+.hero-zone {
+  /* Type-reading zone, centred per spec at 50% / 54%. */
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--margin));
   text-align: center;
 }
-.tagline em { color: var(--gold-bright); font-style: italic; }
-.title .row {
-  display: block;
-  /* Hero entrance — each row fades up, slightly staggered. */
+.title {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(48px, 7vw, 96px);
+  letter-spacing: 0.04em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--ink);
+  white-space: nowrap;
+  width: max-content;
+}
+.tagline {
+  margin: 24px auto 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(20px, 1.7vw, 26px);
+  line-height: 1.4;
+  color: var(--ink);
+  opacity: 0.88;
+  max-width: 56ch;
+}
+.tagline em { font-style: italic; }
+.credit {
+  margin-top: 46px;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+}
+/* Soft entrance only — per the spec, no drifting cloud animation. */
+.title, .tagline, .credit, .topbar, .scroll-cue {
   opacity: 0;
-  transform: translateY(18px);
-  animation: titleIn 900ms cubic-bezier(.2,.7,.2,1) forwards;
+  animation: heroFadeIn 900ms cubic-bezier(.2,.7,.2,1) forwards;
 }
-.title .row.r1 { animation-delay: 120ms; }
-.title .row.r2 { animation-delay: 360ms; padding-left: 12vw; }
-.title .row.r3 { animation-delay: 600ms; text-align: right; padding-right: 0; }
-@keyframes titleIn {
-  to { opacity: 1; transform: translateY(0); }
+.title   { animation-delay: 160ms; }
+.tagline { animation-delay: 460ms; }
+.credit  { animation-delay: 760ms; }
+.topbar  { animation-delay: 200ms; }
+.scroll-cue { animation-delay: 1100ms; }
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
 }
-.tagline, .scroll-cue, .topbar {
-  opacity: 0;
-  animation: heroFadeIn 800ms cubic-bezier(.2,.7,.2,1) 850ms forwards;
-}
-.scroll-cue { animation-delay: 1300ms; }
-@keyframes heroFadeIn { to { opacity: 1; } }
+.topbar { animation-name: heroFadeIn; }
+.topbar { opacity: 0; }
+.topbar { animation: heroFadeIn 900ms cubic-bezier(.2,.7,.2,1) 200ms forwards; }
+.hero-zone .title { transform: translateY(8px); }
+.hero-zone .tagline, .hero-zone .credit { transform: translateY(8px); }
 @media (prefers-reduced-motion: reduce) {
-  .title .row, .tagline, .scroll-cue, .topbar {
+  .title, .tagline, .credit, .topbar, .scroll-cue {
     opacity: 1;
     transform: none;
     animation: none;
@@ -287,12 +316,13 @@ input[type="email"], input[type="text"], textarea {
   position: absolute;
   bottom: 28px; left: 50%;
   transform: translateX(-50%);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.32em;
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--gold-bright);
-  z-index: 3;
+  color: var(--ink);
+  opacity: 0.6;
+  z-index: 4;
   text-align: center;
   animation: cueBlink 2.4s ease-in-out infinite;
 }
@@ -305,10 +335,10 @@ input[type="email"], input[type="text"], textarea {
   height: 180vh;          /* tall scroll lane: t = 0 → 1 across this section */
   background: linear-gradient(
     180deg,
-    var(--blue-deep) 0%,
-    var(--blue) 18%,
-    #1a3050 42%,
-    #2a2a30 72%,
+    var(--sky-bottom) 0%,
+    #5e7e8a 22%,
+    #3e4f54 50%,
+    #2a2a28 78%,
     var(--walnut-2) 96%,
     var(--walnut) 100%
   );
@@ -319,8 +349,8 @@ input[type="email"], input[type="text"], textarea {
   position: absolute; inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(ellipse 50% 16% at 20% 12%, rgba(245,232,200,0.10), transparent 70%),
-    radial-gradient(ellipse 42% 14% at 78% 22%, rgba(245,232,200,0.08), transparent 70%);
+    radial-gradient(ellipse 50% 16% at 20% 12%, rgba(240,232,214,0.10), transparent 70%),
+    radial-gradient(ellipse 42% 14% at 78% 22%, rgba(240,232,214,0.08), transparent 70%);
   background-repeat: no-repeat;
   opacity: 0.9;
   mix-blend-mode: screen;
@@ -345,9 +375,9 @@ input[type="email"], input[type="text"], textarea {
   align-self: start;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 1.6vw, 22px);
-  line-height: 1.5;
-  color: var(--bridge-fg, var(--bone));
+  font-size: clamp(20px, 1.7vw, 24px);
+  line-height: 1.45;
+  color: var(--bridge-fg, var(--cloud-body));
   max-width: 320px;
   padding: 0 var(--margin) 0 0;
   margin: 0;
@@ -361,7 +391,7 @@ input[type="email"], input[type="text"], textarea {
   display: flex; align-items: center; justify-content: center;
   pointer-events: auto;
   position: relative;
-  color: var(--bridge-fg, var(--bone));
+  color: var(--bridge-fg, var(--ink));
 }
 #morph {
   width: 100%;
@@ -406,13 +436,13 @@ body.is-hero .bridge-aria {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  background: rgba(14,42,74,0.88);
-  border: 1px solid var(--gold-bright);
-  color: var(--bone);
+  background: rgba(240,232,214,0.94);
+  border: 1px solid var(--ink);
+  color: var(--ink);
   padding: 10px 18px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   cursor: pointer;
   backdrop-filter: blur(6px);
@@ -420,8 +450,8 @@ body.is-hero .bridge-aria {
 }
 body.is-investigation .audio-btn {
   background: var(--walnut-2);
-  color: var(--bone);
-  border-color: var(--gold-bright);
+  color: var(--cloud-body);
+  border-color: var(--cloud-body);
 }
 .audio-btn .audio-label {
   display: flex; flex-direction: column;
@@ -429,16 +459,17 @@ body.is-investigation .audio-btn {
   gap: 3px; line-height: 1.1;
 }
 .audio-btn .audio-meta {
-  font-size: 9px; font-weight: 500;
-  letter-spacing: 0.28em;
-  color: var(--gold-bright);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: 0.36em;
+  color: var(--ink);
+  opacity: 0.75;
 }
 .audio-btn .audio-status {
   font-size: 12px; font-weight: 600;
   letter-spacing: 0.18em;
   color: inherit;
 }
-body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
+body.is-investigation .audio-btn .audio-meta { color: var(--cloud-body); opacity: 0.85; }
 .audio-btn .glyph {
   display: inline-flex; align-items: end; gap: 2px;
   height: 14px;
@@ -447,10 +478,11 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   display: inline-block;
   width: 3px;
   height: 100%;
-  background: var(--gold-bright);
+  background: var(--ink);
   transform-origin: bottom;
   transform: scaleY(.4);
 }
+body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .audio-btn.playing .bar { animation: eq 1s ease-in-out infinite; }
 .audio-btn.playing .b1 { animation-delay: 0s; }
 .audio-btn.playing .b2 { animation-delay: .15s; }
@@ -1135,13 +1167,13 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .beetle.scurrying { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)) drop-shadow(0 0 6px rgba(212,175,55,0.35)); }
 
 /* ---------- §1b Simple-pair (pre-bridge): four notes & four bases ----------
-   Two cards in asymmetric positions — a gold-rimmed circle (music) on the
-   left, a gold-rimmed square (DNA) on the right — with a single bar of
-   music tilted between them. Miró: shapes, not grids. */
+   Two cream-paper cards on the teal sky: a soft-circle on the left
+   (music), a soft-square on the right (DNA); a tilted bar of music
+   drifts between them. Black stencil type, no gold. */
 .simple-pair {
   position: relative;
-  background: linear-gradient(180deg, var(--blue) 0%, var(--blue-deep) 100%);
-  color: var(--bone);
+  background: linear-gradient(180deg, var(--sky-bottom) 0%, #6d92a0 100%);
+  color: var(--ink);
   padding: clamp(80px, 14vh, 160px) var(--margin) clamp(60px, 10vh, 120px);
   overflow: hidden;
 }
@@ -1149,11 +1181,11 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.8;
   mix-blend-mode: screen;
   background-image:
-    radial-gradient(ellipse 55% 30% at 16% 28%, rgba(245,232,200,0.10), transparent 70%),
-    radial-gradient(ellipse 50% 28% at 82% 74%, rgba(245,232,200,0.09), transparent 70%);
+    radial-gradient(ellipse 55% 30% at 16% 28%, rgba(240,232,214,0.18), transparent 70%),
+    radial-gradient(ellipse 50% 28% at 82% 74%, rgba(240,232,214,0.14), transparent 70%);
   background-repeat: no-repeat;
 }
 .simple-pair-stage {
@@ -1169,45 +1201,47 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 }
 .simple-card {
   position: relative;
-  background: var(--blue-2);
-  color: var(--bone);
-  border: 1.5px solid var(--gold-bright);
+  background: var(--cloud-body);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   text-align: center;
   padding: clamp(20px, 3vw, 36px);
-  box-shadow: 0 12px 36px rgba(0,0,0,0.32);
+  box-shadow: 0 18px 40px rgba(20,32,42,0.28);
 }
 .simple-card .eyebrow {
   display: block;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.28em;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--ink);
+  opacity: 0.7;
   margin-bottom: 10px;
 }
 .simple-card .num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(54px, 7vw, 96px);
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(56px, 7.5vw, 102px);
   line-height: 1;
-  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
   margin: 0;
 }
 .simple-card h3 {
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(20px, 2vw, 28px);
-  line-height: 1.2;
+  line-height: 1.25;
   margin: 8px 0 0;
-  color: var(--bone);
-  max-width: 14ch;
+  color: var(--ink);
+  max-width: 16ch;
 }
 .simple-card.circle {
-  /* gold-rimmed disc, top-left */
+  /* ink-rimmed disc, upper-left */
   justify-self: start;
   width: clamp(260px, 32vw, 380px);
   aspect-ratio: 1 / 1;
@@ -1215,19 +1249,19 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   transform: translate(8%, -6%) rotate(-3deg);
 }
 .simple-card.square {
-  /* gold-rimmed rounded square, bottom-right */
+  /* ink-rimmed square, lower-right */
   justify-self: end;
   width: clamp(260px, 32vw, 380px);
   aspect-ratio: 1 / 1;
-  border-radius: 6px;
+  border-radius: 4px;
   transform: translate(-4%, 10%) rotate(2.5deg);
 }
 .simple-card.square::before {
-  /* a second offset square for a Miró layered feel */
+  /* an inset hairline for a postcard / stamp feel */
   content: "";
   position: absolute;
   inset: 14px;
-  border: 1px solid rgba(212,175,55,0.32);
+  border: 1px solid rgba(31,26,22,0.28);
   pointer-events: none;
 }
 .simple-bar {
@@ -1236,11 +1270,11 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   top: 50%; left: 50%;
   width: clamp(220px, 26vw, 340px);
   transform: translate(-50%, -50%) rotate(-7deg);
-  color: var(--gold-bright);
+  color: var(--ink);
   pointer-events: none;
   z-index: 1;
   opacity: 0.92;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+  filter: drop-shadow(0 4px 10px rgba(20,32,42,0.35));
 }
 .simple-bar svg { width: 100%; height: auto; display: block; }
 @media (max-width: 820px) {
@@ -1270,7 +1304,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
    reveal that used to live in the standalone hook. */
 .thematic {
   background: linear-gradient(180deg, var(--walnut) 0%, var(--walnut-2) 100%);
-  color: var(--bone);
+  color: var(--cloud-body);
   padding: clamp(80px, 14vh, 160px) var(--margin);
   position: relative;
   overflow: hidden;
@@ -1281,8 +1315,8 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   pointer-events: none;
   opacity: 0.5;
   background-image:
-    radial-gradient(ellipse 60% 24% at 18% 18%, rgba(245,232,200,0.05), transparent 70%),
-    radial-gradient(ellipse 50% 20% at 82% 70%, rgba(245,232,200,0.04), transparent 70%);
+    radial-gradient(ellipse 60% 24% at 18% 18%, rgba(240,232,214,0.05), transparent 70%),
+    radial-gradient(ellipse 50% 20% at 82% 70%, rgba(240,232,214,0.04), transparent 70%);
   background-repeat: no-repeat;
 }
 .thematic-stage {
@@ -1296,58 +1330,55 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
 .thematic-card {
   position: relative;
   padding: clamp(32px, 4.5vw, 56px) clamp(28px, 4vw, 56px);
-  background: var(--blue);
-  color: var(--bone);
-  border: 1.5px solid var(--gold-bright);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  background: var(--cloud-body);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
 }
 .thematic-card .eyebrow {
   display: block;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.28em;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--gold-bright);
+  color: var(--ink);
+  opacity: 0.7;
   margin-bottom: 12px;
 }
 .thematic-card .num {
   display: block;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(48px, 6vw, 80px);
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(54px, 6.5vw, 88px);
   line-height: 1;
-  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
   margin-bottom: 8px;
 }
 .thematic-card h3 {
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(22px, 2.2vw, 32px);
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
-  color: var(--bone);
+  color: var(--ink);
 }
-/* Card A — Two intertwined love stories. Tilted rounded-square, off-centre. */
+/* Card A — Two intertwined love stories. Tilted, off-centre. */
 .thematic-card.love {
   justify-self: start;
   width: min(560px, 92%);
-  border-radius: 12px;
   transform: rotate(-1.5deg);
 }
-/* Card B — the mystery logline. Wider, contrasting fill, with a hook stage. */
+/* Card B — the mystery logline. Wider, with a hook stage. */
 .thematic-card.logline {
   justify-self: end;
   width: min(720px, 96%);
-  background: var(--paper);
-  color: var(--blue-deep);
-  border-color: var(--gold);
-  border-radius: 4px;
   transform: rotate(1deg);
   padding-top: clamp(40px, 6vw, 64px);
 }
-.thematic-card.logline .eyebrow { color: var(--gold); }
 .hook-stage {
   position: relative;
   max-width: 880px;
@@ -1360,7 +1391,7 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-weight: 500;
   font-size: clamp(22px, 2.4vw, 36px);
   line-height: 1.3;
-  color: var(--blue-deep);
+  color: var(--ink);
   margin: 0;
   position: relative;
   z-index: 1;
@@ -1379,13 +1410,13 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   font-style: normal;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: rgba(14,42,74,0.55);
+  color: rgba(31,26,22,0.55);
 }
 .hook-text .ch.revealed {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
-  color: var(--blue-deep);
+  color: var(--ink);
 }
 @media (max-width: 820px) {
   .thematic-card.love, .thematic-card.logline {
@@ -1430,23 +1461,25 @@ body.is-investigation .audio-btn .audio-meta { color: var(--gold-bright); }
   right: calc(24px + env(safe-area-inset-right, 0px));
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   z-index: 60;
-  background: rgba(14,42,74,0.94);
-  border: 1px solid var(--gold-bright);
-  color: var(--bone);
+  background: rgba(240,232,214,0.96);
+  border: 1px solid var(--ink);
+  color: var(--ink);
   font-family: var(--mono);
   backdrop-filter: blur(6px);
   transition: all 300ms ease;
 }
 body.is-investigation .cipher-key {
   background: var(--walnut-2);
-  color: var(--bone);
+  color: var(--cloud-body);
+  border-color: var(--cloud-body);
 }
 .cipher-key.collapsed {
   width: 48px; height: 48px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: var(--gold-bright);
+  font-size: 22px; color: var(--ink);
   font-weight: 700;
 }
+body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
 .cipher-key.collapsed::after {
   content: "‡";
   animation: cueBlink 1.6s ease-in-out infinite;
@@ -1873,11 +1906,11 @@ body.is-investigation .egg-progress {
 .egg-progress.visible { opacity: 1; }
 
 /* ---------- Color contrast pass: scoped --gold override on paper sections ----------
-   The default --gold (#B08D2E) sits at ~2.5:1 against paper, well below the
-   WCAG AA threshold of 4.5:1 for small text. Reassign --gold inside paper
-   contexts to a darker gold (#7C5F18, ~4.9:1). Blue and walnut sections
-   keep the original / bright gold which already has good contrast there. */
-.thematic-card.logline,
+   The default --gold (#B08D2E) sits at ~2.5:1 against the warm paper used
+   for the detective-board artifacts, below the WCAG AA threshold of 4.5:1
+   for small text. Reassign --gold inside paper contexts to a darker gold
+   (#7C5F18, ~4.9:1). The new v4 hero / thematic / simple-pair surfaces
+   use --ink rather than gold, so they don't need this scoping. */
 .notebook .side, .polaroid .side, .catalog .side,
 .cast-card .side, .envelope .side,
 .leibniz .side, .tools-card .side, .leads .side {
@@ -1888,16 +1921,16 @@ body.is-investigation .egg-progress {
 .skip-link {
   position: absolute;
   top: -40px; left: 8px;
-  background: var(--blue-deep);
-  color: var(--bone);
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  background: var(--cloud-body);
+  color: var(--ink);
+  font-family: var(--label);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
   text-decoration: none;
   padding: 10px 14px;
-  border: 2px solid var(--gold-bright);
+  border: 2px solid var(--ink);
   z-index: 9999;
   transition: top 160ms ease;
 }
@@ -1914,13 +1947,11 @@ body.is-investigation .egg-progress {
 }
 
 /* ---------- §7 Cinematic atmosphere ----------
-   Four layers that sell the "this is film" framing:
-     1. film-grain  — fixed-position SVG fractal-noise overlay, low opacity,
-                      staccato CSS animation (steps()), respects rm-motion.
-     2. letterbox   — top/bottom 6vh bars that slide in when Aria audio plays
-                      (body.aria-playing).
-     3. parallax    — body::before paper-noise drifts at 0.3× scroll via
-                      a --scroll-y custom property updated by JS.
+   Two layers that sell the "this is film" framing:
+     1. film-grain — fixed-position SVG fractal-noise overlay, low opacity,
+                     staccato CSS animation (steps()), respects rm-motion.
+     2. parallax   — body::before cloud layer drifts at 0.3× scroll via
+                     a --scroll-y custom property updated by JS.
 */
 
 .film-grain {
@@ -1948,29 +1979,6 @@ body.is-investigation .egg-progress {
   100% { transform: translate(0px, 0px); }
 }
 
-.letterbox {
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 6vh;
-  pointer-events: none;
-  z-index: 9985;          /* below film-grain (9990), above page content */
-  will-change: transform;
-  transition: transform 700ms cubic-bezier(.6,.05,.3,1);
-}
-.letterbox.top {
-  top: 0;
-  background: linear-gradient(180deg, #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(-100%);
-}
-.letterbox.bottom {
-  bottom: 0;
-  background: linear-gradient(0deg,   #0a0805 60%, rgba(10,8,5,0.4) 100%);
-  transform: translateY(100%);
-}
-body.aria-playing .letterbox.top    { transform: translateY(0); }
-body.aria-playing .letterbox.bottom { transform: translateY(0); }
-
 /* Global drifting-cloud parallax layer — soft non-tiling radial puffs
    over a blue ground. Inspired by the brochure p.2 cover-cloud motif.
    No SVG noise tile (which would show seams) — just large soft
@@ -1997,7 +2005,6 @@ body::before {
 
 @media (prefers-reduced-motion: reduce) {
   .film-grain { animation: none; opacity: 0.07; }
-  .letterbox  { transition: none; }
 }
 
 /* prefers-reduced-motion */
@@ -2048,33 +2055,97 @@ body::before {
 
 <!-- Cinematic atmosphere — purely decorative, pointer-events: none. -->
 <div class="film-grain" aria-hidden="true"></div>
-<div class="letterbox top" aria-hidden="true"></div>
-<div class="letterbox bottom" aria-hidden="true"></div>
 
 <a class="skip-link" href="#bridge">Skip to film</a>
 
 <!-- ============================================================
-     §1  HERO
+     §1  HERO — Postcard-Noon: painterly-cloud SVG behind black stencil
      ============================================================ -->
 <header class="hero">
 
+  <!-- Layer 2: painterly clouds. Each <g> is two stacked ovals (shadow
+       underbelly + cream highlight) passed through a per-cloud filter:
+         feTurbulence → feDisplacementMap → feGaussianBlur.
+       That sequence converts smooth ellipses into wispy painterly forms;
+       each cloud uses a unique seed so they don't read as repeats. -->
+  <svg class="sky-clouds" viewBox="0 0 1440 900"
+       preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <filter id="painterly-1" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
+                      numOctaves="3" seed="3" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="60"/>
+        <feGaussianBlur stdDeviation="8"/>
+      </filter>
+      <filter id="painterly-2" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
+                      numOctaves="3" seed="11" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="55"/>
+        <feGaussianBlur stdDeviation="7"/>
+      </filter>
+      <filter id="painterly-3" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
+                      numOctaves="3" seed="7" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="65"/>
+        <feGaussianBlur stdDeviation="8"/>
+      </filter>
+      <filter id="painterly-4" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
+                      numOctaves="3" seed="21" result="t"/>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="75"/>
+        <feGaussianBlur stdDeviation="10"/>
+      </filter>
+    </defs>
+
+    <!-- Cloud 1: upper-left -->
+    <g filter="url(#painterly-1)" opacity="0.90">
+      <ellipse cx="220" cy="334.4" rx="266"   ry="44"    fill="#b3c3c9"/>
+      <ellipse cx="236.8" cy="313.6" rx="257.6" ry="46.4" fill="#f0e8d6"/>
+      <ellipse cx="276" cy="296" rx="140" ry="20.8" fill="#f0e8d6" opacity="0.6"/>
+    </g>
+    <!-- Cloud 2: upper-right -->
+    <g filter="url(#painterly-2)" opacity="0.85">
+      <ellipse cx="1180" cy="272.6" rx="228"   ry="38.5"  fill="#b3c3c9"/>
+      <ellipse cx="1194.4" cy="254.4" rx="220.8" ry="40.6" fill="#f0e8d6"/>
+      <ellipse cx="1228" cy="239" rx="120" ry="18.2" fill="#f0e8d6" opacity="0.6"/>
+    </g>
+    <!-- Cloud 3: mid -->
+    <g filter="url(#painterly-3)" opacity="0.95">
+      <ellipse cx="760" cy="554.4" rx="304"   ry="44"    fill="#b3c3c9"/>
+      <ellipse cx="779.2" cy="533.6" rx="294.4" ry="46.4" fill="#f0e8d6"/>
+      <ellipse cx="824" cy="516" rx="160" ry="20.8" fill="#f0e8d6" opacity="0.6"/>
+    </g>
+    <!-- Cloud 4: lower-left -->
+    <g filter="url(#painterly-4)" opacity="0.70">
+      <ellipse cx="380" cy="732.6" rx="342"   ry="38.5"  fill="#b3c3c9"/>
+      <ellipse cx="401.6" cy="714.4" rx="331.2" ry="40.6" fill="#f0e8d6"/>
+      <ellipse cx="452" cy="699" rx="180" ry="18.2" fill="#f0e8d6" opacity="0.6"/>
+    </g>
+  </svg>
+
+  <!-- Layer 3: cream-tinted film grain over the sky + clouds. -->
+  <svg class="grain" aria-hidden="true">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="1.3"
+                    numOctaves="2" seed="11" stitchTiles="stitch"/>
+      <feColorMatrix values="
+        0 0 0 0 0.95
+        0 0 0 0 0.90
+        0 0 0 0 0.78
+        0 0 0 0.7 0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain)"/>
+  </svg>
+
   <div class="topbar">
-    <div class="doc">
-      <span>FOLIO 01 / IV</span>
-    </div>
-    <div class="doc">
-      <span>A Film by Mark A. Levinson</span>
-    </div>
+    <div class="doc"><span>FOLIO 01 / IV</span></div>
+    <div class="doc"><span>A Film by Mark A. Levinson</span></div>
   </div>
 
-  <div class="hero-grid">
-    <h1 class="title" aria-label="The Gold Bug Variations">
-      <span class="row r1">The&nbsp;Gold</span>
-      <span class="row r2">Bug</span>
-      <span class="row r3">Variations</span>
-    </h1>
-
-    <p class="tagline">A feature film based on the acclaimed novel by <em>Richard Powers</em>.</p>
+  <div class="hero-zone">
+    <h1 class="title">The Gold Bug Variations</h1>
+    <p class="tagline">a feature film, after the novel by <em>Richard Powers</em></p>
+    <p class="credit">Directed by Mark A. Levinson</p>
   </div>
 
   <div class="scroll-cue" aria-hidden="true">
@@ -3684,13 +3755,14 @@ function setupHelixMorph(){
   }
 
   function tintBridge(t){
-    // Top of the bridge (blue) → gold-bright. Bottom (walnut) → bone.
-    // The morph stays legible across both backgrounds.
-    const gR = 0xD4, gG = 0xAF, gB = 0x37;
-    const boneR = 0xF0, boneG = 0xE6, boneB = 0xD2;
-    const r = Math.round(gR + (boneR - gR) * t);
-    const g = Math.round(gG + (boneG - gG) * t);
-    const b = Math.round(gB + (boneB - gB) * t);
+    // Top of the bridge (teal) → ink (warm near-black, visible on teal).
+    // Bottom (walnut) → cream (visible on walnut). The morph stays legible
+    // across both backgrounds.
+    const inkR = 0x1f, inkG = 0x1a, inkB = 0x16;
+    const crR  = 0xf0, crG  = 0xe8, crB  = 0xd6;
+    const r = Math.round(inkR + (crR - inkR) * t);
+    const g = Math.round(inkG + (crG - inkG) * t);
+    const b = Math.round(inkB + (crB - inkB) * t);
     bridge.style.setProperty('--bridge-fg', `rgb(${r},${g},${b})`);
     bridge.style.setProperty('--bridge-fg-mute', `rgba(${r},${g},${b},0.7)`);
   }
@@ -3774,9 +3846,6 @@ function setUiPlaying(on){
   // Swap the visible icon: triangle ▶ when stopped, two bars ‖ when playing.
   if (iconPlay)  iconPlay.style.display  = on ? 'none' : '';
   if (iconPause) iconPause.style.display = on ? '' : 'none';
-  // Letterbox bars slide in/out with the Aria audio — cinematic framing
-  // for when the music is the score.
-  document.body.classList.toggle('aria-playing', !!on);
 }
 
 function ensureFallback(){
@@ -4538,9 +4607,7 @@ function setupHookReveal(){
   }
 }
 
-// Cinematic atmosphere — parallax + time-of-day.
-// (Film grain and letterbox are CSS-only; letterbox is hooked from
-// setUiPlaying so it follows the Aria audio state.)
+// Cinematic atmosphere — parallax cloud drift.
 function setupParallax(){
   let raf = 0;
   function update(){
