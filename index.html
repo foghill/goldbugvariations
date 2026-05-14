@@ -3749,18 +3749,21 @@ function decryptElement(el){
     el.dataset.built = '1';
   }
   const chars = el.querySelectorAll('.ch');
-  const perChar = 40;
+  // Sped-up timings — was perChar=40, startDelay=i*12, cycles=6+rand(5).
+  // Now ~2× faster across the board so long card-back synopses don't
+  // sit half-decoded for ~6 s before settling.
+  const perChar = 20;
 
   chars.forEach((ch, i) => {
     const target = ch.dataset.target;
     const isLetter = !!CIPHER[target.toUpperCase()];
-    const startDelay = i * 12;
+    const startDelay = i * 6;
 
     if (!isLetter){
       setTimeout(() => { ch.classList.add('solved'); ch.textContent = target; }, startDelay);
       return;
     }
-    let cycles = 6 + Math.floor(Math.random() * 5);
+    let cycles = 3 + Math.floor(Math.random() * 3);
     let n = 0;
     const tick = () => {
       if (n < cycles){
@@ -3780,7 +3783,7 @@ function decryptElement(el){
     el.dataset.decrypting = '';
     el.classList.remove('cipher');           // restore inherited typography
     wrapWords(el);
-  }, perChar * 12 + chars.length * 12 + 80);
+  }, perChar * 6 + chars.length * 6 + 60);
 }
 
 function wrapWords(el){
@@ -3818,7 +3821,7 @@ function reEncryptWord(w){
     ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
   });
   let n = 0;
-  const cycles = 5;
+  const cycles = 3;
   const tick = () => {
     if (n < cycles){
       chars.forEach(ch => {
@@ -3827,7 +3830,7 @@ function reEncryptWord(w){
         ch.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
       });
       n++;
-      setTimeout(tick, 40);
+      setTimeout(tick, 20);
     } else {
       chars.forEach(ch => {
         ch.textContent = ch.dataset.target;
@@ -3836,7 +3839,7 @@ function reEncryptWord(w){
       w.dataset.busy = '';
     }
   };
-  setTimeout(tick, 80);
+  setTimeout(tick, 40);
 }
 
 function initCipherTargets(){
@@ -3868,18 +3871,21 @@ function decryptCardElement(el){
     el.dataset.built = '1';
   }
   const chars = el.querySelectorAll('.ch');
-  const perChar = 40;
+  // Sped-up timings (matches decryptElement). Card-back synopses are
+  // long; this halves the total decode time so the user reads English
+  // sooner after flipping a card.
+  const perChar = 20;
 
   chars.forEach((ch, i) => {
     const target = ch.dataset.target;
     const isLetter = !!CIPHER[target.toUpperCase()];
-    const startDelay = i * 12;
+    const startDelay = i * 6;
 
     if (!isLetter){
       setTimeout(() => { ch.classList.add('solved'); ch.textContent = target; }, startDelay);
       return;
     }
-    let cycles = 6 + Math.floor(Math.random() * 5);
+    let cycles = 3 + Math.floor(Math.random() * 3);
     let n = 0;
     const tick = () => {
       if (n < cycles){
@@ -3900,7 +3906,7 @@ function decryptCardElement(el){
     el.classList.remove('cipher');     // strip gold
     el.classList.add('decoded-mono');  // keep mono / 700 / tracking, body color
     wrapWords(el);
-  }, perChar * 12 + chars.length * 12 + 80);
+  }, perChar * 6 + chars.length * 6 + 60);
 }
 
 /* Decrypt-on-flip — every time a card is flipped to its back face, run the
@@ -3932,11 +3938,11 @@ function decryptCardBack(back){
     built.push(el);
   });
   // The face takes ~550 ms to flip; the back becomes visible around 275 ms
-  // in. Hold the static cipher for a beat so it's clearly seen before the
-  // decode begins.
+  // in. Hold the static cipher just long enough to register, then start
+  // the decode (was 480 ms — felt sluggish on long card-back synopses).
   setTimeout(() => {
     built.forEach(el => decryptCardElement(el));
-  }, 480);
+  }, 240);
 }
 
 function buildFooterCipher(){
