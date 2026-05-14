@@ -302,7 +302,8 @@ input[type="email"], input[type="text"], textarea {
   width: max-content;
 }
 .tagline {
-  margin: 24px auto 0;
+  /* Postcard Noon spec: subtitle margin-top 14 px, opacity 0.88. */
+  margin: 14px auto 0;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
@@ -2590,27 +2591,28 @@ top: -40px; left: 8px;
     </filter>
   </defs>
 
-  <!-- ===== TOP BAND (y 0–1500) — bright sky, fluffy clouds. The hero
-       sits here. Same 4 cloud compositions the hero used originally. ===== -->
+  <!-- ===== TOP BAND (y 0–1500) — Postcard Noon spec exact match.
+       Per-cloud shadow + highlight cream variants from
+       postcard-noon/design.md, not the simplified single-cream. ===== -->
   <g filter="url(#painterly-1)" opacity="0.90">
-    <ellipse cx="220"   cy="334"  rx="266"   ry="44"   fill="#b3c3c9"/>
-    <ellipse cx="237"   cy="314"  rx="258"   ry="46"   fill="#f0e8d6"/>
-    <ellipse cx="276"   cy="296"  rx="140"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+    <ellipse cx="220"   cy="334.4" rx="266"   ry="44"   fill="#a8bcc3"/>
+    <ellipse cx="236.8" cy="313.6" rx="257.6" ry="46.4" fill="#f0e8d6"/>
+    <ellipse cx="276"   cy="296"   rx="140"   ry="20.8" fill="#f0e8d6" opacity="0.6"/>
   </g>
   <g filter="url(#painterly-2)" opacity="0.85">
-    <ellipse cx="1180"  cy="273"  rx="228"   ry="39"   fill="#b3c3c9"/>
-    <ellipse cx="1194"  cy="254"  rx="221"   ry="41"   fill="#f0e8d6"/>
-    <ellipse cx="1228"  cy="239"  rx="120"   ry="18"   fill="#f0e8d6" opacity="0.6"/>
+    <ellipse cx="1180"  cy="272.6" rx="228"   ry="38.5" fill="#a8bcc3"/>
+    <ellipse cx="1194.4" cy="254.4" rx="220.8" ry="40.6" fill="#eee5d0"/>
+    <ellipse cx="1228"  cy="239"   rx="120"   ry="18.2" fill="#eee5d0" opacity="0.6"/>
   </g>
   <g filter="url(#painterly-3)" opacity="0.95">
-    <ellipse cx="760"   cy="554"  rx="304"   ry="44"   fill="#b3c3c9"/>
-    <ellipse cx="779"   cy="534"  rx="294"   ry="46"   fill="#f0e8d6"/>
-    <ellipse cx="824"   cy="516"  rx="160"   ry="21"   fill="#f0e8d6" opacity="0.6"/>
+    <ellipse cx="760"   cy="554.4" rx="304"   ry="44"   fill="#aabec4"/>
+    <ellipse cx="779.2" cy="533.6" rx="294.4" ry="46.4" fill="#f0e8d6"/>
+    <ellipse cx="824"   cy="516"   rx="160"   ry="20.8" fill="#f0e8d6" opacity="0.6"/>
   </g>
   <g filter="url(#painterly-4)" opacity="0.70">
-    <ellipse cx="380"   cy="733"  rx="342"   ry="39"   fill="#b3c3c9"/>
-    <ellipse cx="402"   cy="714"  rx="331"   ry="41"   fill="#f0e8d6"/>
-    <ellipse cx="452"   cy="699"  rx="180"   ry="18"   fill="#f0e8d6" opacity="0.6"/>
+    <ellipse cx="380"   cy="732.6" rx="342"   ry="38.5" fill="#aabec4"/>
+    <ellipse cx="401.6" cy="714.4" rx="331.2" ry="40.6" fill="#ece4cd"/>
+    <ellipse cx="452"   cy="699"   rx="180"   ry="18.2" fill="#ece4cd" opacity="0.6"/>
   </g>
 
   <!-- Mid-top band (y 1500–3000) — clouds drifting through transition desk + morph. Body sky here is mid-blue, clouds slightly cooler. -->
