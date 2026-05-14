@@ -1,5 +1,65 @@
 # Changelog — The Gold Bug Variations site
 
+## v3 — 2026-05-14 — Blue / gold overhaul
+
+The v2-era paper/walnut version is the previous stable. To roll back,
+`git revert` the v3 commit (or check out the prior tip of `main`).
+
+A palette and structural pass driven by the director's brief: a cover-blue
+ground with gold type, brochure-cloud texture, and a layered scroll flow
+that splits the thematic cards around the music→DNA transition.
+
+- **Palette / texture** — body switched from paper to a deep cover-blue
+  (`--blue-deep` / `--blue` / `--blue-2`), with gold as the dominant
+  foreground. The global parallax noise was replaced with a soft cloud
+  layer (low-frequency fractal noise + a few drifting cumulus radials)
+  drifting at 0.3× scroll. Theme-color, favicon, and selection colors
+  retuned to match.
+- **Hero** — blue ground with cloud overlay; title in italic gold-bright;
+  the right-hand `SHOOTING · Q3 2026` topbar marker replaced with a
+  director credit. OG description loses the "Shooting Q3 2026" tail.
+- **§1b Simple pair (new)** — between the hero and the bridge: a
+  gold-rimmed circle ("Four bass notes of music") on the upper left and
+  a gold-rimmed square ("Four base molecules of DNA") on the lower
+  right, with a single bar of music tilted between them. Asymmetric
+  positioning + slight rotations — Miró feel.
+- **Bridge** — gradient retuned to start in `--blue-deep` and roll
+  through blue → walnut. The morph tint now ramps from gold-bright at
+  t=0 (visible against blue) to bone at t=1 (visible against walnut).
+- **§3 After-transition cards** — the old "Complexity, from a few simple
+  things" thematic grid and the standalone mystery hook are merged into
+  two scroll-staged cards on the walnut horizon:
+    1. *Two intertwined love stories.*
+    2. *Connected by the mystery of the disappearance of a brilliant
+       scientist on the brink of discovering the code for life.*
+  The magnifying-glass cipher reveal now lives on the second card.
+- **Detective desk (§4)** — desk header simplified (the "A quiet
+  detective story without a crime" line is gone). Three new artifact
+  cards on the board:
+    - **Leibniz quote** — paper note, tilted, in the upper-middle of
+      the desk. Same artifact mechanics (flip / decrypt on back).
+    - **Tools** — director credit (Mark A. Levinson · *Particle Fever*
+      · the films-and-formulas pull quote). Sits bottom-left of the
+      desk.
+    - **Current Leads** — Sundance, Film Independent, Sloan ×3, Gotham.
+      Sits bottom-right. Back side carries the production-territory
+      note and the Kirkus pull quote.
+  Six small Miró-inspired decorative shapes (gold dot, red dot, blue
+  triangle, gold line, crescent moon) are scattered behind the
+  artifacts for whimsy.
+- **§6 Tools section removed** — `.tools` (director + partners +
+  shooting + Kirkus grid) and its CSS are gone; content folded into
+  the desk artifact cards above. The "Kit on the desk" heading and the
+  standalone shooting-Q3-2026 production card are removed.
+- **Easter-egg anchor** — the Leibniz-quote glyph anchor moves from the
+  removed `.tools-epigraph` to the new `.leibniz blockquote` card.
+- **Cipher key panel & audio button** — restyled to read on the new
+  blue ground (translucent blue ground, gold-bright rim).
+- **Accessibility** — WCAG --gold override now scoped only to the paper
+  artifact cards (notebook / polaroid / catalog / cast / envelope /
+  leibniz / tools / leads + the logline card). Skip-link recolored to
+  blue/gold.
+
 ## 2026-05-09 — Director's restructure
 
 A warmer, more emotional pass on the whole page, ordered to lead with the

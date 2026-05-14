@@ -36,21 +36,30 @@ npx serve .          # quick local server on port 3000
 
 ## Sections of the page
 
-1. **Hero (paper)** — title set "The Gold / Bug / Variations" with a
-   warm Lora-italic tagline. Custom Poe-cipher cursor + symbol trail.
-2. **Bridge (paper → walnut)** — sticky scroll-driven SVG that morphs a
+1. **Hero (cover blue)** — title set "The Gold / Bug / Variations" in
+   gold-bright italics on a cloud-textured blue ground. Custom
+   Poe-cipher cursor + symbol trail.
+2. **Simple pair** — two asymmetrically-placed cards before the
+   transition: a gold-rimmed circle ("Four bass notes of music") and a
+   gold-rimmed square ("Four base molecules of DNA"), with a single
+   bar of music tilted between them.
+3. **Bridge (blue → walnut)** — sticky scroll-driven SVG that morphs a
    Bach music staff with note-heads into a DNA double helix. Goldberg
    Aria audio toggle (YouTube IFrame API + archive.org fallback).
-3. **Thematic cards** — four notes, four bases, two love stories.
-4. **Mystery hook** — a single caption setting up the case.
-5. **Detective board (walnut)** — five draggable, flippable artifact
-   cards on a dark desk; gold beetle that crawls naturally and flees
-   from the cursor; ghost cipher symbols revealed by the magnifying-glass
-   cursor.
-6. **Tools** — director bio, development partners, production note, and
-   a Kirkus pull quote (with the Leibniz epigraph at the section head).
-7. **Signup** — "Join the search" envelope CTA.
-8. **Footer** — press kit, festival programmers, financing &amp; co-pro,
+4. **After-transition cards** — "Two intertwined love stories" and the
+   mystery logline ("Connected by the mystery of the disappearance of
+   a brilliant scientist on the brink of discovering the code for
+   life."). The magnifying-glass cipher reveal lives on the logline
+   card.
+5. **Detective board (walnut)** — eight draggable, flippable artifact
+   cards on a dark desk (notebook, polaroid, catalog, canister, cast,
+   Leibniz quote, Tools / director credit, Current Leads / development
+   partners). Gold beetle that crawls and flees from the cursor; ghost
+   cipher symbols revealed by the magnifying-glass cursor. Six
+   Miró-inspired decorative shapes scattered behind the artifacts.
+6. **Signup** — "Join the search" envelope CTA at the bottom of the
+   desk.
+7. **Footer** — press kit, festival programmers, financing &amp; co-pro,
    honors, link grid, and the never-decrypting cipher line.
 
 Plus: floating Poe substitution-key panel with a built-in live encoder,
