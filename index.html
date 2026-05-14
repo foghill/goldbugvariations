@@ -371,61 +371,141 @@ input[type="email"], input[type="text"], textarea {
   opacity: 0.9;
   mix-blend-mode: screen;
 }
-.bridge-stage {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr minmax(220px, 380px) 1fr;
-  /* Anchor content near the top of the viewport so it sits just below
-     the epigraph instead of floating in a half-screen empty band. */
-  align-items: start;
-  padding-top: clamp(40px, 6vh, 90px);
-  pointer-events: none;
+/* ---------- §2 Transition desk (the new bridge) ----------
+   Sky → dusk-teal vertical floor; three polaroid photos tilted across
+   the seam, each carrying one beat of the threefold theme; a Bach
+   blurb on a tracing-paper slip below the polaroids. The .bridge-aria
+   audio button keeps its old fixed-position spot (defined further
+   down the file). The .bridge-caption span is reused as the tracing-
+   paper slip so the third easter-egg ‡ glyph anchor still resolves. */
+.transition-desk {
+  /* Override .bridge's tall sticky-scroll lane — no morph anymore. */
+  height: auto;
+  min-height: clamp(820px, 100vh, 1000px);
+  padding: clamp(70px, 10vh, 130px) var(--margin) clamp(80px, 11vh, 140px);
+  display: block;
+  isolation: isolate;
 }
-.bridge-caption {
-  position: sticky;
-  top: 24vh;
-  grid-column: 1;
-  justify-self: end;
-  align-self: start;
+.transition-desk .td-head {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto clamp(40px, 5vh, 60px);
+  color: var(--cloud-body);
+}
+.transition-desk .td-eyebrow {
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--cloud-body);
+  opacity: 0.92;
+}
+.transition-desk .td-sub {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(20px, 1.7vw, 24px);
-  line-height: 1.45;
-  color: var(--bridge-fg, var(--cloud-body));
-  max-width: 320px;
-  padding: 0 var(--margin) 0 0;
-  margin: 0;
-  text-align: right;
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--cloud-body);
+  opacity: 0.72;
+  margin-top: 6px;
 }
-.bridge-caption .cap-body { margin: 0; }
 
-.bridge-svg-wrap {
-  grid-column: 2;
-  height: 80vh;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: auto;
+.td-polaroids {
   position: relative;
-  color: var(--bridge-fg, var(--ink));
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 2vw, 36px);
+  align-items: center;
+  justify-items: center;
 }
-#morph {
+
+.td-polaroid {
+  --polaroid-w: clamp(220px, 24vw, 320px);
+  width: var(--polaroid-w);
+  margin: 0;
+  padding: 14px 14px 22px;
+  background: var(--cloud-body);
+  box-shadow:
+    0 18px 36px rgba(8,14,22,0.55),
+    0 3px 6px rgba(8,14,22,0.35);
+  display: flex; flex-direction: column;
+  position: relative;
+  transition: transform 220ms ease;
+  will-change: transform;
+}
+.td-polaroid .td-photo {
   width: 100%;
-  height: 100%;
-  overflow: visible;
+  aspect-ratio: 4 / 3;
+  background: #1c1612;
+  overflow: hidden;
   display: block;
 }
-#morph .clef-glyph {
-  font-family: 'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol',
-               'STIX Two Math', 'Cambria Math', serif;
-  font-weight: 400;
-  font-size: 200px;
-  fill: currentColor;
-  /* The Unicode music clef glyph U+1D11E sits with a generous left bearing
-     and a baseline near its tail. We anchor it where the morph code wants
-     it via x/y attributes on the <text> element. */
-  dominant-baseline: alphabetic;
-  text-anchor: start;
+.td-polaroid .td-photo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.td-polaroid .td-cap {
+  margin: 14px 0 0;
+  text-align: center;
+  font-family: var(--label);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.td-polaroid .td-cap-num { display: block; }
+.td-polaroid .td-cap-sub {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  opacity: 0.72;
+}
+/* Per-polaroid tilts — A leans left, B nearly flat, C leans right */
+.td-pa { transform: rotate(-5deg)   translateY(8px); }
+.td-pb { transform: rotate(2.5deg)  translateY(-12px); }
+.td-pc { transform: rotate(6deg)    translateY(0); }
+.td-polaroid:hover { transform: rotate(0) translateY(-4px) scale(1.02); z-index: 3; }
+
+/* The Bach blurb tracing-paper slip — sits below the polaroids. */
+.transition-desk .bridge-caption.td-blurb {
+  /* Override the legacy sticky bridge-caption layout entirely. */
+  position: relative;
+  top: auto; left: auto;
+  grid-column: auto;
+  justify-self: auto;
+  align-self: auto;
+  text-align: left;
+  max-width: 720px;
+  margin: clamp(48px, 7vh, 80px) auto 0;
+  padding: 22px 28px;
+  background: rgba(240, 232, 214, 0.86);
+  box-shadow: 0 8px 22px rgba(8,14,22,0.45);
+  transform: rotate(-1.5deg);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.transition-desk .bridge-caption.td-blurb .cap-body { margin: 0; }
+
+@media (max-width: 820px) {
+  .td-polaroids {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .td-pa, .td-pb, .td-pc { transform: rotate(-2deg); }
+  .td-pb { transform: rotate(2deg); }
+  .td-pc { transform: rotate(-1deg); }
 }
 .bridge-aria {
   position: fixed;
@@ -1182,137 +1262,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 .beetle.scurrying { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)) drop-shadow(0 0 6px rgba(212,175,55,0.35)); }
 
-/* ---------- §1b Simple-pair (pre-bridge): four notes & four bases ----------
-   Two cream-paper cards on the teal sky: a soft-circle on the left
-   (music), a soft-square on the right (DNA); a tilted bar of music
-   drifts between them. Black stencil type, no gold. */
-.simple-pair {
-  position: relative;
-  background: linear-gradient(180deg, var(--sky-bottom) 0%, #6d92a0 100%);
-  color: var(--ink);
-  padding: clamp(80px, 14vh, 160px) var(--margin) clamp(60px, 10vh, 120px);
-  overflow: hidden;
-}
-.simple-pair::before {
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  opacity: 0.8;
-  mix-blend-mode: screen;
-  background-image:
-    radial-gradient(ellipse 55% 30% at 16% 28%, rgba(240,232,214,0.18), transparent 70%),
-    radial-gradient(ellipse 50% 28% at 82% 74%, rgba(240,232,214,0.14), transparent 70%);
-  background-repeat: no-repeat;
-}
-.simple-pair-stage {
-  position: relative;
-  z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: clamp(420px, 60vh, 620px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  align-items: center;
-}
-.simple-card {
-  position: relative;
-  background: var(--cloud-body);
-  color: var(--ink);
-  border: 1.5px solid var(--ink);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: clamp(20px, 3vw, 36px);
-  box-shadow: 0 18px 40px rgba(20,32,42,0.28);
-}
-.simple-card .eyebrow {
-  display: block;
-  font-family: var(--label);
-  font-size: 12px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.7;
-  margin-bottom: 10px;
-}
-.simple-card .num {
-  font-family: var(--stencil);
-  font-weight: 700;
-  font-size: clamp(56px, 7.5vw, 102px);
-  line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 0;
-}
-.simple-card h3 {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(20px, 2vw, 28px);
-  line-height: 1.25;
-  margin: 8px 0 0;
-  color: var(--ink);
-  max-width: 16ch;
-}
-.simple-card.circle {
-  /* ink-rimmed disc, upper-left */
-  justify-self: start;
-  width: clamp(260px, 32vw, 380px);
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  transform: translate(8%, -6%) rotate(-3deg);
-}
-.simple-card.square {
-  /* ink-rimmed square, lower-right */
-  justify-self: end;
-  width: clamp(260px, 32vw, 380px);
-  aspect-ratio: 1 / 1;
-  border-radius: 4px;
-  transform: translate(-4%, 10%) rotate(2.5deg);
-}
-.simple-card.square::before {
-  /* an inset hairline for a postcard / stamp feel */
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(31,26,22,0.28);
-  pointer-events: none;
-}
-.simple-bar {
-  /* a single bar of music tilted between the two shapes */
-  position: absolute;
-  top: 50%; left: 50%;
-  width: clamp(220px, 26vw, 340px);
-  transform: translate(-50%, -50%) rotate(-7deg);
-  color: var(--ink);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.92;
-  filter: drop-shadow(0 4px 10px rgba(20,32,42,0.35));
-}
-.simple-bar svg { width: 100%; height: auto; display: block; }
-@media (max-width: 820px) {
-  .simple-pair-stage {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    min-height: auto;
-  }
-  .simple-card.circle, .simple-card.square {
-    justify-self: center;
-    transform: rotate(-2deg);
-    width: min(80vw, 320px);
-  }
-  .simple-card.square { transform: rotate(2deg); }
-  .simple-bar {
-    position: relative;
-    top: auto; left: auto;
-    transform: rotate(-4deg);
-    margin: 0 auto;
-    width: 60vw;
-  }
-}
+/* ---------- §1b Simple-pair retired — its content (Music · Four,
+   Life · Four) is now carried by Polaroid A + Polaroid B of the
+   transition desk below (.transition-desk in §2). */
 
 /* ---------- §3 After-transition cards (love stories + the mystery logline)
    Two cards, one above the other, asymmetric, sitting on the walnut
@@ -1386,17 +1338,13 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   margin: 0;
   color: var(--ink);
 }
-/* Card A — Two intertwined love stories. Tilted, off-centre. */
-.thematic-card.love {
-  justify-self: start;
-  width: min(560px, 92%);
-  transform: rotate(-1.5deg);
-}
-/* Card B — the mystery logline. Wider, with a hook stage. */
+/* Card A (.thematic-card.love) retired — moved to transition-desk
+   Polaroid C. */
+/* Card B — the mystery logline. Now standalone, centered. */
 .thematic-card.logline {
-  justify-self: end;
-  width: min(720px, 96%);
-  transform: rotate(1deg);
+  justify-self: center;
+  width: min(820px, 96%);
+  transform: rotate(0.5deg);
   padding-top: clamp(40px, 6vw, 64px);
 }
 .hook-stage {
@@ -1439,7 +1387,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   color: var(--ink);
 }
 @media (max-width: 820px) {
-  .thematic-card.love, .thematic-card.logline {
+  .thematic-card.logline {
     justify-self: center;
     width: 100%;
     transform: none;
@@ -2076,16 +2024,8 @@ body::before {
   .title { font-size: 68px; }
   .title .row.r2 { padding-left: 0; }
   .title .row.r3 { text-align: left; }
-  .bridge { height: 160vh; }
-  .bridge-stage { grid-template-columns: 1fr; padding: 0 24px; }
-  .bridge-caption {
-    grid-column: 1 / -1;
-    justify-self: center;
-    text-align: center;
-    max-width: 100%;
-    padding: 0;
-  }
-  .bridge-svg-wrap { grid-column: 1; height: 60vh; }
+  /* §2 transition desk handles its own mobile reflow via its own
+     820px media query inside the .transition-desk block above. */
   .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
   .case-board .artifact {
     position: relative !important;
@@ -2203,102 +2143,132 @@ body::before {
 </header>
 
 
+<!-- §1b · SIMPLE PAIR removed — the Music · Four / Life · Four / And · Two
+     beats are now carried by the transition desk's polaroid triptych below. -->
+
+
 <!-- ============================================================
-     §1b  SIMPLE PAIR — two cards before the music→DNA transition.
-     A circle for the four notes; a square for the four bases; a single
-     bar of music drifts between them.
+     §2  TRANSITION DESK — sky → dusk-teal handoff carrying the
+     "Music · Four / Life · Four / And · Two" triptych across the seam.
+     The id="bridge" wrapper is preserved so legacy hooks (egg anchor on
+     .bridge-caption .cap-body, audio button bridge-aria, and the
+     setupHelixMorph early-return guard) keep working.
      ============================================================ -->
-<section class="simple-pair" aria-label="Four notes, four bases">
-  <div class="simple-pair-stage">
+<section class="bridge transition-desk" id="bridge" aria-label="The threefold theme — laid out on the desk in order of arrival">
 
-    <article class="simple-card circle">
-      <span class="eyebrow">Music</span>
-      <span class="num">Four</span>
-      <h3>Bass notes of music.</h3>
-    </article>
+  <!-- Section label, top-left -->
+  <header class="td-head">
+    <div class="td-eyebrow">§ 02 · the threefold theme</div>
+    <div class="td-sub">laid out on the desk, in order of arrival</div>
+  </header>
 
-    <article class="simple-card square">
-      <span class="eyebrow">Life</span>
-      <span class="num">Four</span>
-      <h3>Base molecules of DNA.</h3>
-    </article>
+  <!-- Three polaroids — the triptych. Each tilted, slight overlap. -->
+  <div class="td-polaroids">
 
-    <div class="simple-bar" aria-hidden="true">
-      <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
-        <!-- 5 staff lines -->
-        <g stroke="currentColor" stroke-width="1.2" fill="none">
-          <line x1="6"  y1="22" x2="234" y2="22"/>
-          <line x1="6"  y1="32" x2="234" y2="32"/>
-          <line x1="6"  y1="42" x2="234" y2="42"/>
-          <line x1="6"  y1="52" x2="234" y2="52"/>
-          <line x1="6"  y1="62" x2="234" y2="62"/>
-        </g>
-        <!-- bar lines + final double bar -->
-        <g stroke="currentColor" stroke-width="1.2" fill="none">
-          <line x1="6"   y1="22" x2="6"   y2="62"/>
-          <line x1="118" y1="22" x2="118" y2="62"/>
-          <line x1="231" y1="22" x2="231" y2="62"/>
-          <line x1="234" y1="22" x2="234" y2="62" stroke-width="2.4"/>
-        </g>
-        <!-- four note-heads sitting on the staff -->
-        <g fill="currentColor">
-          <ellipse cx="28"  cy="52" rx="6.5" ry="4.5" transform="rotate(-20 28 52)"/>
-          <ellipse cx="68"  cy="42" rx="6.5" ry="4.5" transform="rotate(-20 68 42)"/>
-          <ellipse cx="158" cy="47" rx="6.5" ry="4.5" transform="rotate(-20 158 47)"/>
-          <ellipse cx="198" cy="37" rx="6.5" ry="4.5" transform="rotate(-20 198 37)"/>
-        </g>
-        <!-- note stems -->
-        <g stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
-          <line x1="33"  y1="50" x2="33"  y2="18"/>
-          <line x1="73"  y1="40" x2="73"  y2="8"/>
-          <line x1="163" y1="45" x2="163" y2="13"/>
-          <line x1="203" y1="35" x2="203" y2="3"/>
-        </g>
-        <!-- a beam joining the last two notes — a small phrase -->
-        <path d="M 163 13 L 203 3 L 203 9 L 163 19 Z" fill="currentColor"/>
-      </svg>
-    </div>
+    <!-- Polaroid A · MUSIC · FOUR — the sky as a photograph -->
+    <figure class="td-polaroid td-pa">
+      <div class="td-photo td-photo-sky" aria-hidden="true">
+        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <filter id="td-cloud-a" x="-30%" y="-30%" width="160%" height="160%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="3" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="22"/>
+              <feGaussianBlur stdDeviation="2.2"/>
+            </filter>
+          </defs>
+          <rect width="240" height="180" fill="url(#td-sky-grad)"/>
+          <defs>
+            <linearGradient id="td-sky-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a3c2cb"/>
+              <stop offset="100%" stop-color="#7a9faa"/>
+            </linearGradient>
+          </defs>
+          <g filter="url(#td-cloud-a)">
+            <ellipse cx="80"  cy="78"  rx="62" ry="22" fill="#b3c3c9"/>
+            <ellipse cx="86"  cy="68"  rx="60" ry="22" fill="#f0e8d6"/>
+            <ellipse cx="170" cy="120" rx="54" ry="18" fill="#b3c3c9"/>
+            <ellipse cx="176" cy="112" rx="52" ry="18" fill="#f0e8d6"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="td-cap">
+        <span class="td-cap-num">MUSIC · FOUR</span>
+        <span class="td-cap-sub">four bass notes</span>
+      </figcaption>
+    </figure>
+
+    <!-- Polaroid B · LIFE · FOUR — painterly cream+ink helix on lab notebook paper -->
+    <figure class="td-polaroid td-pb">
+      <div class="td-photo td-photo-helix" aria-hidden="true">
+        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <filter id="helix-shiver" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="22" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>
+              <feGaussianBlur stdDeviation="0.55"/>
+            </filter>
+            <pattern id="td-notebook" patternUnits="userSpaceOnUse" width="240" height="14">
+              <rect width="240" height="14" fill="#ede4cd"/>
+              <line x1="0" y1="13" x2="240" y2="13" stroke="#b3c3c9" stroke-width="0.6" opacity="0.55"/>
+            </pattern>
+          </defs>
+          <rect width="240" height="180" fill="url(#td-notebook)"/>
+          <g filter="url(#helix-shiver)" stroke-linecap="round" fill="none">
+            <!-- Two interleaved sine strands, ink + warm dark, painterly. -->
+            <path d="M 50 16 Q 110 38 50 60 Q 0 82 50 104 Q 110 126 50 148 Q 0 170 50 178"
+                  stroke="#1f1a16" stroke-width="2.1"/>
+            <path d="M 190 16 Q 130 38 190 60 Q 240 82 190 104 Q 130 126 190 148 Q 240 170 190 178"
+                  stroke="#8a6f3a" stroke-width="2.1"/>
+            <!-- Rungs where the strands cross -->
+            <line x1="60"  y1="38"  x2="180" y2="38"  stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
+            <line x1="60"  y1="82"  x2="180" y2="82"  stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
+            <line x1="60"  y1="126" x2="180" y2="126" stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
+            <line x1="60"  y1="170" x2="180" y2="170" stroke="#1f1a16" stroke-width="1" opacity="0.7"/>
+            <!-- ATGC tick letters along the inner rail -->
+            <g fill="#1f1a16" font-family="ui-monospace, Menlo, monospace" font-size="9">
+              <text x="36" y="42">A</text>
+              <text x="36" y="86">T</text>
+              <text x="36" y="130">G</text>
+              <text x="36" y="174">C</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="td-cap">
+        <span class="td-cap-num">LIFE · FOUR</span>
+        <span class="td-cap-sub">four base molecules</span>
+      </figcaption>
+    </figure>
+
+    <!-- Polaroid C · AND · TWO — two interlocked rings -->
+    <figure class="td-polaroid td-pc">
+      <div class="td-photo td-photo-rings" aria-hidden="true">
+        <svg viewBox="0 0 240 180" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <filter id="rings-shiver" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="14" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="2"/>
+            </filter>
+          </defs>
+          <rect width="240" height="180" fill="#ede4cd"/>
+          <g filter="url(#rings-shiver)" fill="none" stroke="#1f1a16" stroke-width="2.2">
+            <circle cx="100" cy="90" r="48"/>
+            <circle cx="142" cy="90" r="48"/>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="td-cap">
+        <span class="td-cap-num">AND · TWO</span>
+        <span class="td-cap-sub">intertwined love stories</span>
+      </figcaption>
+    </figure>
 
   </div>
-</section>
 
-
-<!-- ============================================================
-     §2  BRIDGE — music staff → DNA double helix scroll morph
-     ============================================================ -->
-<section class="bridge" id="bridge" aria-label="A spiral strand connecting music, code, and love">
-  <div class="bridge-stage">
-
-    <div class="bridge-caption" aria-hidden="false">
-      <p class="cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
-    </div>
-
-    <div class="bridge-svg-wrap">
-      <!--
-        Single coherent morph: at t=0 the SVG renders a bar of music
-        (treble clef + 5 staff lines + a phrase of mixed notes); as scroll
-        progresses, the staff lines bend into a DNA double helix and the
-        note ornamentation (clef, stems, beams, flags) recedes so the
-        helix can take the stage. The same primitives are present at every
-        t — there is no cross-fade between two visual systems.
-
-        viewBox is 360 × 720 (matching the .bridge-svg-wrap aspect on
-        desktop) with preserveAspectRatio="xMidYMid meet" so circles stay
-        circular, stems stay vertical, and beams stay parallel.
-      -->
-      <svg id="morph" viewBox="0 0 360 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- Back-to-front z-order: staff lines, beams, stems, heads, flags, clef. -->
-        <g id="lines"      stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"></g>
-        <g id="goldStrand" stroke="#D4AF37"      stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0"></g>
-        <g id="rungs"      stroke="currentColor" stroke-width="1"   opacity="0"></g>
-        <g id="beams"      fill="currentColor"></g>
-        <g id="stems"      fill="currentColor"></g>
-        <g id="notes"      fill="currentColor"></g>
-        <g id="flags"      fill="currentColor"></g>
-        <g id="clef"></g>
-      </svg>
-
-    </div>
+  <!-- Bach blurb on tracing-paper slip, tilted -1.5°. The .cap-body span
+       is the third easter-egg ‡ glyph anchor (see ANCHORS in §egg). -->
+  <div class="bridge-caption td-blurb" aria-hidden="false">
+    <p class="cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
   </div>
 
   <div class="bridge-aria">
@@ -2323,11 +2293,9 @@ body::before {
 <section class="thematic" id="thematic" aria-label="Two intertwined love stories and the mystery that joins them">
   <div class="thematic-stage">
 
-    <article class="thematic-card love">
-      <span class="eyebrow">And —</span>
-      <span class="num">Two</span>
-      <h3>Intertwined love stories.</h3>
-    </article>
+    <!-- The "And · Two — Intertwined love stories" card moved to the
+         transition desk above (Polaroid C). This section now carries only
+         the "Connected by —" logline + magnifying glass reveal. -->
 
     <article class="thematic-card logline">
       <span class="eyebrow">Connected by —</span>
@@ -3790,8 +3758,17 @@ function bridgeMorph(opts){
 }
 
 function setupHelixMorph(){
+  // Site Polish §4 — the scroll-driven music-staff → DNA helix morph
+  // was retired in favour of the new transition desk (a triptych of
+  // polaroids that carry the Music · Four / Life · Four / And · Two
+  // beats across the seam between sky and case-file). The morph SVG
+  // (#morph + child layers) is gone from the DOM; this function now
+  // bails out so the legacy renderer doesn't run against null nodes.
+  // bridgeMorph() is left in place but never invoked.
   const bridge = document.getElementById('bridge');
   if (!bridge) return;
+  const morphSvg = document.getElementById('morph');
+  if (!morphSvg) return;     // <-- the polish removed #morph; bail early.
 
   const morph = bridgeMorph();
 
