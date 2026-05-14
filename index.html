@@ -2830,33 +2830,51 @@ body::before {
             <ellipse cx="148" cy="150" rx="50" ry="66" opacity="0.45"/>
           </g>
 
-          <!-- LEFT silhouette — facing right, clipped to left oval -->
+          <!-- LEFT silhouette — feminine head + long hair, facing RIGHT.
+               Clockwise from the top of the head: forehead → brow ridge →
+               eye recess → nose bridge → NOSE TIP (the iconic protrusion) →
+               philtrum → upper lip → mouth line → lower lip → chin → jaw →
+               neck → shoulder → hair flowing down the BACK of the head and
+               returning up the left side of the oval. Clipped to the left
+               oval so the hair fills it fully. -->
           <g clip-path="url(#td-clip-left)" fill="#1f1a16">
-            <!-- Hair / head profile facing right: drawn as a single closed path -->
-            <path d="M 40 232
-                     C 52 200, 56 174, 56 152
-                     C 56 124, 64 100, 78 92
-                     C 86 88, 96 88, 102 96
-                     C 106 102, 108 110, 108 120
-                     C 108 134, 102 148, 100 158
-                     C 99 166, 102 174, 106 178
-                     C 110 182, 116 184, 116 190
-                     C 116 198, 108 204, 96 210
-                     C 84 216, 70 222, 60 232
+            <path d="M 88 78
+                     C 100 76, 110 84, 114 96
+                     C 116 105, 117 114, 116 122
+                     C 114 124, 111 124, 109 126
+                     C 108 128, 110 130, 112 131
+                     C 116 134, 122 140, 126 148
+                     C 128 154, 124 158, 119 159
+                     C 115 160, 110 161, 109 164
+                     C 109 168, 112 171, 110 175
+                     C 109 180, 110 184, 113 188
+                     C 117 194, 119 202, 117 212
+                     C 114 224, 105 240, 94 254
+                     L 32 254
+                     C 22 220, 18 175, 26 138
+                     C 32 108, 50 86, 88 78
                      Z"/>
           </g>
-          <!-- RIGHT silhouette — facing left (mirror of the left), clipped to right oval -->
+
+          <!-- RIGHT silhouette — mirror of the LEFT, facing LEFT.
+               Same construction, x-axis mirrored across the polaroid centre
+               (x = 120). Clipped to the right oval. -->
           <g clip-path="url(#td-clip-right)" fill="#1f1a16">
-            <path d="M 200 232
-                     C 188 200, 184 174, 184 152
-                     C 184 124, 176 100, 162 92
-                     C 154 88, 144 88, 138 96
-                     C 134 102, 132 110, 132 120
-                     C 132 134, 138 148, 140 158
-                     C 141 166, 138 174, 134 178
-                     C 130 182, 124 184, 124 190
-                     C 124 198, 132 204, 144 210
-                     C 156 216, 170 222, 180 232
+            <path d="M 152 78
+                     C 140 76, 130 84, 126 96
+                     C 124 105, 123 114, 124 122
+                     C 126 124, 129 124, 131 126
+                     C 132 128, 130 130, 128 131
+                     C 124 134, 118 140, 114 148
+                     C 112 154, 116 158, 121 159
+                     C 125 160, 130 161, 131 164
+                     C 131 168, 128 171, 130 175
+                     C 131 180, 130 184, 127 188
+                     C 123 194, 121 202, 123 212
+                     C 126 224, 135 240, 146 254
+                     L 208 254
+                     C 218 220, 222 175, 214 138
+                     C 208 108, 190 86, 152 78
                      Z"/>
           </g>
 
