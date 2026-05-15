@@ -314,13 +314,17 @@ input[type="email"], input[type="text"], textarea {
 }
 .tagline em { font-style: italic; }
 .credit {
-  margin-top: 46px;
+  /* Bumped from 12px / opacity 0.7 to a more present 18px clamp /
+     opacity 0.85 since the topbar's "A Film by Mark A. Levinson"
+     line was removed — the directed-by credit now does that work
+     under the title. */
+  margin-top: 38px;
   font-family: var(--label);
-  font-size: 12px;
+  font-size: clamp(15px, 1.5vw, 18px);
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--ink);
-  opacity: 0.7;
+  opacity: 0.85;
 }
 /* Soft entrance only — per the spec, no drifting cloud animation. */
 .title, .tagline, .credit, .topbar, .scroll-cue {
@@ -2724,7 +2728,6 @@ top: -40px; left: 8px;
 
   <div class="topbar">
     <div class="doc"><span>FOLIO 01 / IV</span></div>
-    <div class="doc"><span>A Film by Mark A. Levinson</span></div>
   </div>
 
   <div class="hero-zone">
