@@ -4726,11 +4726,21 @@ function setupAriaAudio(){
   const playInd = document.getElementById('playInd');
   let userToggled = false;     // set true once the user has explicitly used a play/pause control
 
+  // Track our INTENT separately from the audio engine's reported state.
+  // Earlier the toggle asked `isMusicPlaying()` to decide play vs pause —
+  // but if the YT player state momentarily desynced (loading, buffering,
+  // transient PAUSED→PLAYING transition), the toggle could read "not
+  // playing" mid-click and call playMusic() again instead of pausing.
+  // Tracking our own flag means the toggle ALWAYS flips regardless of
+  // engine state, then we call the appropriate engine method.
+  let intentPlaying = false;
+
   function toggle(e){
     if (e) { e.preventDefault(); e.stopPropagation(); }
     userToggled = true;        // explicit control — disable autoplay-on-gesture from here on
-    if (isMusicPlaying()) { pauseMusic(); setUiPlaying(false); }
-    else                  { playMusic(); }
+    intentPlaying = !intentPlaying;
+    if (intentPlaying) { playMusic();  setUiPlaying(true); }
+    else               { pauseMusic(); setUiPlaying(false); }
   }
   if (btn) btn.addEventListener('click', toggle);
   if (playInd) {
@@ -4754,7 +4764,10 @@ function setupAriaAudio(){
   const onFirstGesture = () => {
     if (autoplayDone || userToggled) return;
     autoplayDone = true;
-    if (!isMusicPlaying()) playMusic();
+    if (!isMusicPlaying()) {
+      playMusic();
+      intentPlaying = true;    // sync our intent flag with the autoplay
+    }
     evs.forEach(ev => window.removeEventListener(ev, onFirstGesture, true));
   };
   evs.forEach(ev => window.addEventListener(ev, onFirstGesture, { passive: true, capture: true }));
