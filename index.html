@@ -301,15 +301,20 @@ input[type="email"], input[type="text"], textarea {
   width: max-content;
 }
 .tagline {
-  /* Postcard Noon spec: subtitle margin-top 14 px, opacity 0.88. */
-  margin: 14px auto 0;
+  /* Bumped beyond Postcard Noon spec — tagline now sits visibly
+     larger than the directed-by credit beneath it (clamp 18px →
+     32px italic Garamond vs the credit's stencil clamp 15–18px).
+     Italic delicate type can read smaller than blockier stencil
+     caps at the same px, so we push tagline up a notch to win
+     the comparison. */
+  margin: 18px auto 0;
   font-family: var(--serif);
   font-style: italic;
-  font-weight: 400;
-  font-size: clamp(20px, 1.7vw, 26px);
-  line-height: 1.4;
+  font-weight: 500;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.35;
   color: var(--ink);
-  opacity: 0.88;
+  opacity: 0.92;
   max-width: 56ch;
 }
 .tagline em { font-style: italic; }
