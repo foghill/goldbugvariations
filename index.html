@@ -658,6 +658,12 @@ body.is-signup .bridge-aria {
   opacity: 0;
   pointer-events: none;
 }
+body.is-footer .bridge-aria {
+  /* Footer is the page's typeset colophon — don't overlap the
+     © MMXXVI / Site No. 0001 legal line with the audio pill. */
+  opacity: 0;
+  pointer-events: none;
+}
 .audio-btn {
   display: inline-flex;
   align-items: center;
@@ -5339,6 +5345,7 @@ function setupSectionObserver(){
   const hero = document.querySelector('header.hero');
   const musicMorph = document.getElementById('music-morph');
   const signup = document.getElementById('signup');
+  const footer = document.querySelector('footer.masthead');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.target === investigation){
@@ -5356,12 +5363,18 @@ function setupSectionObserver(){
       if (e.target === signup){
         document.body.classList.toggle('is-signup', e.isIntersecting && e.intersectionRatio > 0.15);
       }
+      if (e.target === footer){
+        // Hide as soon as the footer touches the viewport so the pill
+        // never overlaps the © MMXXVI / Site No. legal line.
+        document.body.classList.toggle('is-footer', e.isIntersecting && e.intersectionRatio > 0.05);
+      }
     });
-  }, { threshold: [0, 0.15, 0.3, 0.5, 0.6] });
+  }, { threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.6] });
   if (investigation) io.observe(investigation);
   if (hero)         io.observe(hero);
   if (musicMorph)   io.observe(musicMorph);
   if (signup)       io.observe(signup);
+  if (footer)       io.observe(footer);
 }
 
 function setupHookReveal(){
