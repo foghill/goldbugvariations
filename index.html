@@ -647,6 +647,17 @@ body.is-hero .bridge-aria {
   opacity: 0;
   pointer-events: none;
 }
+body.is-music-morph .bridge-aria {
+  /* Music morph IS the music, visually — a live "AUDIO ON" pill
+     overlaid on the helix would be redundant + obtrusive. */
+  opacity: 0;
+  pointer-events: none;
+}
+body.is-signup .bridge-aria {
+  /* Signup is the return-to-sky CTA — keep it uncluttered. */
+  opacity: 0;
+  pointer-events: none;
+}
 .audio-btn {
   display: inline-flex;
   align-items: center;
@@ -5326,6 +5337,8 @@ function setupEasterEggs(){
 function setupSectionObserver(){
   const investigation = document.getElementById('investigation');
   const hero = document.querySelector('header.hero');
+  const musicMorph = document.getElementById('music-morph');
+  const signup = document.getElementById('signup');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.target === investigation){
@@ -5334,10 +5347,21 @@ function setupSectionObserver(){
       if (e.target === hero){
         document.body.classList.toggle('is-hero', e.isIntersecting && e.intersectionRatio > 0.5);
       }
+      if (e.target === musicMorph){
+        // Hide the bridge audio button while the helix morph is on
+        // screen — the morph IS the music visually, so an "AUDIO ON"
+        // pill overlaid on it is redundant.
+        document.body.classList.toggle('is-music-morph', e.isIntersecting && e.intersectionRatio > 0.15);
+      }
+      if (e.target === signup){
+        document.body.classList.toggle('is-signup', e.isIntersecting && e.intersectionRatio > 0.15);
+      }
     });
   }, { threshold: [0, 0.15, 0.3, 0.5, 0.6] });
-  io.observe(investigation);
-  if (hero) io.observe(hero);
+  if (investigation) io.observe(investigation);
+  if (hero)         io.observe(hero);
+  if (musicMorph)   io.observe(musicMorph);
+  if (signup)       io.observe(signup);
 }
 
 function setupHookReveal(){
