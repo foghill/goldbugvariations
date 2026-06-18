@@ -117,6 +117,18 @@
   --gold-warm:    #C9A227;
   --gold-bright:  #D4AF37;
 
+  /* Title gold — deep antique embossed-foil tone for the hero title and
+     a handful of book-cover accents. Sits warm against the dusty-teal
+     sky, harmonises with the brass push-pins in the case-file board. */
+  --title-gold:   #a07c1e;
+  --title-gold-2: #8a6618;     /* shadow tint for letter depth */
+
+  /* Cork — bulletin-board surface in §4 (replaces walnut). Warm tan
+     with a slight grain. */
+  --cork:         #b88a4a;
+  --cork-2:       #9a6f33;
+  --cork-shadow:  #5a3e1a;
+
   /* Stamps & grain */
   --stamp-red:    #b34a3a;
   --grain-tint:   rgb(242,230,199);
@@ -296,7 +308,13 @@ input[type="email"], input[type="text"], textarea {
   line-height: 0.98;
   text-transform: uppercase;
   margin: 0;
-  color: var(--ink);
+  /* Deep antique gold reads as embossed book-cover foil on the dusty
+     teal sky. Subtle dark gold inset shadow gives the letters a touch
+     of depth without going metallic-chrome. */
+  color: var(--title-gold);
+  text-shadow:
+    0 1px 0 var(--title-gold-2),
+    0 2px 8px rgba(20, 14, 0, 0.18);
   white-space: nowrap;
   width: max-content;
 }
@@ -331,25 +349,63 @@ input[type="email"], input[type="text"], textarea {
   color: var(--ink);
   opacity: 0.85;
 }
-/* Soft entrance only — per the spec, no drifting cloud animation. */
-.title, .tagline, .credit, .topbar, .scroll-cue {
+/* Hero entrance — title fades up; the subtitle and credit each ride
+   in on their own painterly cloud puff, drifting from offscreen left
+   and settling under the title. The puff is a soft cream radial
+   gradient layered behind the text via the ::before pseudo. Drift
+   in, then HOLD — Movement III's clouds drift more actively. */
+.title, .topbar, .scroll-cue {
   opacity: 0;
   animation: heroFadeIn 900ms cubic-bezier(.2,.7,.2,1) forwards;
 }
 .title   { animation-delay: 160ms; }
-.tagline { animation-delay: 460ms; }
-.credit  { animation-delay: 760ms; }
 .topbar  { animation-delay: 200ms; }
-.scroll-cue { animation-delay: 1100ms; }
+.scroll-cue { animation-delay: 1700ms; }
 @keyframes heroFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
-.topbar { animation-name: heroFadeIn; }
-.topbar { opacity: 0; }
-.topbar { animation: heroFadeIn 900ms cubic-bezier(.2,.7,.2,1) 200ms forwards; }
 .hero-zone .title { transform: translateY(8px); }
-.hero-zone .tagline, .hero-zone .credit { transform: translateY(8px); }
+
+/* Each cloud-borne line sits inside its own positioning context so the
+   ::before puff can float behind the text. Display block + margin auto
+   so they stack vertically + centre under the title; padding gives the
+   cloud puff room to breathe behind the type. */
+.tagline, .credit {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: calc(100vw - 4 * var(--margin));
+  margin-left: auto;
+  margin-right: auto;
+  padding: 14px 36px;
+  opacity: 0;
+  transform: translateX(-32vw);
+  animation: cloudFloatIn 1500ms cubic-bezier(.16,.7,.22,1) forwards;
+}
+.tagline { animation-delay: 600ms; }
+.credit  { animation-delay: 1100ms; }
+
+.tagline::before, .credit::before {
+  content: "";
+  position: absolute;
+  inset: -18% -18%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 60% 70% at 38% 42%,
+      rgba(240, 232, 214, 0.78),
+      rgba(240, 232, 214, 0.55) 45%,
+      rgba(240, 232, 214, 0.0) 75%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+@keyframes cloudFloatIn {
+  0%   { opacity: 0; transform: translateX(-32vw); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .title, .tagline, .credit, .topbar, .scroll-cue {
     opacity: 1;
@@ -506,11 +562,53 @@ input[type="email"], input[type="text"], textarea {
   color: var(--ink);
   opacity: 0.72;
 }
-/* Per-polaroid tilts — A leans left, B nearly flat, C leans right */
-.td-pa { transform: rotate(-5deg)   translateY(8px); }
-.td-pb { transform: rotate(2.5deg)  translateY(-12px); }
-.td-pc { transform: rotate(6deg)    translateY(0); }
-.td-polaroid:hover { transform: rotate(0) translateY(-4px) scale(1.02); z-index: 3; }
+/* Per-polaroid tilts — A leans left, B nearly flat, C leans right.
+   Each card uses a custom property --p-rot for its resting tilt so
+   the staggered-arrival transition can drift from offset+0deg to
+   landed+tilt without fighting the resting transform. */
+.td-pa { --p-rot: -5deg;  --p-ty: 8px;   }
+.td-pb { --p-rot: 2.5deg; --p-ty: -12px; }
+.td-pc { --p-rot: 6deg;   --p-ty: 0px;   }
+.td-polaroid {
+  transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+}
+
+/* Sequential arrival — each card drifts up + fades in. The .td-arrive
+   class is added by an IntersectionObserver in setupPolaroidArrival()
+   once the triptych enters the viewport; staggered delays make the
+   cards appear "in order of arrival". */
+.td-polaroid {
+  opacity: 0;
+  transform:
+    translate(var(--p-tx-from, 0), calc(var(--p-ty, 0px) + 36px))
+    rotate(0deg);
+  transition:
+    opacity 700ms cubic-bezier(.2,.7,.2,1),
+    transform 900ms cubic-bezier(.2,.7,.2,1);
+}
+.td-pa { --p-tx-from: -28vw; }
+.td-pb { --p-tx-from: 0; }
+.td-pc { --p-tx-from: 28vw; }
+
+.td-polaroid.td-arrive {
+  opacity: 1;
+  transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+}
+.td-pa.td-arrive { transition-delay: 0ms,   0ms; }
+.td-pb.td-arrive { transition-delay: 260ms, 260ms; }
+.td-pc.td-arrive { transition-delay: 520ms, 520ms; }
+
+.td-polaroid:hover {
+  transform: translateY(-4px) rotate(0deg) scale(1.02);
+  z-index: 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-polaroid {
+    opacity: 1;
+    transition: none;
+    transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+  }
+}
 
 /* The Bach blurb tracing-paper slip — sits below the polaroids. */
 .transition-desk .bridge-caption.td-blurb {
@@ -540,9 +638,10 @@ input[type="email"], input[type="text"], textarea {
     grid-template-columns: 1fr;
     gap: 28px;
   }
-  .td-pa, .td-pb, .td-pc { transform: rotate(-2deg); }
-  .td-pb { transform: rotate(2deg); }
-  .td-pc { transform: rotate(-1deg); }
+  .td-pa { --p-rot: -2deg; --p-ty: 0; }
+  .td-pb { --p-rot: 2deg;  --p-ty: 0; }
+  .td-pc { --p-rot: -1deg; --p-ty: 0; }
+  .td-pa, .td-pb, .td-pc { --p-tx-from: 0; }
 }
 
 /* ---------- §2b Music → DNA helix morph (restored) ----------
@@ -653,6 +752,12 @@ body.is-music-morph .bridge-aria {
   opacity: 0;
   pointer-events: none;
 }
+body.is-closing .bridge-aria {
+  /* Movement III's cloud-borne text should read uncluttered — the
+     aria-snip card on the case-file board carries the audio control. */
+  opacity: 0;
+  pointer-events: none;
+}
 body.is-signup .bridge-aria {
   /* Signup is the return-to-sky CTA — keep it uncluttered. */
   opacity: 0;
@@ -722,38 +827,45 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .audio-btn.playing .b4 { animation-delay: .25s; }
 @keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
 
-/* ---------- §5 Detective board: dusk-teal ground + paper artifact cards
-   Background lock: starts at exact --dusk-teal (matches .thematic above)
-   and ends at exact --dusk-teal (matches the signup's dusk-teal opening
-   below). The faint cool-light vignette in the centre is unchanged so
-   cards still feel slightly lifted off the ground. */
+/* ---------- §5 Case file: cork BULLETIN BOARD + paper artifact cards
+   Movement II is the deliberate visual "variation" the director called
+   for. We swap the dusk-teal surface for a warm cork board so the
+   middle section reads as a distinct chapter from the sky in I + III.
+   Cards are now PINNED to the cork via brass dome push-pins (see
+   .artifact::before). The red string / desk-vignette mechanics are
+   retired here. */
 .investigation {
-  /* Section transparent — body gradient (which lands on its darkest
-     value, dusk-teal, at this y-position) provides the desk surface.
-     The cream artifact cards still pop on the dark middle band. The
-     subtle centre vignette is preserved via .investigation::before
-     (the grain noise overlay) for ambient desk feel. */
   position: relative;
-  background: transparent;
-  color: var(--cloud-body);
+  /* Warm tan cork ground. A second layer of SVG fractalNoise sits on
+     top of the solid as a subtle grain — enough to read as "cork"
+     without becoming busy. */
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,222,170,0.18) 0%, transparent 60%),
+    linear-gradient(180deg, var(--cork) 0%, var(--cork-2) 100%);
+  color: var(--ink);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
-  /* Disabled — was a 0.22-opacity overlay-blended noise rectangle
-     bound to the investigation section. With every other section now
-     transparent against the body gradient, this ::before created a
-     visible darker textured band where the desk lives. The body's
-     .film-grain layer (fixed-position, full viewport) still provides
-     ambient grain without the section-rectangle. */
-  content: none;
+  /* Cork grain — fine-frequency SVG noise tinted brown, low opacity. */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0 0.08  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23c)'/></svg>");
+  background-size: 220px 220px;
 }
 .investigation::after {
-  /* No bottom-edge fade — both .investigation and .signup now start
-     and end at exact --dusk-teal, so the seam is invisible without
-     any vignette. Kept the rule (empty) so any future tinting has a
-     ready hook. */
-  content: none;
+  /* Top + bottom edge gradient softens the cork → sky seam without
+     producing a hard line — Movement II eases into III. */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(122, 159, 170, 0.55) 0%, transparent 8%, transparent 92%, rgba(163, 194, 203, 0.55) 100%);
 }
 .desk {
   position: relative;
@@ -771,49 +883,51 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   padding-left: var(--rail-inset);
   max-width: 1400px;
 }
+/* Cork board head — single short label in ink-leaning brown stencil.
+   The verbose "§ 04 · Brooklyn Public Library · 1985 · Three readers"
+   copy was design-doc shorthand; replaced with "Jan O'Deigh's Case File." */
+.desk-head {
+  /* Override the legacy grid alignment to a simple inline row so the
+     reset button sits to the right of the label. */
+  z-index: 3;
+}
 .desk-head .marque {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-family: var(--label);
+  font-size: 13px;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: rgba(240,230,210,0.55);
-  line-height: 2;
+  color: rgba(31, 26, 22, 0.6);
+  line-height: 1.4;
 }
-.desk-head .marque b { color: var(--cream); font-weight: 500; }
-.desk-head h2 {
-  font-family: var(--grot);
+.desk-head .marque b {
+  font-family: var(--stencil);
   font-weight: 700;
-  font-stretch: 125%;
-  font-size: clamp(32px, 5vw, 80px);
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  margin: 12px 0 0;
-  color: var(--bone);
+  font-size: clamp(22px, 2.6vw, 32px);
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  display: inline-block;
 }
-.desk-head .sub {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(16px, 1.4vw, 22px);
-  color: rgba(240,230,210,0.7);
-  margin: 8px 0 0;
-}
+.desk-head .sub { display: none; }   /* legacy copy retired */
 .desk-head .reset-btn {
   background: transparent;
-  border: 1px solid rgba(240,230,210,0.5);
-  color: rgba(240,230,210,0.85);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
+  border: 1px solid rgba(31, 26, 22, 0.45);
+  color: rgba(31, 26, 22, 0.75);
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.32em;
   padding: 9px 14px;
   text-transform: uppercase;
   transition: all 0.2s;
 }
-.desk-head .reset-btn:hover { border-color: var(--cream); color: var(--cream); }
+.desk-head .reset-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: rgba(255, 250, 230, 0.35);
+}
 
 .case-board {
   position: relative;
-  height: 1740px;
+  height: 1400px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -822,10 +936,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   top: 26px; right: 40%;
   font-family: var(--hand);
   font-size: 22px;
-  color: rgba(240,230,210,0.75);
+  color: rgba(31, 26, 22, 0.55);
   z-index: 5;
   pointer-events: none;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   transition: opacity 0.6s;
 }
 .hint.fade { opacity: 0; }
@@ -841,21 +954,13 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 /* Scattered ghost cipher symbols on the desk wood — only visible inside the
    magnifying-glass cursor's radius. Z-index 1 so cards (10+) sit on top. */
 .desk-cipher {
-  position: absolute; inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
+  /* Hidden on cork — the ghost-cipher mechanic belonged to the
+     walnut-desk magnifying-glass cursor. On the bulletin board the
+     paper artifacts speak for themselves. Kept the rule (display:
+     none) so legacy JS that queries .desk-cipher remains a no-op. */
+  display: none;
 }
-.desk-cipher .ghost-ch {
-  position: absolute;
-  font-family: var(--mono);
-  font-weight: 700;
-  color: var(--cream);
-  opacity: 0;
-  transition: opacity 240ms ease;
-  user-select: none;
-  white-space: nowrap;
-}
+.desk-cipher .ghost-ch { display: none; }
 
 /* ---------- Generic artifact ---------- */
 .artifact {
@@ -863,7 +968,53 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   perspective: 1200px;
   z-index: 10;
   transition: transform 0.3s cubic-bezier(.4,.1,.4,1), filter 0.3s;
-  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55));
+  /* Shadow tightened up — cards are now PINNED to cork at close range,
+     not hovering over a deep walnut field. Closer = softer + smaller. */
+  filter: drop-shadow(0 6px 12px rgba(40, 26, 8, 0.42))
+          drop-shadow(0 1px 2px rgba(40, 26, 8, 0.32));
+}
+
+/* Brass dome push-pin centred at the top of each card. Pure CSS — a
+   small radial gradient produces the "lit metal dome" highlight, an
+   inset dark crescent provides the underside shadow. The two paper-clip
+   variants (.pin-clip, .pin-clip-red) replace the pin on the journal +
+   newspaper cards for variety. */
+.artifact::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%,
+      #ffe7a0 0%,
+      #d3a04a 38%,
+      #8a5e1a 80%,
+      #5a3a0a 100%);
+  box-shadow:
+    0 2px 4px rgba(40, 26, 8, 0.55),
+    inset 0 -2px 3px rgba(40, 18, 0, 0.5),
+    inset 1px 1px 2px rgba(255, 240, 200, 0.45);
+  z-index: 12;
+  pointer-events: none;
+}
+/* A second pin variant — red-headed thumbtack — used to highlight one
+   or two cards (the encrypted message + the Pulitzer note read as
+   "look at me" pieces). */
+.artifact.pin-red::before {
+  background:
+    radial-gradient(circle at 35% 30%,
+      #f7b6a8 0%,
+      #c84a3a 38%,
+      #7c1b14 80%,
+      #4a0a06 100%);
+  box-shadow:
+    0 2px 4px rgba(40, 6, 4, 0.55),
+    inset 0 -2px 3px rgba(20, 0, 0, 0.55),
+    inset 1px 1px 2px rgba(255, 220, 210, 0.42);
 }
 .artifact .face {
   position: relative;
@@ -1012,114 +1163,94 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    Ring is a sibling of label-strip (was a parent) so it can spin on its own
    while the label and play button stay put on top — like a record turning
    under a fixed label. */
-.canister { width: 380px; height: 380px; left: 37%; top: 520px; transform: rotate(-4deg); }
-/* Recoloured per Option E — keep the round vinyl silhouette + spin
-   animation, but drop the dark walnut + gold-on-black palette in
-   favour of a soft warm-cream disc body with an ink stencil label.
-   Reads as a paper artifact in the same family as the other cards
-   on the desk. No bevel, no heavy black shadow; just paper-weight
-   shadow consistent with the other artifact cards. */
-.canister .side {
-  background: radial-gradient(circle at 50% 50%,
-    #c8b88f 0%,
-    #b8a878 60%,
-    #9c8c5e 100%);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+/* Aria snippet — torn slip of staff paper on cork. Replaces the
+   vinyl-disc canister; .canister class kept on the element only for
+   JS compatibility (setupAriaAudio binds to data-art="canister"). */
+.canister.aria-snip {
+  width: 400px; height: 240px;
+  left: 35%; top: 380px;
+  transform: rotate(-3.5deg);
 }
-.canister .ring {
-  position: absolute;
-  inset: 7%;
-  border-radius: 50%;
+.canister.aria-snip .side {
   background:
-    /* Asymmetric light sweep — same trick as before so the spinning
-       disc has visible rotational motion. Tone reduced to a soft
-       cream highlight against the warm-cream disc instead of a
-       gold-on-black sweep. */
-    conic-gradient(
-      from 0deg,
-      transparent 0deg,
-      rgba(240,232,214,0.18) 25deg,
-      rgba(240,232,214,0.32) 55deg,
-      rgba(240,232,214,0.18) 85deg,
-      transparent 130deg,
-      transparent 200deg,
-      rgba(240,232,214,0.10) 240deg,
-      transparent 280deg
-    ),
-    /* Concentric grooves drawn as faint ink rings on the cream body
-       (was gold rings on near-black). */
-    repeating-radial-gradient(circle at 50% 50%, transparent 0 6px, rgba(31,26,22,0.08) 6px 7px, transparent 7px 14px),
-    radial-gradient(circle, #b3a371 30%, #a39259 32%, #b3a371 34%, #a39259 36%, #b3a371 38%, #a39259 60%, #b3a371 62%);
-}
-.canister .label-strip {
-  /* Cream paper "label" stamped onto the disc centre. */
-  position: absolute;
-  inset: 22% 9%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--paper);
-  border-radius: 50%;
-  text-align: center;
-  padding: 20px;
-  z-index: 2;
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.22);
-}
-.canister .label-strip .top {
-  font-family: var(--mono); font-size: 13px; letter-spacing: 0.22em;
+    repeating-linear-gradient(90deg, transparent 0 60%, rgba(120,90,40,0.05) 60% 100%),
+    var(--paper);
+  padding: 22px 28px;
+  display: flex; flex-direction: column;
   color: var(--ink);
-  opacity: 0.7;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.12);
+  /* Torn-edge effect — clip-path with a hand-irregular bottom edge */
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 88%, 96% 92%, 88% 86%, 80% 94%,
+    72% 88%, 64% 92%, 56% 84%, 48% 92%, 40% 88%, 32% 94%,
+    24% 86%, 16% 92%, 8% 86%, 0% 92%
+  );
+}
+.canister.aria-snip .as-eyebrow {
+  font-family: var(--serif); font-style: italic;
+  font-size: 15px;
+  color: var(--ink); opacity: 0.65;
+  margin-bottom: 6px;
+}
+.canister.aria-snip .as-staff {
+  width: 100%; height: auto;
+  flex: 0 0 auto;
   margin-bottom: 8px;
 }
-.canister .label-strip .mid {
+.canister.aria-snip .as-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+.canister.aria-snip .as-title {
   font-family: var(--stencil); font-weight: 700;
-  font-size: 30px; line-height: 1; text-transform: uppercase;
+  font-size: 14px; letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--ink);
-  letter-spacing: 0.04em;
 }
-.canister .label-strip .bot {
-  font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink);
-  opacity: 0.78;
-  margin-top: 8px;
-}
-.canister .play-indicator {
-  /* Ink outline + ink play arrow on cream paper — quiet but obvious. */
-  margin-top: 18px;
-  width: 56px; height: 56px;
+.canister.aria-snip .play-indicator {
+  width: 40px; height: 40px;
   border-radius: 50%;
   border: 1.5px solid var(--ink);
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
   color: var(--ink);
-  pointer-events: auto;
-  background: transparent;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  pointer-events: auto;
+  transition: background 0.2s, transform 0.15s;
 }
-.canister .play-indicator:hover {
+.canister.aria-snip .play-indicator svg { fill: var(--ink); }
+.canister.aria-snip .play-indicator:hover {
   background: rgba(31,26,22,0.08);
-  border-color: var(--ink);
   transform: scale(1.08);
 }
-.canister .play-indicator svg { width: 24px; height: 24px; fill: var(--ink); }
-.canister.playing .ring { animation: spinSlow 6s linear infinite; }
-@keyframes spinSlow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+.canister.aria-snip.playing .play-indicator {
+  background: var(--ink);
 }
-.canister .back {
-  /* Back face also recoloured — was a dark walnut radial; now a soft
-     cream disc matching the front. */
-  background: radial-gradient(circle at 50% 50%,
-    #d8c89c 0%,
-    #c8b88f 60%,
-    #b3a371 100%);
-  border-radius: 50%;
-  padding: 44px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
+.canister.aria-snip.playing .play-indicator svg { fill: var(--paper); }
+.canister.aria-snip .back {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 60%, rgba(120,90,40,0.05) 60% 100%),
+    #e8dfc4;
+  padding: 26px 28px;
   color: var(--ink);
+  clip-path: polygon(
+    0% 8%, 8% 14%, 16% 8%, 24% 14%, 32% 6%, 40% 12%,
+    48% 8%, 56% 16%, 64% 8%, 72% 12%, 80% 6%, 88% 14%,
+    96% 8%, 100% 12%, 100% 100%, 0% 100%
+  );
 }
-.canister .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.2em; color: var(--ink); margin: 0 0 16px; opacity: 0.72; }
-.canister .back p { font-family: var(--serif); font-size: 18px; font-style: italic; line-height: 1.5; margin: 0 0 14px; color: var(--ink); }
+.canister.aria-snip .back h4 {
+  font-family: var(--label);
+  font-size: 12px; letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.72;
+  margin: 0 0 14px;
+}
+.canister.aria-snip .back p {
+  font-family: var(--serif); font-size: 17px;
+  font-style: italic; line-height: 1.5;
+  margin: 0 0 12px; color: var(--ink);
+}
 
 /* 6) Cast list */
 .cast-card { width: 460px; height: 580px; left: 3%; top: 720px; transform: rotate(-4deg); }
@@ -1246,7 +1377,312 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   color: #2a2218; background: var(--paper);
 }
 
-/* 9) Current Leads — development partners card */
+/* ---------- v5 cork-board cards ----------
+   Layout reworked for the bulletin-board roster. Eight visible cards
+   plus the leibniz quote tucked in the middle. Notebook + catalog
+   sit at the top; aria + news + punch fill the middle band; poe +
+   pulitzer + enc anchor the bottom. */
+.leibniz {
+  width: 320px; height: 220px;
+  left: 42%; top: 230px;
+  transform: rotate(-7deg);
+}
+
+.news-clip {
+  width: 380px; height: 460px;
+  right: 3%; top: 460px;
+  transform: rotate(4deg);
+  z-index: 11;
+}
+.news-clip .side {
+  background:
+    linear-gradient(180deg, #e3d9bd 0%, #d5c9a6 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.32 0 0 0 0.32 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+  background-blend-mode: multiply;
+  padding: 24px 26px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+  /* Torn upper-left edge */
+  clip-path: polygon(
+    0% 6%, 4% 0%, 12% 4%, 22% 1%, 32% 5%, 40% 0%, 48% 6%, 58% 1%,
+    68% 4%, 78% 0%, 88% 5%, 100% 0%,
+    100% 100%, 0% 100%
+  );
+}
+.news-clip .np-masthead {
+  font-family: var(--label); font-size: 10px;
+  letter-spacing: 0.34em; text-transform: uppercase;
+  color: rgba(42,34,24,0.7);
+}
+.news-clip .np-rule {
+  height: 2px; background: rgba(42,34,24,0.7);
+  margin: 8px 0 16px;
+}
+.news-clip .np-headline {
+  font-family: 'Stardos Stencil', serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 0 14px;
+  color: #1f1a16;
+}
+.news-clip .np-byline {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px; opacity: 0.7;
+  margin: 0 0 12px;
+}
+.news-clip .np-body {
+  font-family: var(--serif); font-size: 15px; line-height: 1.45;
+  column-count: 1; margin: 0; color: #2a2218;
+}
+.news-clip .back {
+  background: #e0d5b3;
+  padding: 28px 28px;
+  color: #2a2218;
+  font-family: var(--serif); font-size: 16px; line-height: 1.5;
+}
+.news-clip .back h4 {
+  font-family: var(--label);
+  font-size: 12px; letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.72;
+  margin: 0 0 14px;
+}
+
+.punch-card {
+  width: 400px; height: 230px;
+  left: 5%; top: 720px;
+  transform: rotate(2deg);
+  z-index: 11;
+}
+.punch-card .side {
+  background: #ddc798;
+  padding: 16px 22px;
+  color: #1f1a16;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+  position: relative;
+}
+.punch-card .pc-corner {
+  /* Cut-off top-left corner — the iconic IBM 5081 detail. */
+  position: absolute;
+  top: 0; left: 0;
+  width: 28px; height: 28px;
+  background: var(--cork);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.punch-card .pc-head {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.22em;
+  color: rgba(31,26,22,0.7);
+  margin-bottom: 10px;
+  margin-left: 30px;
+}
+.punch-card .pc-grid {
+  /* Twelve rows × 80 columns — render as a dense field of tiny rect
+     "holes" with a CSS background. Two patterns: an empty bias-tone
+     and a punched-out sparse pattern. */
+  height: 110px;
+  background:
+    radial-gradient(circle, rgba(31,26,22,0.9) 0.8px, transparent 1.3px),
+    var(--paper);
+  background-size: 12px 9px;
+  background-position: 4px 4px;
+  border: 1px solid rgba(31,26,22,0.25);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.1);
+}
+.punch-card .pc-grid::after {
+  /* A handful of bigger "punches" — actual data holes — overlaid on
+     the dot field. */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle, rgba(31,26,22,0.95) 2.2px, transparent 2.8px);
+  background-size: 24px 18px;
+  background-position: 8px 8px;
+  opacity: 0.45;
+}
+.punch-card .pc-foot {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px;
+  color: rgba(31,26,22,0.7);
+  margin-top: 8px;
+  text-align: right;
+}
+.punch-card .back {
+  background: #d8c590;
+  padding: 22px 24px;
+  color: #1f1a16;
+  font-family: var(--serif); font-size: 15px; line-height: 1.45;
+}
+.punch-card .back h4 {
+  font-family: var(--label); font-size: 12px;
+  letter-spacing: 0.32em; color: var(--ink);
+  margin: 0 0 12px; opacity: 0.72;
+}
+
+.poe-card {
+  width: 340px; height: 280px;
+  left: 42%; top: 780px;
+  transform: rotate(5deg);
+  z-index: 11;
+}
+.poe-card .side {
+  background:
+    linear-gradient(180deg, rgba(20,10,0,0.05), rgba(0,0,0,0.04)),
+    #e6d6ad;
+  padding: 22px 24px;
+  color: #1f1a16;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.16);
+}
+.poe-card .poe-eyebrow {
+  font-family: var(--label); font-size: 11px;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(31,26,22,0.65);
+  margin-bottom: 6px;
+}
+.poe-card h4 {
+  font-family: var(--stencil); font-weight: 700;
+  font-size: 24px; letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  color: #1f1a16;
+}
+.poe-card .poe-title {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px;
+  margin: 0 0 12px;
+  color: rgba(31,26,22,0.78);
+}
+.poe-card p {
+  font-family: var(--serif); font-size: 14px;
+  line-height: 1.45; margin: 0 0 10px;
+  color: #2a2218;
+}
+.poe-card .poe-glyphs {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 22px; letter-spacing: 0.18em;
+  color: var(--title-gold);
+  margin-top: 8px;
+}
+.poe-card .back {
+  background: #ddcb9a;
+  padding: 24px 24px;
+  color: #2a2218;
+  font-family: var(--serif); font-size: 15px; line-height: 1.5;
+}
+.poe-card .back h4 {
+  font-family: var(--label); font-size: 12px;
+  letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.72;
+  margin: 0 0 12px;
+}
+
+.pulitzer-card {
+  width: 280px; height: 330px;
+  right: 8%; top: 940px;
+  transform: rotate(-4deg);
+  z-index: 11;
+}
+.pulitzer-card .side {
+  background: var(--paper);
+  padding: 22px 22px;
+  color: #1f1a16;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.14);
+}
+.pulitzer-card .pu-medal {
+  width: 64px; height: 64px;
+  margin: 4px auto 12px;
+}
+.pulitzer-card .pu-eyebrow {
+  font-family: var(--label); font-size: 11px;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(31,26,22,0.65);
+  margin-bottom: 6px;
+}
+.pulitzer-card h4 {
+  font-family: var(--stencil); font-weight: 700;
+  font-size: 22px; letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  color: #1f1a16;
+}
+.pulitzer-card p {
+  font-family: var(--serif); font-size: 14px;
+  line-height: 1.45; margin: 0 0 8px;
+  color: #2a2218;
+}
+.pulitzer-card .pu-small {
+  font-size: 12px; opacity: 0.72; font-style: italic;
+  margin-top: 12px;
+}
+.pulitzer-card .back {
+  background: #ede4cb;
+  padding: 22px 22px;
+  color: #2a2218;
+  font-family: var(--serif); font-size: 14px; line-height: 1.5;
+  text-align: left;
+}
+.pulitzer-card .back h4 {
+  font-family: var(--label); font-size: 11px;
+  letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.72;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+
+.enc-card {
+  width: 360px; height: 290px;
+  left: 18%; top: 1010px;
+  transform: rotate(-3deg);
+  z-index: 11;
+}
+.enc-card .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.03)),
+    #ebe2c5;
+  padding: 22px 24px;
+  color: #1f1a16;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.16);
+}
+.enc-card .enc-eyebrow {
+  font-family: var(--label); font-size: 11px;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--stamp-red);
+  margin-bottom: 12px;
+}
+.enc-card .enc-body {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 14px; line-height: 1.5;
+  color: #1f1a16;
+  margin: 0 0 14px;
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+.enc-card .enc-foot {
+  font-family: var(--serif); font-style: italic;
+  font-size: 12px;
+  color: rgba(31,26,22,0.65);
+  margin: 0;
+}
+.enc-card .back {
+  background: #e3d8b0;
+  padding: 24px 24px;
+  color: #2a2218;
+}
+.enc-card .back h4 {
+  font-family: var(--label); font-size: 12px;
+  letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.72;
+  margin: 0 0 14px;
+}
+
+/* Legacy .tools-card + .leads CSS retained below (cards removed from
+   DOM in v5; styles left in for now as dead code, removed in cleanup). */
+
+/* 9) Current Leads — development partners card (legacy / unused) */
 .leads {
   width: 380px; height: 380px;
   right: 6%; top: 1340px;
@@ -2070,6 +2506,183 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    section transitions to dusk-teal so the footer below picks up
    cleanly. The envelope CTA stays — cream paper card on ink border —
    but loses the walnut backdrop. */
+/* ---------- §5b Closing clouds — Movement III ----------
+   Cork → sky transition with notes dispersing into cloud puffs above
+   three cloud-borne content blocks: director, synopsis, milestones.
+   Bookends the hero's cloud-text idea. */
+.closing {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(255, 248, 220, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse at 78% 60%, rgba(255, 248, 220, 0.30) 0%, transparent 60%),
+    linear-gradient(180deg, var(--sky-bottom) 0%, var(--sky-top) 90%, var(--sky-top) 100%);
+  padding: 0 var(--margin) clamp(80px, 12vh, 140px);
+  overflow: hidden;
+}
+.close-transition {
+  position: relative;
+  width: 100%;
+  height: clamp(110px, 14vh, 180px);
+  display: block;
+  z-index: 2;
+  margin-bottom: clamp(40px, 6vh, 80px);
+}
+.close-transition svg {
+  display: block;
+  width: 100%; height: 100%;
+}
+.closing-zone {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(48px, 8vh, 96px);
+}
+.cloud-card {
+  position: relative;
+  padding: clamp(28px, 4vw, 52px) clamp(32px, 5vw, 64px);
+  color: var(--ink);
+  text-align: center;
+  max-width: 720px;
+}
+.cloud-card::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 65% 75% at 38% 42%,
+      rgba(240, 232, 214, 0.92),
+      rgba(240, 232, 214, 0.68) 45%,
+      rgba(240, 232, 214, 0.0) 78%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+.cc-eyebrow {
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+  margin: 0 0 14px;
+}
+.cloud-card h3 {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  color: var(--title-gold);
+  text-shadow: 0 1px 0 var(--title-gold-2);
+}
+.cloud-card p {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.55;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+.cloud-card p em { font-style: italic; color: var(--title-gold-2); }
+.cloud-card blockquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.45;
+  color: var(--ink);
+  border-left: 2px solid var(--title-gold);
+  padding-left: 18px;
+  margin: 22px auto 0;
+  max-width: 36ch;
+  text-align: left;
+}
+.cc-tag {
+  font-style: italic;
+  font-size: clamp(15px, 1.2vw, 18px);
+  color: var(--ink);
+  opacity: 0.85;
+  margin-top: 16px;
+}
+.cc-tag span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--label);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+.cc-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 22px;
+  font-family: var(--serif);
+  text-align: left;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cc-list li {
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(31,26,22,0.25);
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.4;
+}
+.cc-list li:last-child { border-bottom: 0; }
+.cc-list b { display: block; font-weight: 600; color: var(--ink); }
+.cc-list span { font-style: italic; color: rgba(31,26,22,0.7); font-size: 0.88em; }
+.cc-foot {
+  font-style: italic;
+  font-size: clamp(15px, 1.2vw, 18px);
+  margin-top: 16px;
+}
+
+/* Asymmetric layout — each cloud sits in a different lane so the
+   composition reads as scattered, not stacked. */
+.cc-director  { justify-self: start; }
+.cc-synopsis  { justify-self: center; max-width: 780px; }
+.cc-milestones{ justify-self: end; }
+
+/* Cloud-drift entrance — each card slides in from offscreen and
+   settles. The IntersectionObserver in setupClosingClouds() adds the
+   .cc-arrive class, triggering the staggered transition. */
+.cloud-card {
+  opacity: 0;
+  transform: translateX(var(--cc-tx-from, -30vw));
+  transition:
+    opacity 1000ms cubic-bezier(.16,.7,.22,1),
+    transform 1400ms cubic-bezier(.16,.7,.22,1);
+}
+.cc-director  { --cc-tx-from: -30vw; }
+.cc-synopsis  { --cc-tx-from:  30vw; }
+.cc-milestones{ --cc-tx-from: -30vw; }
+
+.cloud-card.cc-arrive {
+  opacity: 1;
+  transform: translateX(0);
+}
+.cc-director.cc-arrive  { transition-delay: 0ms; }
+.cc-synopsis.cc-arrive  { transition-delay: 320ms; }
+.cc-milestones.cc-arrive{ transition-delay: 640ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .cc-director, .cc-synopsis, .cc-milestones { justify-self: center; }
+  .cloud-card { --cc-tx-from: 0; }
+  .cloud-card { transform: translateY(20px); }
+}
+
 .signup {
   /* Section transparent — the body gradient at this y-position is in
      its "returning-to-sky" upswing, going from mid-teal back through
@@ -2754,8 +3367,8 @@ top: -40px; left: 8px;
 
   <div class="hero-zone">
     <h1 class="title">The Gold Bug Variations</h1>
-    <p class="tagline">a feature film, after the novel by <em>Richard Powers</em></p>
-    <p class="credit">Directed by Mark A. Levinson</p>
+    <p class="tagline">A Feature Film Based on the Acclaimed Novel by <em>Richard Powers</em></p>
+    <p class="credit">Directed by the Award-Winning Director Mark A. Levinson</p>
   </div>
 
   <div class="scroll-cue" aria-hidden="true">
@@ -2775,13 +3388,11 @@ top: -40px; left: 8px;
      .bridge-caption .cap-body, audio button bridge-aria, and the
      setupHelixMorph early-return guard) keep working.
      ============================================================ -->
-<section class="bridge transition-desk" id="bridge" aria-label="The threefold theme — laid out on the desk in order of arrival">
+<section class="bridge transition-desk" id="bridge" aria-label="Three theme cards: four bass notes, four base molecules, two intertwined love stories">
 
-  <!-- Section label, top-left -->
-  <header class="td-head">
-    <div class="td-eyebrow">§ 02 · the threefold theme</div>
-    <div class="td-sub">laid out on the desk, in order of arrival</div>
-  </header>
+  <!-- The "§ 02 · the threefold theme · laid out on the desk, in order
+       of arrival" header was design-doc shorthand and read as literal
+       copy on the live site — removed. Cards arrive on their own. -->
 
   <!-- Three polaroids — the triptych. Each tilted, slight overlap. -->
   <div class="td-polaroids">
@@ -2910,87 +3521,67 @@ top: -40px; left: 8px;
       </figcaption>
     </figure>
 
-    <!-- Polaroid C · AND · TWO — two interlocking ovals containing two facing silhouettes, red ampersand at the meeting, φ above -->
+    <!-- Polaroid C · AND · TWO — a hand-drawn DNA-like spiral whose
+         rungs are four hearts, unifying four-notes + four-bases + two
+         love-stories in a single mark. Two strands wind down the
+         portrait; the hearts (one red, three ink) sit at the
+         crossings, like base-pair rungs. -->
     <figure class="td-polaroid td-pc">
-      <div class="td-photo td-photo-rings" aria-hidden="true">
+      <div class="td-photo td-photo-hearts" aria-hidden="true">
         <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <filter id="rings-shiver" x="-5%" y="-5%" width="110%" height="110%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="14" result="t"/>
-              <feDisplacementMap in="SourceGraphic" in2="t" scale="1.6"/>
+            <filter id="hearts-shiver" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="9" result="t"/>
+              <feDisplacementMap in="SourceGraphic" in2="t" scale="3"/>
+              <feGaussianBlur stdDeviation="0.45"/>
             </filter>
-            <!-- Clip each silhouette to its own oval so the heads stay inside their lens -->
-            <clipPath id="td-clip-left"><ellipse cx="92" cy="150" rx="56" ry="72"/></clipPath>
-            <clipPath id="td-clip-right"><ellipse cx="148" cy="150" rx="56" ry="72"/></clipPath>
+            <pattern id="td-notebook-c" patternUnits="userSpaceOnUse" width="240" height="22">
+              <rect width="240" height="22" fill="#ede4cd"/>
+              <line x1="0" y1="21" x2="240" y2="21" stroke="#b3c3c9" stroke-width="0.7" opacity="0.55"/>
+            </pattern>
+            <!-- A small heart symbol, anchored at its top-centre indent so
+                 it can be reused via <use> at four crossing points. -->
+            <symbol id="heart" viewBox="-20 -18 40 36" overflow="visible">
+              <path d="M 0 14
+                       C -6 8, -16 0, -16 -8
+                       C -16 -14, -10 -16, -6 -14
+                       C -3 -12, -1 -10, 0 -6
+                       C 1 -10, 3 -12, 6 -14
+                       C 10 -16, 16 -14, 16 -8
+                       C 16 0, 6 8, 0 14 Z"/>
+            </symbol>
           </defs>
 
-          <!-- Two interlocking ovals (line drawings, slightly hand-drawn) -->
-          <g filter="url(#rings-shiver)" fill="none" stroke="#1f1a16" stroke-width="1.6">
-            <ellipse cx="92"  cy="150" rx="56" ry="72"/>
-            <ellipse cx="148" cy="150" rx="56" ry="72"/>
-            <!-- A second pair, slightly offset and lighter, hints at the &-as-Venn -->
-            <ellipse cx="92"  cy="150" rx="50" ry="66" opacity="0.45"/>
-            <ellipse cx="148" cy="150" rx="50" ry="66" opacity="0.45"/>
+          <!-- Notebook-paper backdrop, matching Polaroid B for visual rhyme -->
+          <rect width="240" height="300" fill="url(#td-notebook-c)"/>
+
+          <!-- Two intertwined strands (hand-drawn shiver), vertical. -->
+          <g filter="url(#hearts-shiver)" fill="none" stroke-linecap="round">
+            <!-- Strand A — warm brass, leads on the right at the top -->
+            <path d="M 120 24 C 158 38, 158 66, 120 80
+                     C 82 94, 82 122, 120 136
+                     C 158 150, 158 178, 120 192
+                     C 82 206, 82 234, 120 248"
+                  stroke="#8a6f3a" stroke-width="2.4"/>
+            <!-- Strand B — ink, opposite phase -->
+            <path d="M 120 24 C 82 38, 82 66, 120 80
+                     C 158 94, 158 122, 120 136
+                     C 82 150, 82 178, 120 192
+                     C 158 206, 158 234, 120 248"
+                  stroke="#1f1a16" stroke-width="2.4"/>
           </g>
 
-          <!-- LEFT silhouette — feminine head + long hair, facing RIGHT.
-               Clockwise from the top of the head: forehead → brow ridge →
-               eye recess → nose bridge → NOSE TIP (the iconic protrusion) →
-               philtrum → upper lip → mouth line → lower lip → chin → jaw →
-               neck → shoulder → hair flowing down the BACK of the head and
-               returning up the left side of the oval. Clipped to the left
-               oval so the hair fills it fully. -->
-          <g clip-path="url(#td-clip-left)" fill="#1f1a16">
-            <path d="M 88 78
-                     C 100 76, 110 84, 114 96
-                     C 116 105, 117 114, 116 122
-                     C 114 124, 111 124, 109 126
-                     C 108 128, 110 130, 112 131
-                     C 116 134, 122 140, 126 148
-                     C 128 154, 124 158, 119 159
-                     C 115 160, 110 161, 109 164
-                     C 109 168, 112 171, 110 175
-                     C 109 180, 110 184, 113 188
-                     C 117 194, 119 202, 117 212
-                     C 114 224, 105 240, 94 254
-                     L 32 254
-                     C 22 220, 18 175, 26 138
-                     C 32 108, 50 86, 88 78
-                     Z"/>
+          <!-- Four hearts at the strand crossings (rungs). The TOP heart
+               is the romantic-red one — it's the "two" of the headline;
+               the other three are ink, recursing through the motif. -->
+          <g>
+            <use href="#heart" x="120" y="52"  width="28" height="28" fill="#b34a3a"/>
+            <use href="#heart" x="120" y="108" width="24" height="24" fill="#1f1a16" opacity="0.92"/>
+            <use href="#heart" x="120" y="164" width="22" height="22" fill="#1f1a16" opacity="0.78"/>
+            <use href="#heart" x="120" y="220" width="20" height="20" fill="#1f1a16" opacity="0.65"/>
           </g>
-
-          <!-- RIGHT silhouette — mirror of the LEFT, facing LEFT.
-               Same construction, x-axis mirrored across the polaroid centre
-               (x = 120). Clipped to the right oval. -->
-          <g clip-path="url(#td-clip-right)" fill="#1f1a16">
-            <path d="M 152 78
-                     C 140 76, 130 84, 126 96
-                     C 124 105, 123 114, 124 122
-                     C 126 124, 129 124, 131 126
-                     C 132 128, 130 130, 128 131
-                     C 124 134, 118 140, 114 148
-                     C 112 154, 116 158, 121 159
-                     C 125 160, 130 161, 131 164
-                     C 131 168, 128 171, 130 175
-                     C 131 180, 130 184, 127 188
-                     C 123 194, 121 202, 123 212
-                     C 126 224, 135 240, 146 254
-                     L 208 254
-                     C 218 220, 222 175, 214 138
-                     C 208 108, 190 86, 152 78
-                     Z"/>
-          </g>
-
-          <!-- φ glyph above the intersection -->
-          <text x="120" y="76" text-anchor="middle"
-                font-family="'EB Garamond', Georgia, serif" font-style="italic"
-                font-size="14" fill="#1f1a16" opacity="0.85">φ</text>
-
-          <!-- Red stylised ampersand at the meeting point of the two ovals -->
-          <text x="120" y="174" text-anchor="middle"
-                font-family="'EB Garamond', Georgia, serif" font-style="italic"
-                font-size="32" fill="#b34a3a" font-weight="500">&amp;</text>
         </svg>
+        <span class="td-photo-sub">two ♥ four</span>
       </div>
       <figcaption class="td-cap">
         <span class="td-cap-num">AND · TWO</span>
@@ -3000,11 +3591,10 @@ top: -40px; left: 8px;
 
   </div>
 
-  <!-- Bach blurb on tracing-paper slip, tilted -1.5°. The .cap-body span
-       is the third easter-egg ‡ glyph anchor (see ANCHORS in §egg). -->
-  <div class="bridge-caption td-blurb" aria-hidden="false">
-    <p class="cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
-  </div>
+  <!-- Bach blurb removed per director feedback: the triptych speaks for
+       itself; the "Connected by …" line on the next section carries the
+       mystery hook. The third easter-egg ‡ anchor moves to the
+       music-morph caption (see ANCHORS in §egg). -->
 
   <div class="bridge-aria">
     <button class="audio-btn" id="ariaBtn" aria-pressed="false" aria-label="Toggle Bach Goldberg Aria, BWV 988">
@@ -3030,9 +3620,9 @@ top: -40px; left: 8px;
      ============================================================ -->
 <section class="music-morph" id="music-morph" aria-label="A music staff bending into a DNA double helix">
   <div class="mm-stage">
-    <div class="mm-caption" aria-hidden="false">
-      <p class="mm-cap-body">Bach wrote thirty variations on a single bass line. Watson and Crick read four letters into the spine of a cell. The film listens — patiently — for the strand they share.</p>
-    </div>
+    <!-- Bach / Watson-Crick caption removed per director feedback —
+         the scroll-driven morph carries the metaphor on its own and we
+         go right to the "Connected by …" line on the next section. -->
     <div class="mm-svg-wrap">
       <svg id="morph" viewBox="0 0 360 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <!-- Back-to-front z-order: rungs (behind strands), back strand,
@@ -3234,18 +3824,20 @@ top: -40px; left: 8px;
     <div class="desk-head">
       <div>
         <div class="marque">
-          <b>§ 04 · The case file</b><br>
-          Jan O'Deigh's desk · Brooklyn Public Library · 1985
+          <b>Jan O'Deigh's Case File.</b>
         </div>
-        <p class="sub">Three readers. One vanished life. A handful of artifacts laid out on a desk at three in the morning.</p>
       </div>
       <button class="reset-btn" id="resetBtn" aria-label="Reset desk">↺ Reset desk</button>
     </div>
 
     <div class="case-board" id="caseBoard">
 
-      <div class="hint" id="hint">click to flip · drag to move</div>
-      <svg class="red-string-svg" id="redString" width="100%" height="100%"></svg>
+      <div class="hint" id="hint">click to flip · drag to rearrange</div>
+      <!-- Red string SVG removed — on cork, the cards are pinned
+           individually; no investigative thread is overlaid. The
+           #redString id stays in the DOM as an empty placeholder so
+           legacy JS that queries it remains a no-op without erroring. -->
+      <svg class="red-string-svg" id="redString" width="0" height="0" aria-hidden="true" style="display:none"></svg>
 
       <!-- 1 · Notebook -->
       <div class="artifact notebook" data-art="notebook">
@@ -3272,8 +3864,9 @@ top: -40px; left: 8px;
         </div>
       </div>
 
-      <!-- 2 · Polaroid microscope -->
-      <div class="artifact polaroid" data-art="polaroid">
+      <!-- Polaroid microscope card removed in v5 — its director-note
+           back side moves to Movement III's closing cloud section. -->
+      <div class="artifact polaroid" data-art="polaroid" hidden style="display:none">
         <div class="face">
           <div class="side front">
             <div class="photo">
@@ -3479,17 +4072,60 @@ top: -40px; left: 8px;
         </div>
       </div>
 
-      <!-- 5 · Film canister -->
-      <div class="artifact canister" data-art="canister">
+      <!-- Aria score snippet — a torn slip of staff paper with the
+           Aria's opening bars hand-drawn on it. Click the play disc to
+           begin the audio (preserves the existing #playInd binding).
+           Keeps the .canister data-art binding so the existing audio
+           handler in setupAriaAudio() still finds it. -->
+      <div class="artifact aria-snip canister" data-art="canister">
         <div class="face">
           <div class="side front">
-            <div class="ring"></div>
-            <div class="label-strip">
-              <div class="top">REEL · 01</div>
-              <div class="mid">Aria<br>BWV 988</div>
-              <div class="bot">— J.S. Bach —</div>
+            <div class="as-eyebrow">— Aria · BWV 988 —</div>
+            <svg class="as-staff" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <filter id="as-shiver" x="-5%" y="-5%" width="110%" height="110%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="9" result="t"/>
+                  <feDisplacementMap in="SourceGraphic" in2="t" scale="0.8"/>
+                </filter>
+              </defs>
+              <g filter="url(#as-shiver)" stroke="#1f1a16" stroke-linecap="round">
+                <!-- 5-line staff -->
+                <g stroke-width="1.05" fill="none">
+                  <line x1="20"  y1="36" x2="300" y2="36"/>
+                  <line x1="20"  y1="50" x2="300" y2="50"/>
+                  <line x1="20"  y1="64" x2="300" y2="64"/>
+                  <line x1="20"  y1="78" x2="300" y2="78"/>
+                  <line x1="20"  y1="92" x2="300" y2="92"/>
+                  <line x1="300" y1="36" x2="300" y2="92" stroke-width="1.4"/>
+                </g>
+                <!-- Treble clef glyph -->
+                <text x="22" y="92"
+                      font-family="'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol', 'STIX Two Math', 'Cambria Math', serif"
+                      font-size="58" fill="#1f1a16"
+                      dominant-baseline="alphabetic" text-anchor="start">&#x1D11E;</text>
+                <!-- Aria opening: G ↗ B-A-G slow ornamented descent -->
+                <g fill="#1f1a16">
+                  <ellipse cx="92"  cy="78" rx="6.4" ry="4.6" transform="rotate(-22 92 78)"/>
+                  <ellipse cx="124" cy="64" rx="6.4" ry="4.6" transform="rotate(-22 124 64)"/>
+                  <ellipse cx="156" cy="71" rx="6.4" ry="4.6" transform="rotate(-22 156 71)"/>
+                  <ellipse cx="188" cy="78" rx="6.4" ry="4.6" transform="rotate(-22 188 78)"/>
+                  <ellipse cx="220" cy="85" rx="6.4" ry="4.6" transform="rotate(-22 220 85)"/>
+                  <ellipse cx="252" cy="78" rx="6.4" ry="4.6" transform="rotate(-22 252 78)"/>
+                </g>
+                <g stroke="#1f1a16" stroke-width="1.5" fill="none">
+                  <line x1="97"  y1="76" x2="97"  y2="40"/>
+                  <line x1="129" y1="62" x2="129" y2="26"/>
+                  <line x1="161" y1="69" x2="161" y2="33"/>
+                  <line x1="193" y1="76" x2="193" y2="40"/>
+                  <line x1="225" y1="83" x2="225" y2="47"/>
+                  <line x1="257" y1="76" x2="257" y2="40"/>
+                </g>
+              </g>
+            </svg>
+            <div class="as-foot">
+              <span class="as-title">Aria · J.S. Bach</span>
               <button class="play-indicator" id="playInd" aria-label="Play / pause Aria">
-                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                   <polygon class="icon-play" points="7,4 21,12 7,20"></polygon>
                   <g class="icon-pause" style="display:none">
                     <rect x="6" y="4" width="5" height="16" rx="0.5"></rect>
@@ -3508,29 +4144,7 @@ top: -40px; left: 8px;
         </div>
       </div>
 
-      <!-- 6 · Cast list -->
-      <div class="artifact cast-card" data-art="cast">
-        <div class="face">
-          <div class="side front">
-            <h4>The four voices</h4>
-            <div class="stamp">DRAMATIS PERSONAE</div>
-            <ul>
-              <li><i>Dr. Stuart Ressler</i><span>· molecular geneticist, vanished</span></li>
-              <li><i>Jan O'Deigh</i><span>· research librarian, Brooklyn</span></li>
-              <li><i>Franklin Todd</i><span>· graduate student, art historian</span></li>
-              <li><i>Jeannette Koss</i><span>· mathematician, Urbana 1957</span></li>
-              <li><i>Dr. Cyfer</i><span>· head of the Cyfer lab</span></li>
-            </ul>
-          </div>
-          <div class="side back">
-            <h4>FOUR VOICES, TWO CENTURIES</h4>
-            <p>The pairing is not chronological. It is musical: a question in 1957 is answered, fifteen years of plot later, by a gesture in 1985. The audience learns to listen for the rhyme.</p>
-            <p style="margin-top:10px;font-style:italic;">The third act is the moment the two voices land on the same chord — the screen becomes one image, briefly, before parting again.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7 · Leibniz quote — small paper note pinned to the desk -->
+      <!-- Leibniz quote — small paper note pinned to the cork. -->
       <div class="artifact leibniz" data-art="leibniz">
         <div class="face">
           <div class="side front">
@@ -3539,45 +4153,110 @@ top: -40px; left: 8px;
             <cite>— Gottfried Leibniz</cite>
           </div>
           <div class="side back">
-            <h4>WHY IT'S ON THE DESK</h4>
+            <h4>WHY IT'S ON THE BOARD</h4>
             <p>The film's two strands — the Goldberg Variations and the four bases of DNA — are both arithmetic that does not feel like arithmetic. Leibniz heard it three centuries early.</p>
           </div>
         </div>
       </div>
 
-      <!-- 8 · Tools — director credit card -->
-      <div class="artifact tools-card" data-art="tools">
+      <!-- Mainframe punch card — an IBM-360-era 80-column punch card, the
+           era of computing in the novel (Ressler's MOL graveyard shift). -->
+      <div class="artifact punch-card" data-art="punch">
         <div class="face">
           <div class="side front">
-            <span class="label-tag">Tools</span>
-            <h4>Mark A. Levinson</h4>
-            <p>Director of <em>Particle Fever</em> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
-            <blockquote>"Films and formulas — both are theories about how the universe operates."</blockquote>
+            <div class="pc-corner"></div>
+            <div class="pc-head">IBM · 5081 · 80-COL · 12-ROW</div>
+            <!-- Punch holes — 80 columns, a sparse pattern of punches in the
+                 first 24 columns spelling "GBV1985" in EBCDIC-ish density. -->
+            <div class="pc-grid" aria-hidden="true"></div>
+            <div class="pc-foot">— Manhattan On-Line · graveyard shift · 1985 —</div>
           </div>
           <div class="side back">
-            <h4>WHY HE'S MAKING THIS ONE</h4>
-            <p>Powers's novel asks how four notes and four bases can become a love story. Forty-five films in, that is the question I find still worth answering.</p>
-            <p style="margin-top:14px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.22em;color:#4a3a14;">— M.A. LEVINSON</p>
+            <h4>THE MAINFRAME ERA</h4>
+            <p>By 1985 Stuart Ressler is loading magnetic tapes overnight at MOL, anonymously feeding code into a refrigerator-sized IBM that draws thousands of watts. The era's working interface to the machine was an 80-column Hollerith punch card — twelve rows, one character per column.</p>
+            <p style="margin-top:10px;font-style:italic;">The novel's title is a code; its medium is, too.</p>
           </div>
         </div>
       </div>
 
-      <!-- 9 · Current Leads — development partners -->
-      <div class="artifact leads" data-art="leads">
+      <!-- Newspaper clipping — torn 1958 headline as it appears in the novel. -->
+      <div class="artifact news-clip" data-art="news">
         <div class="face">
           <div class="side front">
-            <span class="label-tag">Current Leads</span>
-            <ul>
-              <li><b>Sundance Institute</b><span>Screenwriters &amp; Directors Lab</span></li>
-              <li><b>Film Independent</b><span>Fast Track · Producers Lab</span></li>
-              <li><b>Sloan Foundation</b><span>Three Science-in-Fiction grants</span></li>
-              <li><b>Gotham (IFP)</b><span>No-Borders International</span></li>
-            </ul>
+            <div class="np-masthead">THE URBANA CHRONICLE · APRIL 12, 1958</div>
+            <div class="np-rule"></div>
+            <h4 class="np-headline">Dr. Stuart Ressler:<br>One of the New Breed Who Will Help Uncover<br>the Formula for Human Life</h4>
+            <p class="np-byline">By A. Witcham · Staff</p>
+            <p class="np-body">A twenty-six-year-old Illinois fellow, Stuart Ressler, is one of a small group of post-Watson-and-Crick scientists racing to read the four-letter alphabet of life. His colleagues believe he is "as close as anyone in the country" to breaking the genetic code…</p>
           </div>
           <div class="side back">
-            <h4>FINANCING &amp; CO-PRO</h4>
-            <p>Principal photography across <em>New York, Illinois, and Leipzig</em>. We are looking for financial partners passionate about science, music, love, and the way they intertwine.</p>
-            <p style="margin-top:12px;font-style:italic;font-size:17px;line-height:1.45;">"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story." <span style="font-family:var(--mono);font-style:normal;font-size:13px;font-weight:600;letter-spacing:0.22em;display:inline-block;margin-top:4px;">— KIRKUS</span></p>
+            <h4>FROM THE NOVEL</h4>
+            <p>The clipping is one of the artifacts Jan finds when she begins her investigation. The young Ressler in 1958 was a face of American science. By 1985 nobody on the night-shift floor of MOL knows who he is.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pulitzer card — small note establishing Powers's stature. -->
+      <div class="artifact pulitzer-card pin-red" data-art="pulitzer">
+        <div class="face">
+          <div class="side front">
+            <div class="pu-medal" aria-hidden="true">
+              <svg viewBox="0 0 60 60">
+                <defs>
+                  <radialGradient id="pu-gold" cx="0.4" cy="0.3" r="0.7">
+                    <stop offset="0%" stop-color="#f6dc9b"/>
+                    <stop offset="55%" stop-color="#c39838"/>
+                    <stop offset="100%" stop-color="#6e4f10"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="30" cy="30" r="26" fill="url(#pu-gold)" stroke="#5a3a0a" stroke-width="1"/>
+                <text x="30" y="35" text-anchor="middle"
+                      font-family="'EB Garamond', serif" font-style="italic" font-size="20" fill="#3a2410">P</text>
+              </svg>
+            </div>
+            <div class="pu-eyebrow">For context —</div>
+            <h4>Richard Powers</h4>
+            <p>won the 2019 Pulitzer Prize for Fiction for <em>The Overstory</em>.</p>
+            <p class="pu-small">The Gold Bug Variations was his third novel · 1991 · Time "Book of the Year."</p>
+          </div>
+          <div class="side back">
+            <h4>STATURE</h4>
+            <p>Two MacArthur Foundation Fellowships. Thirteen novels. A through-line of work that braids scientific knowledge into deeply human stories — exactly the through-line the film inherits.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Poe "The Gold-Bug" card — about the 1843 short story the cipher
+           in the novel borrows from. -->
+      <div class="artifact poe-card" data-art="poe">
+        <div class="face">
+          <div class="side front">
+            <div class="poe-eyebrow">Source —</div>
+            <h4>Edgar Allan Poe</h4>
+            <p class="poe-title">"The Gold-Bug" · Dollar Newspaper · Philadelphia · 21 June 1843</p>
+            <p>The short story that gave Powers his title — and gives this site its cipher. Twenty-six substitution glyphs; one buried message.</p>
+            <div class="poe-glyphs" aria-hidden="true">‡ † § ¶ ¢ ◊ • ★</div>
+          </div>
+          <div class="side back">
+            <h4>WHY IT'S HERE</h4>
+            <p>Three substitution systems run through the novel — Bach's Goldbergs, the four-letter genetic code, and Poe's twenty-six glyphs. The film holds them up against each other and asks: are these the same code?</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Encrypted message card — folded slip in cipher; click flips and
+           the cipher decodes to a buried screenplay line. -->
+      <div class="artifact enc-card pin-red" data-art="encrypted">
+        <div class="face">
+          <div class="side front">
+            <div class="enc-eyebrow">— Encoded —</div>
+            <p class="enc-body decrypt" data-text="Every code is a love letter waiting for someone patient enough to read it.">Every code is a love letter waiting for someone patient enough to read it.</p>
+            <p class="enc-foot">— after E. A. Poe · solved on the back</p>
+          </div>
+          <div class="side back">
+            <h4>DECODED</h4>
+            <p style="font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.4;">"Every code is a love letter waiting for someone patient enough to read it."</p>
+            <p style="margin-top:14px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.22em;color:#6B1410;">— FROM THE SCREENPLAY</p>
           </div>
         </div>
       </div>
@@ -3604,6 +4283,75 @@ top: -40px; left: 8px;
       <line x1="14" y1="11" x2="14" y2="34" stroke="#2a1f10" stroke-width="0.7"/>
       <ellipse cx="11" cy="17" rx="2" ry="5" fill="#fff" opacity="0.25"/>
     </svg>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     §5b  CLOSING CLOUDS — Movement III · return to the sky
+     The cork board fades out at the top; a small DNA-to-score-to-clouds
+     transition lives in the .close-transition strip; three cloud
+     blocks (director's background, milestones, synopsis) drift in
+     left-to-right and settle. Bookends the hero's cloud-borne text.
+     ============================================================ -->
+<section class="closing" id="closing" aria-label="The film — director, milestones, synopsis">
+
+  <!-- Reverse transition strip: a small SVG with two cloud puffs that
+       grow inward as you scroll. Above it (the cork board) tapers via
+       its ::after bottom-fade; below it (this section's body) is sky. -->
+  <div class="close-transition" aria-hidden="true">
+    <svg viewBox="0 0 1440 200" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="close-painterly" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.013"
+                        numOctaves="3" seed="33" result="t"/>
+          <feDisplacementMap in="SourceGraphic" in2="t" scale="55"/>
+          <feGaussianBlur stdDeviation="7"/>
+        </filter>
+      </defs>
+      <g filter="url(#close-painterly)" opacity="0.92">
+        <!-- four notes dispersing upward — the DNA-to-score-to-clouds rhyme -->
+        <ellipse cx="180"  cy="120" rx="62" ry="22" fill="#b3c3c9"/>
+        <ellipse cx="200"  cy="108" rx="58" ry="22" fill="#f0e8d6"/>
+        <ellipse cx="540"  cy="80"  rx="76" ry="26" fill="#b3c3c9"/>
+        <ellipse cx="560"  cy="68"  rx="72" ry="26" fill="#f0e8d6"/>
+        <ellipse cx="920"  cy="100" rx="80" ry="26" fill="#b3c3c9"/>
+        <ellipse cx="940"  cy="88"  rx="76" ry="26" fill="#f0e8d6"/>
+        <ellipse cx="1260" cy="130" rx="68" ry="24" fill="#b3c3c9"/>
+        <ellipse cx="1280" cy="118" rx="64" ry="24" fill="#f0e8d6"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="closing-zone">
+
+    <!-- Cloud 1 — Director -->
+    <article class="cloud-card cc-director">
+      <p class="cc-eyebrow">— Directed by —</p>
+      <h3>Mark A. Levinson</h3>
+      <p>Director of <em>Particle Fever</em> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
+      <blockquote>"Films and formulas — both are theories about how the universe operates."</blockquote>
+    </article>
+
+    <!-- Cloud 2 — Synopsis -->
+    <article class="cloud-card cc-synopsis">
+      <p class="cc-eyebrow">— Synopsis —</p>
+      <p>1957. <em>Stuart Ressler</em> arrives at Illinois on a fellowship to crack the four-letter alphabet of life. By 1985 he is loading magnetic tapes on a Brooklyn graveyard shift, anonymous, brilliant, and unaccountably lost. When research librarian <em>Jan O'Deigh</em> receives a single reference question about his vanished career, she begins an investigation that rhymes — in fugue and counterpoint — with the work he abandoned.</p>
+      <p class="cc-tag">"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story." <span>— Kirkus, on the Powers novel</span></p>
+    </article>
+
+    <!-- Cloud 3 — Milestones / Support -->
+    <article class="cloud-card cc-milestones">
+      <p class="cc-eyebrow">— Development partners —</p>
+      <ul class="cc-list">
+        <li><b>Sundance Institute</b><span>Screenwriters &amp; Directors Lab</span></li>
+        <li><b>Film Independent</b><span>Fast Track · Producers Lab</span></li>
+        <li><b>Sloan Foundation</b><span>Three Science-in-Fiction grants</span></li>
+        <li><b>Gotham (IFP)</b><span>No-Borders International</span></li>
+      </ul>
+      <p class="cc-foot">Principal photography across <em>New York, Illinois, and Leipzig</em>.</p>
+    </article>
+
   </div>
 </section>
 
@@ -5272,7 +6020,7 @@ function setupEasterEggs(){
   const ANCHORS = [
     '.hero .tagline em',
     '.leibniz blockquote',
-    '.bridge-caption .cap-body',
+    '.thematic-card.logline .eyebrow',
     '.desk-head .marque',
     '.signup .envelope .eyebrow'
   ];
@@ -5344,6 +6092,7 @@ function setupSectionObserver(){
   const investigation = document.getElementById('investigation');
   const hero = document.querySelector('header.hero');
   const musicMorph = document.getElementById('music-morph');
+  const closing = document.getElementById('closing');
   const signup = document.getElementById('signup');
   const footer = document.querySelector('footer.masthead');
   const io = new IntersectionObserver((entries) => {
@@ -5360,6 +6109,13 @@ function setupSectionObserver(){
         // pill overlaid on it is redundant.
         document.body.classList.toggle('is-music-morph', e.isIntersecting && e.intersectionRatio > 0.15);
       }
+      if (e.target === closing){
+        // Closing-clouds section — drop the bridge audio pill so the
+        // cloud-borne director / synopsis / milestones blocks read
+        // cleanly. The Aria toggle on the desk's aria-snip card is
+        // the local audio control through Movement II and III.
+        document.body.classList.toggle('is-closing', e.isIntersecting && e.intersectionRatio > 0.15);
+      }
       if (e.target === signup){
         document.body.classList.toggle('is-signup', e.isIntersecting && e.intersectionRatio > 0.15);
       }
@@ -5373,6 +6129,7 @@ function setupSectionObserver(){
   if (investigation) io.observe(investigation);
   if (hero)         io.observe(hero);
   if (musicMorph)   io.observe(musicMorph);
+  if (closing)      io.observe(closing);
   if (signup)       io.observe(signup);
   if (footer)       io.observe(footer);
 }
@@ -5483,6 +6240,53 @@ function setupHookReveal(){
 }
 
 // Cinematic atmosphere — parallax cloud drift.
+/* Movement III · cloud-card arrival. Adds .cc-arrive to each cloud
+   block when the closing section enters the viewport, staggered via
+   transition-delays in CSS (--cc-tx-from carries the from-direction). */
+function setupClosingClouds(){
+  const closing = document.getElementById('closing');
+  if (!closing) return;
+  const cards = closing.querySelectorAll('.cloud-card');
+  if (!cards.length) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cards.forEach(c => c.classList.add('cc-arrive'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        cards.forEach(c => c.classList.add('cc-arrive'));
+        io.disconnect();
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+  io.observe(closing);
+}
+
+/* Sequential reveal for the transition-desk polaroids — adds .td-arrive
+   to each card when the triptych enters the viewport, with staggered
+   transition-delays in CSS handling the "in order of arrival" cadence. */
+function setupPolaroidArrival(){
+  const grid = document.querySelector('.td-polaroids');
+  if (!grid) return;
+  const polaroids = grid.querySelectorAll('.td-polaroid');
+  if (!polaroids.length) return;
+  // Reduced-motion: skip the animation, just mark all arrived.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){
+    polaroids.forEach(p => p.classList.add('td-arrive'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        polaroids.forEach(p => p.classList.add('td-arrive'));
+        io.disconnect();
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+  io.observe(grid);
+}
+
 function setupParallax(){
   let raf = 0;
   function update(){
@@ -5513,6 +6317,8 @@ function boot(){
   setupSoundFx();
   setupDeskCipher();
   setupHookReveal();
+  setupPolaroidArrival();
+  setupClosingClouds();
   setupParallax();
 }
 if (document.readyState === 'loading'){
