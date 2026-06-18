@@ -927,17 +927,19 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 
 .case-board {
   position: relative;
-  height: 1400px;
+  height: 1340px;
   max-width: 1560px;
   margin: 0 auto;
 }
+/* Hint lives inside .desk-head now (above the case-board) so cards
+   in the board can't cover it. Was previously position: absolute at
+   top: 26 / right: 40% with z-index 5 — artifact cards (z 10+)
+   overlapped it. */
 .hint {
-  position: absolute;
-  top: 26px; right: 40%;
+  margin-top: 6px;
   font-family: var(--hand);
-  font-size: 22px;
+  font-size: clamp(18px, 1.8vw, 24px);
   color: rgba(31, 26, 22, 0.55);
-  z-index: 5;
   pointer-events: none;
   transition: opacity 0.6s;
 }
@@ -1042,7 +1044,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 
 /* 1) Notebook */
-.notebook { width: 480px; height: 620px; left: 2%; top: 30px; transform: rotate(-6deg); }
+.notebook { width: 480px; height: 620px; left: 2%; top: 30px; transform: rotate(-4deg); }
 .notebook .side {
   /* Lab-notebook paper: warmer cream with COOL BLUE horizontal rules.
      No red margin rule, no brown ledger lines — the mockup is a single
@@ -1104,7 +1106,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    commit). */
 
 /* 3) Catalog card */
-.catalog { width: 540px; height: 360px; right: 2%; top: 60px; transform: rotate(-3deg); }
+.catalog { width: 540px; height: 360px; right: 2%; top: 50px; transform: rotate(2.5deg); }
 .catalog .side {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)),
@@ -1147,9 +1149,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    vinyl-disc canister; .canister class kept on the element only for
    JS compatibility (setupAriaAudio binds to data-art="canister"). */
 .canister.aria-snip {
-  width: 400px; height: 240px;
-  left: 35%; top: 380px;
-  transform: rotate(-3.5deg);
+  width: 440px; height: 260px;
+  left: 4%; top: 720px;
+  transform: rotate(-2.5deg);
 }
 .canister.aria-snip .side {
   background:
@@ -1271,26 +1273,24 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 /* 8) Tools card — DOM removed in v5; content moved to Movement III's
    .cc-director cloud. CSS deleted in v5-cleanup. */
 
-/* ---------- v5 cork-board cards ----------
-   Layout reworked for the bulletin-board roster. Eight visible cards
-   plus the leibniz quote pinned between notebook + catalog at the top.
-   Top row: notebook (L) · leibniz (M) · catalog (R).
-   Mid row:  aria-snip + news-clip.
-   Bottom row: punch-card · poe-card · pulitzer-card · enc-card. */
+/* ---------- v5.1 cork-board card layout ----------
+   Roster narrowed to six artifacts. Three-band composition:
+   Top    (y 30-650)   notebook L · leibniz M · catalog R
+   Middle (y 480-940)  news-clip centred (taller item)
+   Bottom (y 720-1100) aria-snip L · punch-card R
+   Case-board height is set to 1180 below so there's no dead space. */
 .leibniz {
-  /* Repositioned in v5-cleanup — was at left:42% top:230 which sat
-     directly on top of the canister.aria-snip card (~70×295px body
-     overlap). Moved up between notebook and catalog so the
-     Aria score is clear. */
-  width: 320px; height: 220px;
-  left: 37%; top: 60px;
-  transform: rotate(-7deg);
+  width: 320px; height: 240px;
+  left: 38%; top: 420px;
+  transform: rotate(-6deg);
 }
 
 .news-clip {
-  width: 380px; height: 460px;
-  right: 3%; top: 460px;
-  transform: rotate(4deg);
+  /* Centred, slight right-of-mid lean. Tall enough to anchor the
+     middle of the board without crowding the top row. */
+  width: 420px; height: 500px;
+  left: 56%; top: 470px;
+  transform: rotate(3deg);
   z-index: 11;
 }
 .news-clip .side {
@@ -1309,50 +1309,50 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   );
 }
 .news-clip .np-masthead {
-  font-family: var(--label); font-size: 10px;
+  font-family: var(--label); font-size: 12px;
   letter-spacing: 0.34em; text-transform: uppercase;
-  color: rgba(42,34,24,0.7);
+  color: rgba(42,34,24,0.78);
 }
 .news-clip .np-rule {
   height: 2px; background: rgba(42,34,24,0.7);
-  margin: 8px 0 16px;
+  margin: 10px 0 18px;
 }
 .news-clip .np-headline {
   font-family: 'Stardos Stencil', serif;
   font-weight: 700;
-  font-size: 22px;
-  line-height: 1.15;
+  font-size: 26px;
+  line-height: 1.2;
   letter-spacing: 0;
   text-transform: none;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   color: #1f1a16;
 }
 .news-clip .np-byline {
   font-family: var(--serif); font-style: italic;
-  font-size: 13px; opacity: 0.7;
-  margin: 0 0 12px;
+  font-size: 15px; opacity: 0.78;
+  margin: 0 0 14px;
 }
 .news-clip .np-body {
-  font-family: var(--serif); font-size: 15px; line-height: 1.45;
+  font-family: var(--serif); font-size: 17px; line-height: 1.5;
   column-count: 1; margin: 0; color: #2a2218;
 }
 .news-clip .back {
   background: #e0d5b3;
-  padding: 28px 28px;
+  padding: 30px 30px;
   color: #2a2218;
-  font-family: var(--serif); font-size: 16px; line-height: 1.5;
+  font-family: var(--serif); font-size: 18px; line-height: 1.55;
 }
 .news-clip .back h4 {
   font-family: var(--label);
-  font-size: 12px; letter-spacing: 0.32em;
-  color: var(--ink); opacity: 0.72;
+  font-size: 13px; letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.78;
   margin: 0 0 14px;
 }
 
 .punch-card {
-  width: 400px; height: 230px;
-  left: 5%; top: 720px;
-  transform: rotate(2deg);
+  width: 460px; height: 260px;
+  right: 4%; top: 1020px;
+  transform: rotate(2.5deg);
   z-index: 11;
 }
 .punch-card .side {
@@ -1371,11 +1371,11 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 .punch-card .pc-head {
-  font-family: var(--mono); font-size: 11px;
+  font-family: var(--mono); font-size: 13px;
   letter-spacing: 0.22em;
-  color: rgba(31,26,22,0.7);
-  margin-bottom: 10px;
-  margin-left: 30px;
+  color: rgba(31,26,22,0.78);
+  margin-bottom: 12px;
+  margin-left: 32px;
 }
 .punch-card .pc-grid {
   /* Twelve rows × 80 columns — render as a dense field of tiny rect
@@ -1404,179 +1404,25 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 .punch-card .pc-foot {
   font-family: var(--serif); font-style: italic;
-  font-size: 13px;
-  color: rgba(31,26,22,0.7);
-  margin-top: 8px;
+  font-size: 15px;
+  color: rgba(31,26,22,0.78);
+  margin-top: 10px;
   text-align: right;
 }
 .punch-card .back {
   background: #d8c590;
-  padding: 22px 24px;
+  padding: 26px 28px;
   color: #1f1a16;
-  font-family: var(--serif); font-size: 15px; line-height: 1.45;
+  font-family: var(--serif); font-size: 17px; line-height: 1.55;
 }
 .punch-card .back h4 {
-  font-family: var(--label); font-size: 12px;
+  font-family: var(--label); font-size: 13px;
   letter-spacing: 0.32em; color: var(--ink);
-  margin: 0 0 12px; opacity: 0.72;
+  margin: 0 0 14px; opacity: 0.78;
 }
 
-.poe-card {
-  width: 340px; height: 280px;
-  left: 42%; top: 780px;
-  transform: rotate(5deg);
-  z-index: 11;
-}
-.poe-card .side {
-  background:
-    linear-gradient(180deg, rgba(20,10,0,0.05), rgba(0,0,0,0.04)),
-    #e6d6ad;
-  padding: 22px 24px;
-  color: #1f1a16;
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.16);
-}
-.poe-card .poe-eyebrow {
-  font-family: var(--label); font-size: 11px;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: rgba(31,26,22,0.65);
-  margin-bottom: 6px;
-}
-.poe-card h4 {
-  font-family: var(--stencil); font-weight: 700;
-  font-size: 24px; letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin: 0 0 6px;
-  color: #1f1a16;
-}
-.poe-card .poe-title {
-  font-family: var(--serif); font-style: italic;
-  font-size: 13px;
-  margin: 0 0 12px;
-  color: rgba(31,26,22,0.78);
-}
-.poe-card p {
-  font-family: var(--serif); font-size: 14px;
-  line-height: 1.45; margin: 0 0 10px;
-  color: #2a2218;
-}
-.poe-card .poe-glyphs {
-  font-family: var(--mono); font-weight: 700;
-  font-size: 22px; letter-spacing: 0.18em;
-  color: var(--title-gold);
-  margin-top: 8px;
-}
-.poe-card .back {
-  background: #ddcb9a;
-  padding: 24px 24px;
-  color: #2a2218;
-  font-family: var(--serif); font-size: 15px; line-height: 1.5;
-}
-.poe-card .back h4 {
-  font-family: var(--label); font-size: 12px;
-  letter-spacing: 0.32em;
-  color: var(--ink); opacity: 0.72;
-  margin: 0 0 12px;
-}
-
-.pulitzer-card {
-  width: 280px; height: 330px;
-  right: 8%; top: 940px;
-  transform: rotate(-4deg);
-  z-index: 11;
-}
-.pulitzer-card .side {
-  background: var(--paper);
-  padding: 22px 22px;
-  color: #1f1a16;
-  text-align: center;
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.14);
-}
-.pulitzer-card .pu-medal {
-  width: 64px; height: 64px;
-  margin: 4px auto 12px;
-}
-.pulitzer-card .pu-eyebrow {
-  font-family: var(--label); font-size: 11px;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: rgba(31,26,22,0.65);
-  margin-bottom: 6px;
-}
-.pulitzer-card h4 {
-  font-family: var(--stencil); font-weight: 700;
-  font-size: 22px; letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin: 0 0 8px;
-  color: #1f1a16;
-}
-.pulitzer-card p {
-  font-family: var(--serif); font-size: 14px;
-  line-height: 1.45; margin: 0 0 8px;
-  color: #2a2218;
-}
-.pulitzer-card .pu-small {
-  font-size: 12px; opacity: 0.72; font-style: italic;
-  margin-top: 12px;
-}
-.pulitzer-card .back {
-  background: #ede4cb;
-  padding: 22px 22px;
-  color: #2a2218;
-  font-family: var(--serif); font-size: 14px; line-height: 1.5;
-  text-align: left;
-}
-.pulitzer-card .back h4 {
-  font-family: var(--label); font-size: 11px;
-  letter-spacing: 0.32em;
-  color: var(--ink); opacity: 0.72;
-  text-transform: uppercase;
-  margin: 0 0 10px;
-}
-
-.enc-card {
-  width: 360px; height: 290px;
-  left: 18%; top: 1010px;
-  transform: rotate(-3deg);
-  z-index: 11;
-}
-.enc-card .side {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.03)),
-    #ebe2c5;
-  padding: 22px 24px;
-  color: #1f1a16;
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.16);
-}
-.enc-card .enc-eyebrow {
-  font-family: var(--label); font-size: 11px;
-  letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--stamp-red);
-  margin-bottom: 12px;
-}
-.enc-card .enc-body {
-  font-family: var(--mono); font-weight: 700;
-  font-size: 14px; line-height: 1.5;
-  color: #1f1a16;
-  margin: 0 0 14px;
-  letter-spacing: 0.04em;
-  word-break: break-word;
-}
-.enc-card .enc-foot {
-  font-family: var(--serif); font-style: italic;
-  font-size: 12px;
-  color: rgba(31,26,22,0.65);
-  margin: 0;
-}
-.enc-card .back {
-  background: #e3d8b0;
-  padding: 24px 24px;
-  color: #2a2218;
-}
-.enc-card .back h4 {
-  font-family: var(--label); font-size: 12px;
-  letter-spacing: 0.32em;
-  color: var(--ink); opacity: 0.72;
-  margin: 0 0 14px;
-}
+/* .poe-card / .pulitzer-card / .enc-card CSS removed in v5.1 — DOM
+   nodes deleted in this same pass per director feedback. */
 
 /* 9) Current Leads card — DOM removed in v5; content moved to
    Movement III's .cc-milestones cloud. CSS deleted in v5-cleanup. */
@@ -3624,13 +3470,13 @@ top: -40px; left: 8px;
         <div class="marque">
           <b>Jan O'Deigh's Case File.</b>
         </div>
+        <div class="hint" id="hint">click to flip · drag to rearrange</div>
       </div>
       <button class="reset-btn" id="resetBtn" aria-label="Reset desk">↺ Reset desk</button>
     </div>
 
     <div class="case-board" id="caseBoard">
 
-      <div class="hint" id="hint">click to flip · drag to rearrange</div>
       <!-- Red string SVG removed — on cork, the cards are pinned
            individually; no investigative thread is overlaid. The
            #redString id stays in the DOM as an empty placeholder so
@@ -3805,70 +3651,9 @@ top: -40px; left: 8px;
         </div>
       </div>
 
-      <!-- Pulitzer card — small note establishing Powers's stature. -->
-      <div class="artifact pulitzer-card pin-red" data-art="pulitzer">
-        <div class="face">
-          <div class="side front">
-            <div class="pu-medal" aria-hidden="true">
-              <svg viewBox="0 0 60 60">
-                <defs>
-                  <radialGradient id="pu-gold" cx="0.4" cy="0.3" r="0.7">
-                    <stop offset="0%" stop-color="#f6dc9b"/>
-                    <stop offset="55%" stop-color="#c39838"/>
-                    <stop offset="100%" stop-color="#6e4f10"/>
-                  </radialGradient>
-                </defs>
-                <circle cx="30" cy="30" r="26" fill="url(#pu-gold)" stroke="#5a3a0a" stroke-width="1"/>
-                <text x="30" y="35" text-anchor="middle"
-                      font-family="'EB Garamond', serif" font-style="italic" font-size="20" fill="#3a2410">P</text>
-              </svg>
-            </div>
-            <div class="pu-eyebrow">For context —</div>
-            <h4>Richard Powers</h4>
-            <p>won the 2019 Pulitzer Prize for Fiction for <em>The Overstory</em>.</p>
-            <p class="pu-small">The Gold Bug Variations was his third novel · 1991 · Time "Book of the Year."</p>
-          </div>
-          <div class="side back">
-            <h4>STATURE</h4>
-            <p>Two MacArthur Foundation Fellowships. Thirteen novels. A through-line of work that braids scientific knowledge into deeply human stories — exactly the through-line the film inherits.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Poe "The Gold-Bug" card — about the 1843 short story the cipher
-           in the novel borrows from. -->
-      <div class="artifact poe-card" data-art="poe">
-        <div class="face">
-          <div class="side front">
-            <div class="poe-eyebrow">Source —</div>
-            <h4>Edgar Allan Poe</h4>
-            <p class="poe-title">"The Gold-Bug" · Dollar Newspaper · Philadelphia · 21 June 1843</p>
-            <p>The short story that gave Powers his title — and gives this site its cipher. Twenty-six substitution glyphs; one buried message.</p>
-            <div class="poe-glyphs" aria-hidden="true">‡ † § ¶ ¢ ◊ • ★</div>
-          </div>
-          <div class="side back">
-            <h4>WHY IT'S HERE</h4>
-            <p>Three substitution systems run through the novel — Bach's Goldbergs, the four-letter genetic code, and Poe's twenty-six glyphs. The film holds them up against each other and asks: are these the same code?</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Encrypted message card — folded slip in cipher; click flips and
-           the cipher decodes to a buried screenplay line. -->
-      <div class="artifact enc-card pin-red" data-art="encrypted">
-        <div class="face">
-          <div class="side front">
-            <div class="enc-eyebrow">— Encoded —</div>
-            <p class="enc-body decrypt" data-text="Every code is a love letter waiting for someone patient enough to read it.">Every code is a love letter waiting for someone patient enough to read it.</p>
-            <p class="enc-foot">— after E. A. Poe · solved on the back</p>
-          </div>
-          <div class="side back">
-            <h4>DECODED</h4>
-            <p style="font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.4;">"Every code is a love letter waiting for someone patient enough to read it."</p>
-            <p style="margin-top:14px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.22em;color:#6B1410;">— FROM THE SCREENPLAY</p>
-          </div>
-        </div>
-      </div>
+      <!-- Pulitzer / Poe / Encrypted-message cards removed in v5.1
+           per director feedback — narrowed the bulletin board to the
+           six artifacts directly tied to the case file. -->
 
     </div>
   </div>
