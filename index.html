@@ -1021,7 +1021,17 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   border-radius: 4px;
   overflow: hidden;
 }
-.artifact .side.back { transform: rotateY(180deg); }
+.artifact .side.back {
+  transform: rotateY(180deg);
+  /* Extra clipping — Chromium can leak overflow from the back face
+     of a rotateY(180deg) element in 3D space when the parent has
+     transform-style: preserve-3d. overflow:clip is stricter than
+     overflow:hidden and doesn't establish a scroll container.
+     We CAN'T add overflow:hidden to .artifact itself because the
+     brass push-pin ::before lives at top: -10 px outside the card
+     box; clipping the wrapper would chop the pin in half. */
+  overflow: clip;
+}
 .artifact.flipping .face { transform: scale(0.9); }
 .artifact.dragging { transition: none !important; filter: drop-shadow(0 22px 32px rgba(0,0,0,0.7)); }
 
@@ -1364,7 +1374,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 
 .punch-card {
-  width: 420px; height: 260px;
+  width: 460px; height: 360px;
   right: 3%; top: 720px;
   transform: rotate(2.5deg);
   z-index: 11;
@@ -3621,7 +3631,7 @@ top: -40px; left: 8px;
           </div>
           <div class="side back">
             <h4>THE MAINFRAME ERA</h4>
-            <p>By 1985 Stuart Ressler is loading magnetic tapes overnight at MOL, anonymously feeding code into a refrigerator-sized IBM that draws thousands of watts. The era's working interface to the machine was an 80-column Hollerith punch card — twelve rows, one character per column.</p>
+            <p>By 1985, Stuart Ressler loads magnetic tapes overnight at MOL, anonymously feeding code into a refrigerator-sized IBM. The era's interface to the machine was an 80-column Hollerith punch card.</p>
             <p style="margin-top:10px;font-style:italic;">The novel's title is a code; its medium is, too.</p>
           </div>
         </div>
