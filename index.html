@@ -1023,14 +1023,27 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 .artifact .side.back {
   transform: rotateY(180deg);
-  /* Extra clipping — Chromium can leak overflow from the back face
-     of a rotateY(180deg) element in 3D space when the parent has
-     transform-style: preserve-3d. overflow:clip is stricter than
-     overflow:hidden and doesn't establish a scroll container.
-     We CAN'T add overflow:hidden to .artifact itself because the
-     brass push-pin ::before lives at top: -10 px outside the card
-     box; clipping the wrapper would chop the pin in half. */
-  overflow: clip;
+  /* Back faces SCROLL when their content overflows the card. The
+     v5.8 `overflow: clip` blocked text-heavy backs (notebook
+     synopsis, leibniz note, etc.) from scrolling — replaced in
+     v5.10 with overflow-y: auto + a subtle scrollbar so any card
+     with long copy can be read without enlarging the card.
+     overflow-x: hidden keeps the rotateY(180deg) from leaking
+     horizontally in 3D space. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(31,26,22,0.35) transparent;
+}
+.artifact .side.back::-webkit-scrollbar {
+  width: 6px;
+}
+.artifact .side.back::-webkit-scrollbar-thumb {
+  background: rgba(31,26,22,0.35);
+  border-radius: 3px;
+}
+.artifact .side.back::-webkit-scrollbar-track {
+  background: transparent;
 }
 .artifact.flipping .face { transform: scale(0.9); }
 .artifact.dragging { transition: none !important; filter: drop-shadow(0 22px 32px rgba(0,0,0,0.7)); }
@@ -4973,6 +4986,18 @@ function setupCards(){
       left: a.style.left, right: a.style.right,
       top: a.style.top, transform: a.style.transform
     });
+
+    // Punch-card opts out of flip + focus entirely. v5.7/v5.8/v5.9
+    // each tried to fix a flip-related glitch the user kept seeing
+    // on this specific card; rather than chase the next variant,
+    // we make it static. The card still pins to the board, still
+    // displays its front (the IBM 5081 grid + caption), just can't
+    // be clicked to flip. Other cards (notebook, catalog, etc.)
+    // keep the flip behaviour.
+    if (a.dataset.art === 'punch') {
+      return;
+    }
+
     // Make each artifact keyboard-focusable + flippable with Enter / Space.
     a.setAttribute('tabindex', '0');
     a.setAttribute('role', 'button');
