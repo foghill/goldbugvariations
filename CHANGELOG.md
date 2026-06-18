@@ -1,5 +1,79 @@
 # Changelog — The Gold Bug Variations site
 
+## v5 — 2026-05-15 — Director feedback: three movements
+
+Three-movement structure following the director's review:
+`I. sky/clouds → II. cork bulletin board → III. sky/clouds (return)`.
+The middle section provides deliberate visual "variation" (the
+director's word) from the hero and the closing.
+
+### Movement I — Sky / clouds (hero + theme cards)
+- **Title gold** — pivot from `--ink` warm-black to deep antique
+  embossed-foil `--title-gold` (`#a07c1e`) with subtle dark-gold
+  inset shadow. Reads as old-book-cover foil on the dusty teal sky.
+- **New subtitle / credit copy** —
+  *"A Feature Film Based on the Acclaimed Novel by Richard Powers"* and
+  *"Directed by the Award-Winning Director Mark A. Levinson"*.
+- **Cloud-float entrance** — subtitle and credit each ride in on
+  their own painterly cloud puff (cream radial gradient behind the
+  text); drift in from offscreen, settle, hold. Movement III's
+  clouds drift more actively — here, settle is the invitation.
+- **Polaroid C redesign** — "AND · TWO" becomes the *spiral with
+  four hearts* emblem the director sketched out. Two intertwined
+  strands; one red heart + three ink hearts at decreasing opacity at
+  the crossings. Unifies four-notes / four-bases / two-stories in a
+  single mark.
+- **"§ 02 · the threefold theme" eyebrow + sub removed** — was
+  design-doc shorthand, never meant for the live site.
+- **Sequential card arrival** — polaroids fade in one-by-one with a
+  ~260ms stagger when the triptych enters the viewport.
+- **Bach blurb dropped** from both the transition desk and the
+  music-morph caption; the helix carries the metaphor on its own.
+  Easter-egg ‡ anchor moves to the thematic logline card eyebrow.
+
+### Movement II — Cork bulletin board (case file)
+- **Walnut → cork surface** — warm-tan ground (radial gradient +
+  multiplied SVG noise grain). The visual "variation" the director
+  asked for.
+- **Brass dome push-pins** replace the red-string + magnifying-glass
+  detective cues; each `.artifact::before` is a tiny lit-metal dome.
+  Red-thumbtack variant (`.pin-red`) for the encrypted-message card
+  and the Pulitzer note.
+- **Desk header simplified** — verbose "§ 04 · Brooklyn Public
+  Library · 1985 · Three readers…" replaced with one line:
+  *"Jan O'Deigh's Case File."*
+- **Card roster** — kept: notebook, library catalog (already for the
+  novel), Leibniz quote. New: mainframe punch card (IBM 5081 with
+  illustrated 12-row × 80-column hole pattern); newspaper clipping
+  (the 1958 Urbana Chronicle headline as it appears in the novel);
+  Pulitzer card (Powers · The Overstory · 2019); Poe "Gold-Bug"
+  source card; encrypted-message card (Poe-cipher front, decoded
+  screenplay line on flip). Repurposed: film canister → torn Aria
+  score slip with the opening bars hand-drawn and a small play disc
+  (existing `#playInd` binding preserved). Removed: polaroid
+  microscope, cast list, Tools (director credit), Current Leads
+  (development partners) — the director + milestones content moves
+  to Movement III.
+
+### Movement III — Sky / clouds (return)
+- **New `.closing` section** between investigation and signup.
+- **Reverse-transition strip** — four pairs of painterly cloud
+  ellipses (same `feTurbulence + feDisplacementMap + feGaussianBlur`
+  chain as the hero) drifting upward; reads as the helix notes
+  dispersing back into clouds.
+- **Three cloud-borne content blocks** — director (Levinson ·
+  *Particle Fever* · the films-and-formulas pull quote); synopsis
+  (the case-file framing + Kirkus tag); milestones (Sundance / Film
+  Independent / Sloan / Gotham). Each rides in from offscreen on its
+  own cloud puff and settles, ~320ms staggered. Bookends the hero's
+  cloud-text mechanic.
+
+### Engineering
+- Body class `is-closing` added to the section observer so the
+  bridge audio pill steps out for Movement III.
+- New JS observers: `setupPolaroidArrival()` (Movement I sequential
+  reveal) and `setupClosingClouds()` (Movement III cloud drift-in).
+
 ## v4 — 2026-05-14 — Postcard Noon: painterly clouds + black stencil
 
 A full palette + typography pivot away from v3's blue/gold cover-design
