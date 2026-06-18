@@ -743,32 +743,9 @@ input[type="email"], input[type="text"], textarea {
   pointer-events: auto;
   transition: opacity 0.4s ease;
 }
-body.is-investigation .bridge-aria {
-  /* Step out of the way of the featured envelope CTA — the canister
-     play button on the desk is the local audio control there. */
-  opacity: 0;
-  pointer-events: none;
-}
-body.is-hero .bridge-aria {
-  /* The Aria toggle is for the bridge — hide it on the landing so it
-     doesn't overlay the hero tagline on initial load. */
-  opacity: 0;
-  pointer-events: none;
-}
 body.is-music-morph .bridge-aria {
   /* Music morph IS the music, visually — a live "AUDIO ON" pill
      overlaid on the helix would be redundant + obtrusive. */
-  opacity: 0;
-  pointer-events: none;
-}
-body.is-closing .bridge-aria {
-  /* Movement III's cloud-borne text should read uncluttered — the
-     aria-snip card on the case-file board carries the audio control. */
-  opacity: 0;
-  pointer-events: none;
-}
-body.is-signup .bridge-aria {
-  /* Signup is the return-to-sky CTA — keep it uncluttered. */
   opacity: 0;
   pointer-events: none;
 }
@@ -778,6 +755,9 @@ body.is-footer .bridge-aria {
   opacity: 0;
   pointer-events: none;
 }
+/* Hero / investigation / closing / signup all KEEP the audio pill
+   visible — the user reported "I don't see the audio pill anywhere"
+   because v5 had been hiding it on those four contexts too. */
 .audio-btn {
   display: inline-flex;
   align-items: center;
@@ -936,7 +916,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 
 .case-board {
   position: relative;
-  height: 1080px;
+  height: 1120px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -1154,93 +1134,119 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    Ring is a sibling of label-strip (was a parent) so it can spin on its own
    while the label and play button stay put on top — like a record turning
    under a fixed label. */
-/* Aria snippet — torn slip of staff paper on cork. Replaces the
-   vinyl-disc canister; .canister class kept on the element only for
-   JS compatibility (setupAriaAudio binds to data-art="canister"). */
-.canister.aria-snip {
-  width: 420px; height: 260px;
+/* Canister — spinning vinyl disc with a paper label dead-centre.
+   Click the play disc → the ring underneath spins (via .playing
+   class added by setupAriaAudio). Restored from v3/v4 in v5.5 after
+   the v5 torn-staff snippet lost the iconic record look. */
+.canister {
+  width: 360px; height: 360px;
   left: 4%; top: 720px;
-  transform: rotate(-3deg);
+  transform: rotate(-4deg);
+  z-index: 11;
 }
-.canister.aria-snip .side {
+.canister .side {
+  background: radial-gradient(circle at 50% 50%,
+    #c8b88f 0%,
+    #b8a878 60%,
+    #9c8c5e 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+}
+.canister .ring {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
   background:
-    repeating-linear-gradient(90deg, transparent 0 60%, rgba(120,90,40,0.05) 60% 100%),
-    var(--paper);
-  padding: 22px 28px;
-  display: flex; flex-direction: column;
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.12);
-  /* Torn-edge effect — clip-path with a hand-irregular bottom edge */
-  clip-path: polygon(
-    0% 0%, 100% 0%, 100% 88%, 96% 92%, 88% 86%, 80% 94%,
-    72% 88%, 64% 92%, 56% 84%, 48% 92%, 40% 88%, 32% 94%,
-    24% 86%, 16% 92%, 8% 86%, 0% 92%
-  );
+    /* Asymmetric light sweep — so the rotation is visible. */
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(240,232,214,0.18) 25deg,
+      rgba(240,232,214,0.32) 55deg,
+      rgba(240,232,214,0.18) 85deg,
+      transparent 130deg,
+      transparent 200deg,
+      rgba(240,232,214,0.10) 240deg,
+      transparent 280deg
+    ),
+    /* Concentric ink grooves on the cream disc body. */
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 6px, rgba(31,26,22,0.08) 6px 7px, transparent 7px 14px),
+    radial-gradient(circle, #b3a371 30%, #a39259 32%, #b3a371 34%, #a39259 36%, #b3a371 38%, #a39259 60%, #b3a371 62%);
 }
-.canister.aria-snip .as-eyebrow {
-  font-family: var(--serif); font-style: italic;
-  font-size: 18px;
-  color: var(--ink); opacity: 0.75;
+.canister .label-strip {
+  /* Cream paper "label" stamped onto the disc centre. */
+  position: absolute;
+  inset: 22% 9%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--paper);
+  border-radius: 50%;
+  text-align: center;
+  padding: 20px;
+  z-index: 2;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.22);
+}
+.canister .label-strip .top {
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--ink); opacity: 0.72;
   margin-bottom: 8px;
 }
-.canister.aria-snip .as-staff {
-  width: 100%; height: auto;
-  flex: 0 0 auto;
-  margin-bottom: 10px;
-}
-.canister.aria-snip .as-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 14px;
-  margin-top: auto;
-}
-.canister.aria-snip .as-title {
+.canister .label-strip .mid {
   font-family: var(--stencil); font-weight: 700;
-  font-size: 18px; letter-spacing: 0.12em;
+  font-size: 30px; line-height: 1;
   text-transform: uppercase;
   color: var(--ink);
+  letter-spacing: 0.04em;
 }
-.canister.aria-snip .play-indicator {
-  width: 40px; height: 40px;
+.canister .label-strip .bot {
+  font-family: var(--serif); font-style: italic;
+  font-size: 18px; color: var(--ink); opacity: 0.78;
+  margin-top: 8px;
+}
+.canister .play-indicator {
+  /* Ink outline + ink play arrow on cream paper — quiet but obvious. */
+  margin-top: 18px;
+  width: 56px; height: 56px;
   border-radius: 50%;
   border: 1.5px solid var(--ink);
-  background: transparent;
   display: flex; align-items: center; justify-content: center;
   color: var(--ink);
-  cursor: pointer;
   pointer-events: auto;
-  transition: background 0.2s, transform 0.15s;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
-.canister.aria-snip .play-indicator svg { fill: var(--ink); }
-.canister.aria-snip .play-indicator:hover {
+.canister .play-indicator:hover {
   background: rgba(31,26,22,0.08);
+  border-color: var(--ink);
   transform: scale(1.08);
 }
-.canister.aria-snip.playing .play-indicator {
-  background: var(--ink);
+.canister .play-indicator svg { width: 24px; height: 24px; fill: var(--ink); }
+.canister.playing .ring { animation: spinSlow 6s linear infinite; }
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
-.canister.aria-snip.playing .play-indicator svg { fill: var(--paper); }
-.canister.aria-snip .back {
-  background:
-    repeating-linear-gradient(90deg, transparent 0 60%, rgba(120,90,40,0.05) 60% 100%),
-    #e8dfc4;
-  padding: 26px 28px;
+.canister .back {
+  background: radial-gradient(circle at 50% 50%,
+    #d8c89c 0%,
+    #c8b88f 60%,
+    #b3a371 100%);
+  border-radius: 50%;
+  padding: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
   color: var(--ink);
-  clip-path: polygon(
-    0% 8%, 8% 14%, 16% 8%, 24% 14%, 32% 6%, 40% 12%,
-    48% 8%, 56% 16%, 64% 8%, 72% 12%, 80% 6%, 88% 14%,
-    96% 8%, 100% 12%, 100% 100%, 0% 100%
-  );
 }
-.canister.aria-snip .back h4 {
-  font-family: var(--label);
-  font-size: 12px; letter-spacing: 0.32em;
-  color: var(--ink); opacity: 0.72;
-  margin: 0 0 14px;
+.canister .back h4 {
+  font-family: var(--label); font-size: 14px;
+  letter-spacing: 0.32em; color: var(--ink);
+  margin: 0 0 16px; opacity: 0.72;
 }
-.canister.aria-snip .back p {
-  font-family: var(--serif); font-size: 17px;
+.canister .back p {
+  font-family: var(--serif); font-size: 18px;
   font-style: italic; line-height: 1.5;
-  margin: 0 0 12px; color: var(--ink);
+  margin: 0 0 14px;
 }
 
 /* 6) Cast list — DOM node removed in v5; CSS deleted in v5-cleanup. */
@@ -3562,55 +3568,16 @@ top: -40px; left: 8px;
            begin the audio (preserves the existing #playInd binding).
            Keeps the .canister data-art binding so the existing audio
            handler in setupAriaAudio() still finds it. -->
-      <div class="artifact aria-snip canister" data-art="canister">
+      <div class="artifact canister" data-art="canister">
         <div class="face">
           <div class="side front">
-            <div class="as-eyebrow">— Aria · BWV 988 —</div>
-            <svg class="as-staff" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <defs>
-                <filter id="as-shiver" x="-5%" y="-5%" width="110%" height="110%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="9" result="t"/>
-                  <feDisplacementMap in="SourceGraphic" in2="t" scale="0.8"/>
-                </filter>
-              </defs>
-              <g filter="url(#as-shiver)" stroke="#1f1a16" stroke-linecap="round">
-                <!-- 5-line staff -->
-                <g stroke-width="1.05" fill="none">
-                  <line x1="20"  y1="36" x2="300" y2="36"/>
-                  <line x1="20"  y1="50" x2="300" y2="50"/>
-                  <line x1="20"  y1="64" x2="300" y2="64"/>
-                  <line x1="20"  y1="78" x2="300" y2="78"/>
-                  <line x1="20"  y1="92" x2="300" y2="92"/>
-                  <line x1="300" y1="36" x2="300" y2="92" stroke-width="1.4"/>
-                </g>
-                <!-- Treble clef glyph -->
-                <text x="22" y="92"
-                      font-family="'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol', 'STIX Two Math', 'Cambria Math', serif"
-                      font-size="58" fill="#1f1a16"
-                      dominant-baseline="alphabetic" text-anchor="start">&#x1D11E;</text>
-                <!-- Aria opening: G ↗ B-A-G slow ornamented descent -->
-                <g fill="#1f1a16">
-                  <ellipse cx="92"  cy="78" rx="6.4" ry="4.6" transform="rotate(-22 92 78)"/>
-                  <ellipse cx="124" cy="64" rx="6.4" ry="4.6" transform="rotate(-22 124 64)"/>
-                  <ellipse cx="156" cy="71" rx="6.4" ry="4.6" transform="rotate(-22 156 71)"/>
-                  <ellipse cx="188" cy="78" rx="6.4" ry="4.6" transform="rotate(-22 188 78)"/>
-                  <ellipse cx="220" cy="85" rx="6.4" ry="4.6" transform="rotate(-22 220 85)"/>
-                  <ellipse cx="252" cy="78" rx="6.4" ry="4.6" transform="rotate(-22 252 78)"/>
-                </g>
-                <g stroke="#1f1a16" stroke-width="1.5" fill="none">
-                  <line x1="97"  y1="76" x2="97"  y2="40"/>
-                  <line x1="129" y1="62" x2="129" y2="26"/>
-                  <line x1="161" y1="69" x2="161" y2="33"/>
-                  <line x1="193" y1="76" x2="193" y2="40"/>
-                  <line x1="225" y1="83" x2="225" y2="47"/>
-                  <line x1="257" y1="76" x2="257" y2="40"/>
-                </g>
-              </g>
-            </svg>
-            <div class="as-foot">
-              <span class="as-title">Aria · J.S. Bach</span>
+            <div class="ring"></div>
+            <div class="label-strip">
+              <div class="top">REEL · 01</div>
+              <div class="mid">Aria<br>BWV 988</div>
+              <div class="bot">— J.S. Bach —</div>
               <button class="play-indicator" id="playInd" aria-label="Play / pause Aria">
-                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                   <polygon class="icon-play" points="7,4 21,12 7,20"></polygon>
                   <g class="icon-pause" style="display:none">
                     <rect x="6" y="4" width="5" height="16" rx="0.5"></rect>
