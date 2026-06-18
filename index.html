@@ -3500,9 +3500,11 @@ top: -40px; left: 8px;
         <div class="marque">
           <b>Jan O'Deigh's Case File.</b>
         </div>
-        <div class="hint" id="hint">click to flip · drag to rearrange</div>
+        <div class="hint" id="hint">click any card to flip</div>
       </div>
-      <button class="reset-btn" id="resetBtn" aria-label="Reset desk">↺ Reset desk</button>
+      <!-- Reset button removed in v5.7 along with the drag-to-rearrange
+           mechanic. Cards are click-to-flip only now; their positions
+           never change, so there's nothing to reset. -->
     </div>
 
     <div class="case-board" id="caseBoard">
@@ -4972,69 +4974,35 @@ function setupCards(){
         flipCard(a);
       }
     });
-    let pendingDrag = false, dragging = false, captured = false, moved = false;
-    let startX = 0, startY = 0, origX = 0, origY = 0, origRot = 0;
-
-    a.addEventListener('pointerdown', (e) => {
+    // Cards on the cork board are CLICK-TO-FLIP only — no drag. The
+    // drag-to-rearrange mechanic was reported as a UX bug (any small
+    // hand-wobble between mousedown and mouseup tripped the 6 px drag
+    // threshold and a card meant for flipping would move down out of
+    // its slot instead). Removed in v5.7. Click anywhere on the card
+    // (outside the play button) flips it.
+    a.addEventListener('click', (e) => {
       if (e.target.closest('input, button, .play-indicator')) return;
-      if (e.button !== undefined && e.button !== 0) return;
-      pendingDrag = true; dragging = false; captured = false; moved = false;
-      startX = e.clientX; startY = e.clientY;
-      const rect = a.getBoundingClientRect();
-      const boardRect = board.getBoundingClientRect();
-      origX = rect.left - boardRect.left;
-      origY = rect.top - boardRect.top;
-      const m = (a.style.transform || '').match(/rotate\(([-\d.]+)deg\)/);
-      origRot = m ? parseFloat(m[1]) : 0;
-      if (hint) hint.classList.add('fade');
-    });
-
-    a.addEventListener('pointermove', (e) => {
-      if (!pendingDrag) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      if (!dragging){
-        if (Math.hypot(dx, dy) <= 6) return;
-        dragging = true; moved = true;
-        try { a.setPointerCapture(e.pointerId); captured = true; } catch(_) {}
-        a.style.right = 'auto';
-        a.style.left = origX + 'px';
-        a.style.top  = origY + 'px';
-        a.style.transform = `rotate(${origRot}deg)`;
-        a.style.zIndex = ++zCounter;
-        a.classList.add('dragging');
-      }
-      a.style.left = (origX + dx) + 'px';
-      a.style.top  = (origY + dy) + 'px';
-      a.style.transform = `rotate(${origRot}deg) translateZ(0)`;
-    });
-
-    const endDrag = (e) => {
-      if (!pendingDrag) return;
-      pendingDrag = false;
-      const wasDragging = dragging;
-      dragging = false;
-      a.classList.remove('dragging');
-      if (captured) { try { a.releasePointerCapture(e.pointerId); } catch(_) {} }
-      captured = false;
-      if (!moved && !wasDragging){
-        flipCard(a);
-      }
-    };
-    a.addEventListener('pointerup', endDrag);
-    a.addEventListener('pointercancel', endDrag);
-  });
-
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    artifacts.forEach(a => {
-      const init = initial.get(a);
-      a.style.left = init.left;
-      a.style.right = init.right;
-      a.style.top = init.top;
-      a.style.transform = init.transform;
-      a.classList.remove('flipped');
+      flipCard(a);
     });
   });
+
+  // Reset button removed with the drag mechanic (v5.7) — DOM node
+  // gone, so guard the lookup. If a future iteration brings it back,
+  // the existing close-the-flipped-state behaviour is preserved here
+  // for re-attachment.
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      artifacts.forEach(a => {
+        const init = initial.get(a);
+        a.style.left = init.left;
+        a.style.right = init.right;
+        a.style.top = init.top;
+        a.style.transform = init.transform;
+        a.classList.remove('flipped');
+      });
+    });
+  }
 }
 
 function setupBeetle(){
