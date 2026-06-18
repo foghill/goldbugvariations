@@ -235,9 +235,12 @@ input[type="email"], input[type="text"], textarea {
 .hero {
   /* Background removed — body gradient now provides the sky. The hero
      keeps its painterly cloud SVG (.sky-clouds) on top of the body
-     clouds for the feature-cloud composition at the top of the page. */
+     clouds for the feature-cloud composition at the top of the page.
+     Height tightened from 100vh → 78vh so the polaroid triptych below
+     sits visibly closer to the title without losing the cloud-float
+     reading zone. */
   position: relative;
-  min-height: 100vh;
+  min-height: 78vh;
   background: transparent;
   color: var(--ink);
   z-index: 2;
@@ -290,10 +293,12 @@ input[type="email"], input[type="text"], textarea {
 .topbar .doc { display: flex; gap: 28px; flex-wrap: wrap; }
 
 .hero-zone {
-  /* Type-reading zone, centred per spec at 50% / 54%. */
+  /* Type-reading zone — moved up from 54% to 42% so the title sits
+     in the upper-third of the hero (matching the brochure cover) and
+     the polaroids below feel adjacent rather than far below. */
   position: absolute;
   left: 50%;
-  top: 54%;
+  top: 42%;
   transform: translate(-50%, -50%);
   z-index: 4;
   width: max-content;
@@ -453,10 +458,12 @@ input[type="email"], input[type="text"], textarea {
    down the file). The .bridge-caption span is reused as the tracing-
    paper slip so the third easter-egg ‡ glyph anchor still resolves. */
 .transition-desk {
-  /* Override .bridge's tall sticky-scroll lane — no morph anymore. */
+  /* Override .bridge's tall sticky-scroll lane — no morph anymore.
+     Tightened in v5.3: dropped the tall min-height (cards drive
+     the section height) and trimmed vertical padding so the
+     polaroids sit closer to the hero above + the music-morph below. */
   height: auto;
-  min-height: clamp(820px, 100vh, 1000px);
-  padding: clamp(70px, 10vh, 130px) var(--margin) clamp(80px, 11vh, 140px);
+  padding: clamp(36px, 5vh, 70px) var(--margin) clamp(36px, 5vh, 70px);
   display: block;
   isolation: isolate;
 }
@@ -652,9 +659,11 @@ input[type="email"], input[type="text"], textarea {
 .music-morph {
   /* Section transparent — body gradient is darkest at this y-position
      (the morph lives in the dusk-teal middle band, ~30–45% of body
-     height), so the cream helix pops naturally against it. */
+     height), so the cream helix pops naturally against it.
+     Scroll lane trimmed from 160vh → 120vh in v5.3 — was generating
+     ~700px of empty sky between the polaroids and the helix. */
   position: relative;
-  height: 160vh;          /* tall scroll lane: t = 0 → 1 */
+  height: 120vh;          /* scroll lane: t = 0 → 1 */
   background: transparent;
   color: var(--cloud-body);
   z-index: 2;
@@ -663,11 +672,11 @@ input[type="email"], input[type="text"], textarea {
 .mm-stage {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 88vh;
   display: grid;
   grid-template-columns: 1fr minmax(220px, 380px) 1fr;
   align-items: start;
-  padding-top: clamp(40px, 6vh, 90px);
+  padding-top: clamp(20px, 3vh, 50px);
   pointer-events: none;
 }
 .mm-caption {
@@ -690,7 +699,7 @@ input[type="email"], input[type="text"], textarea {
 .mm-cap-body { margin: 0; }
 .mm-svg-wrap {
   grid-column: 2;
-  height: 80vh;
+  height: 78vh;
   display: flex; align-items: center; justify-content: center;
   pointer-events: auto;
   position: relative;
