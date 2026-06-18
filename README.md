@@ -34,37 +34,92 @@ npx serve .          # quick local server on port 3000
 
 …or any static server you prefer.
 
+## Visual framework — three movements
+
+The site reads as three deliberate movements, like the Goldberg's
+tripartite arc:
+
+```
+I. Sky / clouds  →  II. Cork bulletin board  →  III. Sky / clouds (return)
+   Hero + theme cards       Jan O'Deigh's Case File          Director · synopsis · partners
+```
+
+The cork bulletin board in the middle is the deliberate visual
+**variation** — a tactile, period-correct case file that breaks the
+painterly-sky aesthetic that bookends it.
+
 ## Sections of the page
 
-1. **Hero (cover blue)** — title set "The Gold / Bug / Variations" in
-   gold-bright italics on a cloud-textured blue ground. Custom
-   Poe-cipher cursor + symbol trail.
-2. **Simple pair** — two asymmetrically-placed cards before the
-   transition: a gold-rimmed circle ("Four bass notes of music") and a
-   gold-rimmed square ("Four base molecules of DNA"), with a single
-   bar of music tilted between them.
-3. **Bridge (blue → walnut)** — sticky scroll-driven SVG that morphs a
-   Bach music staff with note-heads into a DNA double helix. Goldberg
-   Aria audio toggle (YouTube IFrame API + archive.org fallback).
-4. **After-transition cards** — "Two intertwined love stories" and the
-   mystery logline ("Connected by the mystery of the disappearance of
-   a brilliant scientist on the brink of discovering the code for
-   life."). The magnifying-glass cipher reveal lives on the logline
-   card.
-5. **Detective board (walnut)** — eight draggable, flippable artifact
-   cards on a dark desk (notebook, polaroid, catalog, canister, cast,
-   Leibniz quote, Tools / director credit, Current Leads / development
-   partners). Gold beetle that crawls and flees from the cursor; ghost
-   cipher symbols revealed by the magnifying-glass cursor. Six
-   Miró-inspired decorative shapes scattered behind the artifacts.
-6. **Signup** — "Join the search" envelope CTA at the bottom of the
-   desk.
-7. **Footer** — press kit, festival programmers, financing &amp; co-pro,
-   honors, link grid, and the never-decrypting cipher line.
+### Movement I — Sky / clouds
 
-Plus: floating Poe substitution-key panel with a built-in live encoder,
-and an easter-egg ‡ glyph hunt across five hidden locations that unlocks
-a screenplay quote.
+1. **Hero** — dusty-teal sky with painterly cloud SVG (`feTurbulence` →
+   `feDisplacementMap` → `feGaussianBlur` filter chain, per the
+   Postcard-Noon brief). Title in deep antique gold stencil. Subtitle
+   and credit ride in on individual cloud puffs (drift, settle, hold)
+   and bookend Movement III's drifting clouds. Custom Poe-cipher
+   cursor + symbol trail throughout.
+2. **Three theme cards** — a polaroid triptych pinned over the seam
+   between the hero and the music morph: *MUSIC · FOUR* (four bass
+   notes of music, with the Goldberg ground-bass tetrachord G F♯ E D),
+   *LIFE · FOUR* (four base molecules of DNA, with a vertical helix
+   and A T G C labels), and *AND · TWO* (the four-hearts-on-a-spiral
+   emblem unifying notes, bases, and love stories). Cards arrive
+   sequentially as the section enters the viewport (~260ms stagger).
+3. **Music → DNA morph** — sticky scroll-driven SVG that bends a
+   Bach music staff with note-heads into a DNA double helix. Same
+   primitives at every `t` — no cross-fade between two visual systems.
+4. **Connected-by card** — single line below the morph: *"Connected by
+   the mystery of the disappearance of a brilliant scientist on the
+   brink of discovering the code for life."* Carries the
+   magnifying-glass cipher reveal.
+
+### Movement II — Cork bulletin board
+
+5. **Jan O'Deigh's Case File** — warm tan cork ground with fine grain
+   texture. Six draggable, flippable artifact cards pinned with brass
+   dome push-pins (red thumbtacks on the accented ones):
+   - **Handwritten lab notebook** (S.R. · Aug 1957) — ATGC notes,
+     codon arithmetic, Goldberg margin doodles
+   - **Library catalog card** for the novel itself — click flips to
+     a Powers bio + novel summary
+   - **Leibniz quote** — *"Music is the pleasure the human mind
+     experiences from counting without being aware that it is counting."*
+   - **Aria score snippet** — spinning vinyl record with a paper
+     label ("REEL · 01 / Aria / BWV 988 / — J.S. Bach —"). Click the
+     play disc to start the Goldberg Aria (YouTube IFrame API +
+     archive.org fallback); the ring spins under the label while
+     playing.
+   - **Newspaper clipping** — the 1958 *Urbana Chronicle* headline as
+     it appears in the novel: *"Dr. Stuart Ressler: One of the New
+     Breed Who Will Help Uncover the Formula for Human Life."*
+   - **IBM 5081 punch card** — 80-column, 12-row mainframe punch
+     card placing Ressler in the magnetic-tape graveyard shift of
+     1985 Manhattan On-Line
+
+   Gold beetle perambulates around the board and flees from the
+   cursor. Cards keyboard-focusable (Enter / Space to flip).
+
+### Movement III — Sky / clouds (return)
+
+6. **Closing clouds** — reverse-transition strip (helix notes
+   dispersing back into cloud puffs) into three cloud-borne content
+   blocks: **director** (Levinson · *Particle Fever* · DaVinci Award ·
+   Stephen Hawking Medal · the *films-and-formulas* pull quote),
+   **synopsis** (1957 / 1985 framing of Ressler and Jan, with the
+   Kirkus pull quote), and **development partners** (Sundance Lab,
+   Film Independent Fast Track, Sloan ×3, Gotham No-Borders). Each
+   block drifts in from offscreen on its own cloud puff and settles,
+   ~320ms staggered.
+7. **Signup** — "Join the search" envelope CTA on a return-to-sky
+   panel above the colophon.
+8. **Footer (masthead)** — typeset colophon: FOLIO I OF IV · SITE NO.
+   0001 · title · *a feature film by Mark A. Levinson · after Richard
+   Powers* · press kit / festival programmers / financing · sitemap ·
+   the never-decrypting Poe-cipher line.
+
+Plus: floating Poe substitution-key panel with a built-in live
+encoder, and an easter-egg ‡ glyph hunt across five hidden locations
+that unlocks a screenplay quote.
 
 ## Deploys
 
@@ -83,5 +138,7 @@ tag in `index.html`. Full setup walkthrough in
 
 ## Adding new features
 
-See [`CHANGELOG.md`](./CHANGELOG.md) for the feature history and how the
-versioning works (snapshot files for major versions).
+See [`CHANGELOG.md`](./CHANGELOG.md) for the feature history. v3 (blue
++ gold cover), v4 (Postcard-Noon teal + black stencil), and v5
+(director feedback · three movements · cork board) are the recent
+milestones; point releases (v5.1 → v5.6) trail each.
