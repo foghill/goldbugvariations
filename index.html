@@ -4984,12 +4984,18 @@ function setupCards(){
         flipCard(a);
       }
     });
-    // Cards on the cork board are CLICK-TO-FLIP only — no drag. The
-    // drag-to-rearrange mechanic was reported as a UX bug (any small
-    // hand-wobble between mousedown and mouseup tripped the 6 px drag
-    // threshold and a card meant for flipping would move down out of
-    // its slot instead). Removed in v5.7. Click anywhere on the card
-    // (outside the play button) flips it.
+    // Cards on the cork board are CLICK-TO-FLIP only — no drag, no
+    // focus scroll. The drag-to-rearrange mechanic was retired in
+    // v5.7. In v5.9 we ALSO intercept mousedown to preventDefault,
+    // because the artifact's tabindex="0" was causing the browser to
+    // focus the card and scroll it into view on click — visually
+    // identical to the card "moving down" in the viewport. Keyboard
+    // users can still tab to + focus the card, then flip via
+    // Enter / Space (the keydown handler above).
+    a.addEventListener('mousedown', (e) => {
+      if (e.target.closest('input, button, .play-indicator')) return;
+      e.preventDefault();
+    });
     a.addEventListener('click', (e) => {
       if (e.target.closest('input, button, .play-indicator')) return;
       flipCard(a);
