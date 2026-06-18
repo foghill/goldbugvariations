@@ -3276,17 +3276,11 @@ top: -40px; left: 8px;
        mystery hook. The third easter-egg ‡ anchor moves to the
        music-morph caption (see ANCHORS in §egg). -->
 
-  <div class="bridge-aria">
-    <button class="audio-btn" id="ariaBtn" aria-pressed="false" aria-label="Toggle Bach Goldberg Aria, BWV 988">
-      <span class="glyph" aria-hidden="true">
-        <span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="bar b4"></span>
-      </span>
-      <span class="audio-label">
-        <span class="audio-meta">J.S. Bach · BWV 988</span>
-        <span class="audio-status" id="ariaLabel">Aria · off</span>
-      </span>
-    </button>
-  </div>
+  <!-- Floating bridge-aria audio pill removed in v5.6 — the canister's
+       play button on the case file board is the only audio control
+       now. setupAriaAudio() guards its lookups for #ariaBtn and
+       #ariaLabel with `if (el)` checks, so removing the markup is a
+       no-op on the script side. -->
 </section>
 
 
