@@ -5161,6 +5161,12 @@ function setupCards(){
 
   function flipCard(a){
     const back = a.querySelector('.side.back');
+    // Bring the card to the top of the z-stack as it flips so its
+    // back face (or its newly revealed front, when un-flipping) reads
+    // cleanly above any neighbouring cards that overlap it. Without
+    // this, dense layouts like the punch-card + enc-card pair leave
+    // the just-flipped card buried behind the one above it.
+    a.style.zIndex = ++zCounter;
     a.classList.add('flipping');
     sfxRustle();
     setTimeout(() => {
