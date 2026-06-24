@@ -125,9 +125,9 @@
 
   /* Cork — bulletin-board surface in §4 (replaces walnut). Warm tan
      with a slight grain. */
-  --cork:         #b88a4a;
-  --cork-2:       #9a6f33;
-  --cork-shadow:  #5a3e1a;
+  --cork:         #c8975a;     /* v6: warmer + brighter (was #b88a4a) */
+  --cork-2:       #a87740;     /* v6: warmer (was #9a6f33) */
+  --cork-shadow:  #6a4520;
 
   /* Stamps & grain */
   --stamp-red:    #b34a3a;
@@ -916,7 +916,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 
 .case-board {
   position: relative;
-  height: 1120px;
+  height: 580px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -1056,7 +1056,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 
 /* 1) Notebook */
-.notebook { width: 480px; height: 620px; left: 3%; top: 30px; transform: rotate(-4deg); }
+.notebook { width: 340px; height: 480px; left: 1%; top: 40px; transform: rotate(-3deg); }
 .notebook .side {
   /* Lab-notebook paper: warmer cream with COOL BLUE horizontal rules.
      Rule cadence bumped from 30px → 38px to match the larger body
@@ -1071,32 +1071,47 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   display: flex;
   flex-direction: column;
 }
+/* v6 — handwritten notebook front. Caveat replaces the typeset serif
+   on the title + body lines so the page reads as Ressler's actual
+   hand. Mono ATGC sequences keep their typewriter face for the
+   coded vs. handwritten contrast on the page. */
 .notebook .nb-head {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 21px;
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 36px;
   font-weight: 500;
   color: var(--ink);
-  margin-bottom: 22px;
-  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  letter-spacing: 0;
+  transform: rotate(-1deg);
+}
+.notebook .nb-date {
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 24px;
+  font-weight: 400;
+  color: rgba(31,26,22,0.72);
+  margin-bottom: 26px;
+  transform: rotate(-1deg) translateX(2px);
 }
 .notebook .nb-line {
-  font-family: var(--serif);
-  font-size: 24px;
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 32px;
   font-weight: 500;
-  line-height: 38px;          /* matches the 37/38px rule cadence so
-                                  each line sits ON a blue rule */
+  line-height: 38px;          /* matches the 37/38 px rule cadence
+                                  so each line sits ON a blue rule */
   color: var(--ink);
   margin: 0;
 }
-.notebook .nb-line.tilt   { transform: rotate(-1.2deg) translateX(-2px); }
-.notebook .nb-line.indent { padding-left: 30px; }
+.notebook .nb-line.tilt   { transform: rotate(-1.4deg) translateX(-2px); }
+.notebook .nb-line.indent { padding-left: 36px; }
 .notebook .nb-line.italic { font-style: italic; }
 .notebook .nb-line u {
   text-decoration: underline;
   text-decoration-color: var(--ink);
   text-underline-offset: 3px;
 }
+/* Mono ATGC strands — typewritten, NOT handwritten, so the difference
+   between "what's printed" and "what Ressler writes" is visible. */
 .notebook .nb-mono {
   font-family: 'Special Elite', 'Courier Prime', ui-monospace, Menlo, monospace;
   font-size: 19px;
@@ -1108,8 +1123,20 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 .notebook .nb-mono.faded { color: rgba(31,26,22,0.6); }
 .notebook .nb-arrow { color: var(--stamp-red); font-style: normal; }
-.notebook .back { padding: 38px 34px; font-size: 19px; line-height: 1.6; overflow-y: auto; }
-.notebook .back h3 { font-family: var(--grot); font-stretch: 125%; font-weight: 700; font-size: 19px; text-transform: uppercase; letter-spacing: 0.1em; color: #5a3a14; margin: 0 0 18px; }
+
+/* Back face — single beat-line per card. Centred, breathing room. */
+.notebook .back  { padding: 40px 36px; overflow-y: auto; }
+.notebook .back .story,
+.canister .back  .story,
+.punch-card .back .story,
+.catalog .back   .story {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
 
 /* 2) Polaroid (microscope) — taller so the director's note fits when
    rendered as decoded mono on the back side. */
@@ -1118,7 +1145,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    commit). */
 
 /* 3) Catalog card */
-.catalog { width: 540px; height: 360px; right: 3%; top: 30px; transform: rotate(2deg); }
+.catalog { width: 380px; height: 280px; right: 1%; top: 110px; transform: rotate(2deg); }
 .catalog .side {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)),
@@ -1162,9 +1189,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    class added by setupAriaAudio). Restored from v3/v4 in v5.5 after
    the v5 torn-staff snippet lost the iconic record look. */
 .canister {
-  width: 360px; height: 360px;
-  left: 4%; top: 720px;
-  transform: rotate(-4deg);
+  width: 320px; height: 320px;
+  left: 25%; top: 90px;
+  transform: rotate(2deg);
   z-index: 11;
 }
 .canister .side {
@@ -1387,9 +1414,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 }
 
 .punch-card {
-  width: 460px; height: 360px;
-  right: 3%; top: 720px;
-  transform: rotate(2.5deg);
+  width: 380px; height: 280px;
+  left: 49%; top: 60px;
+  transform: rotate(-2deg);
   z-index: 11;
 }
 .punch-card .side {
@@ -2288,6 +2315,13 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   color: var(--ink);
 }
 .cloud-card p em { font-style: italic; color: var(--title-gold-2); }
+.cloud-card h3 a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(160, 124, 30, 0.32);
+  transition: border-color 180ms ease;
+}
+.cloud-card h3 a:hover { border-bottom-color: var(--title-gold); }
 .cloud-card blockquote {
   font-family: var(--serif);
   font-style: italic;
@@ -2345,6 +2379,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 /* Asymmetric layout — each cloud sits in a different lane so the
    composition reads as scattered, not stacked. */
 .cc-director  { justify-self: start; }
+.cc-powers    { justify-self: center; max-width: 780px; }
 .cc-synopsis  { justify-self: center; max-width: 780px; }
 .cc-milestones{ justify-self: end; }
 
@@ -2359,6 +2394,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
     transform 1400ms cubic-bezier(.16,.7,.22,1);
 }
 .cc-director  { --cc-tx-from: -30vw; }
+.cc-powers    { --cc-tx-from:  30vw; }
 .cc-synopsis  { --cc-tx-from:  30vw; }
 .cc-milestones{ --cc-tx-from: -30vw; }
 
@@ -2367,6 +2403,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   transform: translateX(0);
 }
 .cc-director.cc-arrive  { transition-delay: 0ms; }
+.cc-powers.cc-arrive    { transition-delay: 320ms; }
 .cc-synopsis.cc-arrive  { transition-delay: 320ms; }
 .cc-milestones.cc-arrive{ transition-delay: 640ms; }
 
@@ -2449,16 +2486,27 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   display: block;
   position: relative;
   z-index: 2;
-  margin: clamp(20px, 3vh, 32px) auto 0;
+  margin: clamp(28px, 4vh, 44px) auto 0;
   max-width: 720px;
   text-align: center;
   font-family: var(--label);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.42em;
   text-transform: uppercase;
   font-style: normal;
   color: var(--ink);
-  opacity: 0.55;
+  opacity: 0.82;
+}
+.signup .financing-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1.5px solid rgba(31,26,22,0.4);
+  padding-bottom: 4px;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.signup .financing-link:hover {
+  border-bottom-color: var(--title-gold);
+  color: var(--title-gold-2);
 }
 /* ----------------------------------------------------------------
    §7 RETURN-TO-SKY — full mockup-fidelity rebuild.
@@ -3171,8 +3219,8 @@ top: -40px; left: 8px;
         <span class="td-photo-sub">— Aria · BWV 988 —</span>
       </div>
       <figcaption class="td-cap">
-        <span class="td-cap-num">MUSIC · FOUR</span>
-        <span class="td-cap-sub">four bass notes</span>
+        <span class="td-cap-num">MUSIC</span>
+        <span class="td-cap-sub">Four Bass Notes</span>
       </figcaption>
     </figure>
 
@@ -3219,22 +3267,21 @@ top: -40px; left: 8px;
         <span class="td-photo-sub">A · T · G · C</span>
       </div>
       <figcaption class="td-cap">
-        <span class="td-cap-num">LIFE · FOUR</span>
-        <span class="td-cap-sub">four base molecules</span>
+        <span class="td-cap-num">BIOLOGY</span>
+        <span class="td-cap-sub">Four Base Molecules</span>
       </figcaption>
     </figure>
 
-    <!-- Polaroid C · AND · TWO — a hand-drawn DNA-like spiral whose
-         rungs are four hearts, unifying four-notes + four-bases + two
-         love-stories in a single mark. Two strands wind down the
-         portrait; the hearts (one red, three ink) sit at the
-         crossings, like base-pair rungs. -->
+    <!-- Polaroid C · LIFE — interlocked ⚤ symbol on lined notebook paper.
+         The single hand-drawn glyph (Mars + Venus locked through their
+         centres) replaces the v5 four-hearts-on-a-spiral. One mark
+         mirrors the "two" in the headline and reads at small sizes. -->
     <figure class="td-polaroid td-pc">
-      <div class="td-photo td-photo-hearts" aria-hidden="true">
+      <div class="td-photo td-photo-loop" aria-hidden="true">
         <svg viewBox="0 0 240 300" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <filter id="hearts-shiver" x="-10%" y="-10%" width="120%" height="120%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="9" result="t"/>
+            <filter id="loop-shiver" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="13" result="t"/>
               <feDisplacementMap in="SourceGraphic" in2="t" scale="3"/>
               <feGaussianBlur stdDeviation="0.45"/>
             </filter>
@@ -3242,53 +3289,51 @@ top: -40px; left: 8px;
               <rect width="240" height="22" fill="#ede4cd"/>
               <line x1="0" y1="21" x2="240" y2="21" stroke="#b3c3c9" stroke-width="0.7" opacity="0.55"/>
             </pattern>
-            <!-- A small heart symbol, anchored at its top-centre indent so
-                 it can be reused via <use> at four crossing points. -->
-            <symbol id="heart" viewBox="-20 -18 40 36" overflow="visible">
-              <path d="M 0 14
-                       C -6 8, -16 0, -16 -8
-                       C -16 -14, -10 -16, -6 -14
-                       C -3 -12, -1 -10, 0 -6
-                       C 1 -10, 3 -12, 6 -14
-                       C 10 -16, 16 -14, 16 -8
-                       C 16 0, 6 8, 0 14 Z"/>
-            </symbol>
           </defs>
 
-          <!-- Notebook-paper backdrop, matching Polaroid B for visual rhyme -->
           <rect width="240" height="300" fill="url(#td-notebook-c)"/>
 
-          <!-- Two intertwined strands (hand-drawn shiver), vertical. -->
-          <g filter="url(#hearts-shiver)" fill="none" stroke-linecap="round">
-            <!-- Strand A — warm brass, leads on the right at the top -->
-            <path d="M 120 24 C 158 38, 158 66, 120 80
-                     C 82 94, 82 122, 120 136
-                     C 158 150, 158 178, 120 192
-                     C 82 206, 82 234, 120 248"
-                  stroke="#8a6f3a" stroke-width="2.4"/>
-            <!-- Strand B — ink, opposite phase -->
-            <path d="M 120 24 C 82 38, 82 66, 120 80
-                     C 158 94, 158 122, 120 136
-                     C 82 150, 82 178, 120 192
-                     C 158 206, 158 234, 120 248"
-                  stroke="#1f1a16" stroke-width="2.4"/>
+          <!-- Hand-drawn interlocked ⚤ glyph. Two rings stacked vertically
+               (Mars top, Venus bottom) joined through their centres;
+               each ring carries its own arrow / cross extending out so
+               the symbol reads at a glance even with the shiver. -->
+          <g filter="url(#loop-shiver)" stroke-linecap="round" stroke-linejoin="round"
+             fill="none" stroke-width="3.2">
+
+            <!-- ♂  Mars — upper ring, arrow to the upper-right -->
+            <g stroke="#1f1a16">
+              <circle cx="120" cy="116" r="38"/>
+              <!-- arrow shaft from upper-right of ring (angle ~ -45°) -->
+              <line x1="148" y1="88" x2="184" y2="52"/>
+              <!-- arrowhead — two short strokes -->
+              <line x1="184" y1="52" x2="184" y2="74"/>
+              <line x1="184" y1="52" x2="162" y2="52"/>
+            </g>
+
+            <!-- ♀  Venus — lower ring, cross hanging below.
+                 Drawn in a slightly warmer ink so the two glyphs read as
+                 distinct but in conversation. -->
+            <g stroke="#7a4a18">
+              <circle cx="120" cy="184" r="38"/>
+              <!-- cross — vertical stroke + horizontal bar -->
+              <line x1="120" y1="222" x2="120" y2="262"/>
+              <line x1="100" y1="244" x2="140" y2="244"/>
+            </g>
+
+            <!-- Highlight the locked junction with a small dotted glyph
+                 where the rings meet — a single dot per ring's edge so
+                 the eye reads them as fused. -->
+            <g stroke="none" fill="#1f1a16">
+              <circle cx="120" cy="150" r="2.2"/>
+            </g>
           </g>
 
-          <!-- Four hearts at the strand crossings (rungs). The TOP heart
-               is the romantic-red one — it's the "two" of the headline;
-               the other three are ink, recursing through the motif. -->
-          <g>
-            <use href="#heart" x="120" y="52"  width="28" height="28" fill="#b34a3a"/>
-            <use href="#heart" x="120" y="108" width="24" height="24" fill="#1f1a16" opacity="0.92"/>
-            <use href="#heart" x="120" y="164" width="22" height="22" fill="#1f1a16" opacity="0.78"/>
-            <use href="#heart" x="120" y="220" width="20" height="20" fill="#1f1a16" opacity="0.65"/>
-          </g>
         </svg>
-        <span class="td-photo-sub">two ♥ four</span>
+        <span class="td-photo-sub">♂ ⚯ ♀</span>
       </div>
       <figcaption class="td-cap">
-        <span class="td-cap-num">AND · TWO</span>
-        <span class="td-cap-sub">intertwined love stories</span>
+        <span class="td-cap-num">LIFE</span>
+        <span class="td-cap-sub">Two Intertwined Love Stories</span>
       </figcaption>
     </figure>
 
@@ -3358,9 +3403,10 @@ top: -40px; left: 8px;
          the "Connected by —" logline + magnifying glass reveal. -->
 
     <article class="thematic-card logline">
-      <span class="eyebrow">The mystery —</span>
+      <!-- Eyebrow removed per director feedback — the body line stands
+           on its own. -->
       <div class="hook-stage">
-        <p class="hook-text" id="hookText" data-plain="Connected by the mystery of the disappearance of a brilliant scientist on the brink of discovering the code for life."></p>
+        <p class="hook-text" id="hookText" data-plain="Connected by the mystery of the disappearance of a brilliant scientist who was on the brink of discovering the code for life."></p>
         <div class="hook-lens" id="hookLens" aria-hidden="true">
       <svg viewBox="0 0 280 280" width="280" height="280" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -3523,7 +3569,7 @@ top: -40px; left: 8px;
         <div class="marque">
           <b>Jan O'Deigh's Case File.</b>
         </div>
-        <div class="hint" id="hint">click any card to flip</div>
+        <div class="hint" id="hint">click on any card to flip for more information</div>
       </div>
       <!-- Reset button removed in v5.7 along with the drag-to-rearrange
            mechanic. Cards are click-to-flip only now; their positions
@@ -3538,11 +3584,16 @@ top: -40px; left: 8px;
            legacy JS that queries it remains a no-op without erroring. -->
       <svg class="red-string-svg" id="redString" width="0" height="0" aria-hidden="true" style="display:none"></svg>
 
-      <!-- 1 · Notebook -->
+      <!-- Roster in v6 (left → right): Notebook · Goldberg record ·
+           Punch card · Library catalog. Leibniz quote + newspaper
+           clipping removed per director feedback. -->
+
+      <!-- 1 · Notebook — handwritten lab journal, S.R. · Aug. 1957 -->
       <div class="artifact notebook" data-art="notebook">
         <div class="face">
           <div class="side front">
-            <div class="nb-head">— lab notebook · S.R. · Aug. 1957 —</div>
+            <div class="nb-head">Stuart Ressler lab notebook</div>
+            <div class="nb-date">Aug. 1957</div>
             <p class="nb-line tilt">A — T &nbsp;·&nbsp; G — C</p>
             <p class="nb-mono">5'&nbsp;A T G C T A G G T C A A G&nbsp;3'</p>
             <p class="nb-mono faded">3'&nbsp;T A C G A T C C A G T T C&nbsp;5'</p>
@@ -3551,42 +3602,15 @@ top: -40px; left: 8px;
             <p class="nb-line tilt indent italic">— the cipher must be <u>degenerate</u></p>
             <p class="nb-line">Goldberg playing again. Glenn G.</p>
             <p class="nb-line tilt italic">— 30 variations on one bass.</p>
-            <p class="nb-line">life · music · the <u>same</u> trick.</p>
           </div>
           <div class="side back">
-            <h3>Synopsis</h3>
-            <p>1957. <em>Stuart Ressler</em> arrives at Illinois on a fellowship to crack the four-letter alphabet of life. By 1985 he is loading magnetic tapes on a Brooklyn graveyard shift, anonymous, brilliant, and unaccountably lost.</p>
-            <p>When research librarian <em>Jan O'Deigh</em> receives a single reference question about Ressler's vanished career, she begins an investigation that rhymes — in fugue and counterpoint — with the work he abandoned.</p>
-            <p>A four-handed study of two romances divided by a quarter century, structured like a Bach fugue: thirty variations on a single, recursive theme.</p>
-            <p style="font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.22em;margin-top:14px;color:#6B1410;">FEATURE FILM · 132 MIN · IN PRE-PRODUCTION</p>
+            <p class="story">In 1957, a young molecular biologist arrives at a mid-western university determined to unravel the mystery of life — the code of the newly discovered DNA molecule.</p>
           </div>
         </div>
       </div>
 
-
-      <!-- 3 · Catalog card -->
-      <div class="artifact catalog" data-art="catalog">
-        <div class="face">
-          <div class="side front">
-            <div class="cat-num">813.54&nbsp;&nbsp;·&nbsp;&nbsp;P.O.WERS, R.</div>
-            <h4>POWERS, RICHARD · b. 1957</h4>
-            <p class="cat-body"><em>The Gold Bug Variations</em> : a novel / by Richard Powers. — New York : William Morrow, 1991. — 639 p. ; 24 cm.</p>
-            <p class="cat-body" style="font-size:17px;font-weight:500;margin-top:10px;line-height:1.5;">Time Magazine "Book of the Year" · National Book Critics Circle Award · "A formidable masterpiece" — Kirkus.</p>
-            <div class="cat-stamp">PROPERTY · BPL</div>
-          </div>
-          <div class="side back">
-            <h4>SOURCE MATERIAL</h4>
-            <p>Powers's third novel braids two love stories — one in 1957, one in 1985 — around three substitutions: the genetic code, Bach's Goldberg Variations, and Edgar Allan Poe's 1843 short story <em>The Gold-Bug</em>.</p>
-            <p>This site uses Poe's published twenty-six glyphs verbatim.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aria score snippet — a torn slip of staff paper with the
-           Aria's opening bars hand-drawn on it. Click the play disc to
-           begin the audio (preserves the existing #playInd binding).
-           Keeps the .canister data-art binding so the existing audio
-           handler in setupAriaAudio() still finds it. -->
+      <!-- 2 · Goldberg Aria record — the v3 vinyl disc with a paper
+           label. Click the play disc to start the Aria. -->
       <div class="artifact canister" data-art="canister">
         <div class="face">
           <div class="side front">
@@ -3607,69 +3631,44 @@ top: -40px; left: 8px;
             </div>
           </div>
           <div class="side back">
-            <h4>· THE SCORE ·</h4>
-            <p><em>The Goldbergs are not score. They are the spine.</em></p>
-            <p>The opening Aria, then thirty variations, then the Aria again — transformed by what has been heard between.</p>
-            <p>To watch the film is to learn, twice, what one note can mean.</p>
+            <p class="story">But he is derailed by the discovery of music and love.</p>
           </div>
         </div>
       </div>
 
-      <!-- Leibniz quote — small paper note pinned to the cork. -->
-      <div class="artifact leibniz" data-art="leibniz">
-        <div class="face">
-          <div class="side front">
-            <div class="eyebrow">Epigraph</div>
-            <blockquote>"Music is the pleasure the human mind experiences from counting without being aware that it is counting."</blockquote>
-            <cite>— Gottfried Leibniz</cite>
-          </div>
-          <div class="side back">
-            <h4>WHY IT'S ON THE BOARD</h4>
-            <p>The film's two strands — the Goldberg Variations and the four bases of DNA — are both arithmetic that does not feel like arithmetic. Leibniz heard it three centuries early.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mainframe punch card — an IBM-360-era 80-column punch card, the
-           era of computing in the novel (Ressler's MOL graveyard shift). -->
+      <!-- 3 · Mainframe punch card — 80-col Hollerith with visible
+           punches. Restored to flip in v6 (the v5.11 no-flip lock is
+           released; back-overflow is no longer an issue with the
+           tightened body copy + 360 px card height). -->
       <div class="artifact punch-card" data-art="punch">
         <div class="face">
           <div class="side front">
             <div class="pc-corner"></div>
             <div class="pc-head">IBM · 5081 · 80-COL · 12-ROW</div>
-            <!-- Punch holes — 80 columns, a sparse pattern of punches in the
-                 first 24 columns spelling "GBV1985" in EBCDIC-ish density. -->
             <div class="pc-grid" aria-hidden="true"></div>
             <div class="pc-foot">— Manhattan On-Line · graveyard shift · 1985 —</div>
           </div>
           <div class="side back">
-            <h4>THE MAINFRAME ERA</h4>
-            <p>By 1985, Stuart Ressler loads magnetic tapes overnight at MOL, anonymously feeding code into a refrigerator-sized IBM. The era's interface to the machine was an 80-column Hollerith punch card.</p>
-            <p style="margin-top:10px;font-style:italic;">The novel's title is a code; its medium is, too.</p>
+            <p class="story">A quarter century later, a young couple team up to investigate a related mystery — who is the refined, over-educated gentleman who works as a graveyard shift computer operator in a dull Brooklyn data processing company?</p>
           </div>
         </div>
       </div>
 
-      <!-- Newspaper clipping — torn 1958 headline as it appears in the novel. -->
-      <div class="artifact news-clip" data-art="news">
+      <!-- 4 · Library catalog card — The Gold Bug Variations · Powers · 1991 -->
+      <div class="artifact catalog" data-art="catalog">
         <div class="face">
           <div class="side front">
-            <div class="np-masthead">THE URBANA CHRONICLE · APRIL 12, 1958</div>
-            <div class="np-rule"></div>
-            <h4 class="np-headline">Dr. Stuart Ressler:<br>One of the New Breed Who Will Help Uncover<br>the Formula for Human Life</h4>
-            <p class="np-byline">By A. Witcham · Staff</p>
-            <p class="np-body">A twenty-six-year-old Illinois fellow, Stuart Ressler, is one of a small group of post-Watson-and-Crick scientists racing to read the four-letter alphabet of life. His colleagues believe he is "as close as anyone in the country" to breaking the genetic code…</p>
+            <div class="cat-num">813.54&nbsp;&nbsp;·&nbsp;&nbsp;P.O.WERS, R.</div>
+            <h4>POWERS, RICHARD · b. 1957</h4>
+            <p class="cat-body"><em>The Gold Bug Variations</em> : a novel / by Richard Powers. — New York : William Morrow, 1991. — 639 p. ; 24 cm.</p>
+            <p class="cat-body" style="font-size:17px;font-weight:500;margin-top:10px;line-height:1.5;">Time Magazine "Book of the Year" · National Book Critics Circle Award · "A formidable masterpiece" — Kirkus.</p>
+            <div class="cat-stamp">PROPERTY · BPL</div>
           </div>
           <div class="side back">
-            <h4>FROM THE NOVEL</h4>
-            <p>The clipping is one of the artifacts Jan finds when she begins her investigation. The young Ressler in 1958 was a face of American science. By 1985 nobody on the night-shift floor of MOL knows who he is.</p>
+            <p class="story">Four interconnected characters — like the four molecules of DNA, and the four bass notes of Bach's Goldberg Variations — twist around each other in mirrored patterns as they try to decipher the complex codes of biology, of music, and of love.</p>
           </div>
         </div>
       </div>
-
-      <!-- Pulitzer / Poe / Encrypted-message cards removed in v5.1
-           per director feedback — narrowed the bulletin board to the
-           six artifacts directly tied to the case file. -->
 
     </div>
   </div>
@@ -3738,28 +3737,32 @@ top: -40px; left: 8px;
     <!-- Cloud 1 — Director -->
     <article class="cloud-card cc-director">
       <p class="cc-eyebrow">— Directed by —</p>
-      <h3>Mark A. Levinson</h3>
-      <p>Director of <em>Particle Fever</em> (2013) — Robert Sievers DaVinci Award · Stephen Hawking Medal for Science Communication. Former physicist. Forty-five feature films, including close collaborations with Anthony Minghella.</p>
-      <blockquote>"Films and formulas — both are theories about how the universe operates."</blockquote>
+      <h3><a href="https://www.imdb.com/name/nm0506065/" target="_blank" rel="noopener">Mark A. Levinson</a></h3>
+      <p>Director of <em>Particle Fever</em>, <em>The Bit Player</em>, <em>The Universe in a Grain of Sand</em>, <em>Prisoner of Time</em> — Stephen Hawking Medal for Science Communication · National Academies of Science Communication Award · Robert Sievers DaVinci Award. Former physicist. Experience on over forty-five feature films.</p>
+      <blockquote>"I think films and formulas are both theories about how the universe operates."</blockquote>
     </article>
 
-    <!-- Cloud 2 — Synopsis -->
-    <article class="cloud-card cc-synopsis">
-      <p class="cc-eyebrow">— Synopsis —</p>
-      <p>1957. <em>Stuart Ressler</em> arrives at Illinois on a fellowship to crack the four-letter alphabet of life. By 1985 he is loading magnetic tapes on a Brooklyn graveyard shift, anonymous, brilliant, and unaccountably lost. When research librarian <em>Jan O'Deigh</em> receives a single reference question about his vanished career, she begins an investigation that rhymes — in fugue and counterpoint — with the work he abandoned.</p>
-      <p class="cc-tag">"A formidable masterpiece — rewarding in every sense but, in particular, a profoundly moving love story." <span>— Kirkus, on the Powers novel</span></p>
+    <!-- Synopsis cloud dropped per director feedback — the four
+         bulletin-board cards now carry the synopsis as four story
+         beats; restating it here was redundant. -->
+
+    <!-- Cloud 2 — Richard Powers (replaces the synopsis cloud) -->
+    <article class="cloud-card cc-powers">
+      <p class="cc-eyebrow">— Based on the novel by —</p>
+      <h3>Richard Powers</h3>
+      <p>Won the Pulitzer Prize for Fiction for <em>The Overstory</em> and the National Book Award for <em>The Echo Maker</em>. <em>The Gold Bug Variations</em> was named Time magazine's Book of the Year.</p>
+      <blockquote>"Life consists of propositions about life."</blockquote>
     </article>
 
-    <!-- Cloud 3 — Milestones / Support -->
+    <!-- Cloud 3 — Development partners -->
     <article class="cloud-card cc-milestones">
       <p class="cc-eyebrow">— Development partners —</p>
       <ul class="cc-list">
-        <li><b>Sundance Institute</b><span>Screenwriters &amp; Directors Lab</span></li>
+        <li><b>Sundance Institute</b><span>Screenwriters Lab</span></li>
         <li><b>Film Independent</b><span>Fast Track · Producers Lab</span></li>
         <li><b>Sloan Foundation</b><span>Three Science-in-Fiction grants</span></li>
         <li><b>Gotham (IFP)</b><span>No-Borders International</span></li>
       </ul>
-      <p class="cc-foot">Principal photography across <em>New York, Illinois, and Leipzig</em>.</p>
     </article>
 
   </div>
@@ -3782,8 +3785,8 @@ top: -40px; left: 8px;
     <div class="side front">
       <div class="eyebrow">Folio II · in the post</div>
       <div class="stamp" aria-hidden="true"></div>
-      <h2>Join the <em>search.</em></h2>
-      <p class="intro">One letter per quarter — production notes, set photography from Urbana and Brooklyn, and an occasional clue.</p>
+      <h2>Receive <em>updates</em> on the project.</h2>
+      <p class="intro">One letter per quarter — production notes and the occasional clue from the road.</p>
       <form id="signupForm" novalidate>
         <input type="email" required placeholder="name@somewhere" id="emailInput" autocomplete="email">
         <button type="submit">Send ↗</button>
@@ -3792,7 +3795,9 @@ top: -40px; left: 8px;
     </div>
   </div>
 
-  <p class="disclaimer">We will not write to you for any other reason</p>
+  <p class="disclaimer">
+    <a class="financing-link" href="mailto:goldbugmovie@gmail.com?subject=Investor%20deck%20request">Request Financing Deck →</a>
+  </p>
 
   <!-- Sole authorised gold appearance on the return-to-sky panel -->
   <span class="sky-bug" aria-hidden="true">
@@ -3825,38 +3830,9 @@ top: -40px; left: 8px;
       <div class="mast-sub">a feature film by Mark A. Levinson · after Richard Powers</div>
     </div>
 
-    <hr class="mast-rule"/>
-
-    <div class="mast-rows">
-      <div class="mast-row">
-        <span class="mast-lbl">Press kit</span>
-        <a class="mast-val" href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Download (PDF)</a>
-      </div>
-      <div class="mast-divider" aria-hidden="true"></div>
-      <div class="mast-row">
-        <span class="mast-lbl">Festival programmers</span>
-        <a class="mast-val" href="mailto:goldbugmovie@gmail.com">goldbugmovie@gmail.com</a>
-      </div>
-      <div class="mast-divider" aria-hidden="true"></div>
-      <div class="mast-row">
-        <span class="mast-lbl">Financing &amp; co-pro</span>
-        <a class="mast-val" href="mailto:goldbugmovie@gmail.com?subject=Investor%20deck%20request">Request the deck</a>
-      </div>
-    </div>
-
-    <hr class="mast-rule"/>
-
-    <nav class="mast-sitemap" aria-label="Sitemap">
-      <a href="#bridge">Synopsis</a>
-      <span aria-hidden="true">·</span>
-      <a href="#investigation">Cast</a>
-      <span aria-hidden="true">·</span>
-      <a href="#investigation">Source material</a>
-      <span aria-hidden="true">·</span>
-      <a href="press-kit.pdf" download="The-Gold-Bug-Variations-Press-Kit.pdf">Press</a>
-      <span aria-hidden="true">·</span>
-      <a href="mailto:goldbugmovie@gmail.com?subject=Distribution">Distribution</a>
-    </nav>
+    <!-- Masthead rows + sitemap dropped in v6 per director feedback.
+         The signup panel above carries the only remaining CTAs
+         (Receive updates + Request Financing Deck). -->
 
     <hr class="mast-rule"/>
 
@@ -4987,16 +4963,11 @@ function setupCards(){
       top: a.style.top, transform: a.style.transform
     });
 
-    // Punch-card opts out of flip + focus entirely. v5.7/v5.8/v5.9
-    // each tried to fix a flip-related glitch the user kept seeing
-    // on this specific card; rather than chase the next variant,
-    // we make it static. The card still pins to the board, still
-    // displays its front (the IBM 5081 grid + caption), just can't
-    // be clicked to flip. Other cards (notebook, catalog, etc.)
-    // keep the flip behaviour.
-    if (a.dataset.art === 'punch') {
-      return;
-    }
+    // Punch-card flip restored in v6 — it now has its own story-line
+    // back ("A quarter century later, a young couple…") so flipping
+    // matters. The earlier focus-driven viewport scroll + back
+    // overflow issues are fixed by the v5.9 mousedown-preventDefault
+    // + v5.10 overflow-y: auto on .side.back.
 
     // Make each artifact keyboard-focusable + flippable with Enter / Space.
     a.setAttribute('tabindex', '0');
@@ -5422,8 +5393,8 @@ function setupEasterEggs(){
   // gold ‡ injected at the end. Find all five → unlock the screenplay line.
   const ANCHORS = [
     '.hero .tagline em',
-    '.leibniz blockquote',
-    '.thematic-card.logline .eyebrow',
+    '.notebook .nb-head',
+    '.thematic-card.logline .hook-text',
     '.desk-head .marque',
     '.signup .envelope .eyebrow'
   ];
