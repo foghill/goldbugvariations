@@ -1214,45 +1214,49 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
     inset 0 -2px 3px rgba(20, 0, 0, 0.55),
     inset 1px 1px 2px rgba(255, 220, 210, 0.42);
 }
+/* v7.2 — flip mechanic switched from 3D rotateY to a scaleX
+   shrink-swap. The 3D version (transform-style: preserve-3d +
+   rotateY on .face + rotateY on .side.back) was leaking back-face
+   overflow outside the card box in Chromium when the back content
+   was taller than the card (the punch card's "A quarter century
+   later…" paragraph specifically). Style guide confirms the
+   reference uses scaleX shrink-swap for exactly this reason: it
+   "keeps the back a normal block so native scrolling works."
+
+   How it works:
+   - .face is a plain 2D box (no preserve-3d).
+   - During flip, .artifact.flipping → .face animates scaleX(1)→0
+     over 220ms.
+   - At ~mid-anim, JS toggles .flipped, which display:none's the
+     front and display:block's the back.
+   - .flipping is removed → .face animates scaleX(0)→1.
+   - Result: card flips in place, back is a normal block flow, any
+     overflow is naturally clipped by the .side's overflow:hidden. */
 .artifact .face {
   position: relative;
   width: 100%; height: 100%;
-  transition: transform 0.55s cubic-bezier(.4,.1,.4,1);
-  transform-style: preserve-3d;
+  transition: transform 0.22s cubic-bezier(.4,.1,.4,1);
+  transform-origin: center center;
 }
-.artifact.flipped .face { transform: rotateY(180deg); }
+.artifact.flipping .face { transform: scaleX(0); }
+
 .artifact .side {
   position: absolute; inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   border-radius: 4px;
   overflow: hidden;
 }
+.artifact .side.front { display: block; }
+.artifact .side.back  { display: none; overflow-y: auto; overflow-x: hidden; }
+.artifact.flipped .side.front { display: none; }
+.artifact.flipped .side.back  { display: block; }
+
 .artifact .side.back {
-  transform: rotateY(180deg);
-  /* Back faces SCROLL when their content overflows the card. The
-     v5.8 `overflow: clip` blocked text-heavy backs (notebook
-     synopsis, leibniz note, etc.) from scrolling — replaced in
-     v5.10 with overflow-y: auto + a subtle scrollbar so any card
-     with long copy can be read without enlarging the card.
-     overflow-x: hidden keeps the rotateY(180deg) from leaking
-     horizontally in 3D space. */
-  overflow-x: hidden;
-  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(31,26,22,0.35) transparent;
 }
-.artifact .side.back::-webkit-scrollbar {
-  width: 6px;
-}
-.artifact .side.back::-webkit-scrollbar-thumb {
-  background: rgba(31,26,22,0.35);
-  border-radius: 3px;
-}
-.artifact .side.back::-webkit-scrollbar-track {
-  background: transparent;
-}
-.artifact.flipping .face { transform: scale(0.9); }
+.artifact .side.back::-webkit-scrollbar { width: 6px; }
+.artifact .side.back::-webkit-scrollbar-thumb { background: rgba(31,26,22,0.35); border-radius: 3px; }
+.artifact .side.back::-webkit-scrollbar-track { background: transparent; }
 .artifact.dragging { transition: none !important; filter: drop-shadow(0 22px 32px rgba(0,0,0,0.7)); }
 
 .paper-tex {
