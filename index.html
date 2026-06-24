@@ -825,40 +825,50 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    retired here. */
 .investigation {
   position: relative;
-  /* v6.1 — restored the v3 walnut desk surface. Warm dark wood, a
-     radial spotlight from the upper-left, fine fractal-noise grain
-     on top via mix-blend-mode: overlay. The push-pins on each card
-     read as brass dome heads against the dark wood. */
+  /* v6.3 — match the v3 reference exactly. Darker, truer dark wood
+     base (was #3a3128 → #2B2620 → #1B1814, now #221a13 → #110b07
+     → #060403). The base is just a flat near-black warm wood; the
+     spotlight + vignette are owned by ::after, the grain is owned
+     by ::before, so each layer is independently tunable. */
   background:
-    radial-gradient(ellipse at 35% 25%, #3a3128 0%, #2B2620 40%, #1B1814 100%),
-    var(--walnut);
+    radial-gradient(ellipse at 50% 35%, #221a13 0%, #160e08 45%, #0a0604 100%);
   color: var(--bone);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
-  /* v6.2 — vertical wood-grain striations (per the v3 reference),
-     not random fractal noise. Stretched-Y turbulence reads as
-     long, soft vertical streaks running down the surface. */
+  /* Clean vertical wood-plank grain — alternating thin bands.
+     A repeating-linear-gradient gives crisp uniform stripes (the
+     "planks"), and a low-amplitude vertical-stretched turbulence
+     adds organic variation on top so it doesn't read as digital. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.55;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='480'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.85 0.012' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.65 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
-  background-size: 320px 480px;
+  opacity: 0.62;
+  mix-blend-mode: soft-light;
+  background:
+    /* Thin uniform plank shadows every ~7px */
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, 0.14) 0px,
+      rgba(0, 0, 0, 0.14) 1px,
+      transparent 1px,
+      transparent 7px),
+    /* Organic vertical streaks — stretched-Y turbulence */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='480'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.6 0.008' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
+  background-size: auto, 320px 480px;
 }
 .investigation::after {
-  /* Warm desk-lamp spotlight from the upper-left — slightly bigger
-     and warmer than v6.1 to match the v3 reference. */
+  /* Warm desk-lamp spotlight near the top-centre + stronger four-
+     corner vignette so the cards sit in a pool of light against
+     near-black edges, matching the v3 reference cinematic falloff. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(ellipse 60% 50% at 30% 18%, rgba(255,210,140,0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.18) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 45% at 50% 25%, rgba(255, 205, 130, 0.16) 0%, transparent 65%),
+    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.42) 100%);
 }
 .desk {
   position: relative;
