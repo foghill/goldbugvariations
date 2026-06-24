@@ -825,50 +825,68 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    retired here. */
 .investigation {
   position: relative;
-  /* v6.3 — match the v3 reference exactly. Darker, truer dark wood
-     base (was #3a3128 → #2B2620 → #1B1814, now #221a13 → #110b07
-     → #060403). The base is just a flat near-black warm wood; the
-     spotlight + vignette are owned by ::after, the grain is owned
-     by ::before, so each layer is independently tunable. */
+  /* v6.4 — match the reference more closely. Base is a slightly
+     warmer near-black (#1c1410 → #110a07 → #060302) so the wood
+     feels like real walnut under low light, not pure-black. The
+     warm undertone reads in the upper-centre where the spotlight
+     catches it. */
   background:
-    radial-gradient(ellipse at 50% 35%, #221a13 0%, #160e08 45%, #0a0604 100%);
+    radial-gradient(ellipse at 50% 28%, #241813 0%, #160d09 45%, #080403 100%);
   color: var(--bone);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
-  /* Clean vertical wood-plank grain — alternating thin bands.
-     A repeating-linear-gradient gives crisp uniform stripes (the
-     "planks"), and a low-amplitude vertical-stretched turbulence
-     adds organic variation on top so it doesn't read as digital. */
+  /* Wood-plank grain dialed way back. The reference's grain reads
+     as ALMOST INVISIBLE up close — only the warm areas hint at the
+     plank lines. Single SVG turbulence layer at low opacity. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.62;
+  opacity: 0.30;
   mix-blend-mode: soft-light;
   background:
-    /* Thin uniform plank shadows every ~7px */
-    repeating-linear-gradient(90deg,
-      rgba(0, 0, 0, 0.14) 0px,
-      rgba(0, 0, 0, 0.14) 1px,
-      transparent 1px,
-      transparent 7px),
-    /* Organic vertical streaks — stretched-Y turbulence */
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='480'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.6 0.008' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
-  background-size: auto, 320px 480px;
+    /* Subtle vertical streaks only — no more uniform 7 px bands. */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='600'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.7 0.006' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
+  background-size: 400px 600px;
 }
 .investigation::after {
-  /* Warm desk-lamp spotlight near the top-centre + stronger four-
-     corner vignette so the cards sit in a pool of light against
-     near-black edges, matching the v3 reference cinematic falloff. */
+  /* Softer spotlight + stronger vignette so the centre breathes
+     while the corners fall almost to true black, like the reference.
+     A faint horizontal red string also drawn here, ~70 px from the
+     top — picks up on the v3 detective-thread motif. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(ellipse 60% 45% at 50% 25%, rgba(255, 205, 130, 0.16) 0%, transparent 65%),
-    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.42) 100%);
+    radial-gradient(ellipse 55% 38% at 50% 22%, rgba(255, 200, 130, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 105% 88% at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.55) 100%);
+}
+/* Decorative red string across the top of the case-board — pure
+   ornament now (the v5 cork-board removed the functional red-thread
+   mechanic). Faint, low-saturation, gentle catenary curve. */
+.case-board::before {
+  content: "";
+  position: absolute;
+  top: -34px;
+  left: -2%;
+  right: -2%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(140, 36, 28, 0.55) 12%,
+    rgba(170, 50, 38, 0.7) 50%,
+    rgba(140, 36, 28, 0.55) 88%,
+    transparent 100%);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+  z-index: 2;
+  /* Tiny catenary — a 2 px high arc by transforming a wide flat bar. */
+  transform: translateY(-6px) scaleX(1.02);
+  transform-origin: center top;
+  border-radius: 50% / 100%;
 }
 .desk {
   position: relative;
