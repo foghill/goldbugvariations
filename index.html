@@ -825,36 +825,39 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    retired here. */
 .investigation {
   position: relative;
-  /* Warm tan cork ground. A second layer of SVG fractalNoise sits on
-     top of the solid as a subtle grain — enough to read as "cork"
-     without becoming busy. */
+  /* v6.1 — restored the v3 walnut desk surface. Warm dark wood, a
+     radial spotlight from the upper-left, fine fractal-noise grain
+     on top via mix-blend-mode: overlay. The push-pins on each card
+     read as brass dome heads against the dark wood. */
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(255,222,170,0.18) 0%, transparent 60%),
-    linear-gradient(180deg, var(--cork) 0%, var(--cork-2) 100%);
-  color: var(--ink);
+    radial-gradient(ellipse at 35% 25%, #3a3128 0%, #2B2620 40%, #1B1814 100%),
+    var(--walnut);
+  color: var(--bone);
   z-index: 2;
   overflow: hidden;
 }
 .investigation::before {
-  /* Cork grain — fine-frequency SVG noise tinted brown, low opacity. */
+  /* Wood-grain noise — fine fractal turbulence, dark warm tint,
+     overlay-blended so it dims into the walnut rather than sitting
+     on top of it as a layer. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.42;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0 0.08  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23c)'/></svg>");
-  background-size: 220px 220px;
+  opacity: 0.36;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0 0.05  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
+  background-size: 240px 240px;
 }
 .investigation::after {
-  /* Top + bottom edge gradient softens the cork → sky seam without
-     producing a hard line — Movement II eases into III. */
+  /* Warm desk-lamp spotlight from the upper-left, low intensity so
+     the cards read first and the lighting reads second. Sits above
+     the grain so the lamp highlight catches the noise. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(122, 159, 170, 0.55) 0%, transparent 8%, transparent 92%, rgba(163, 194, 203, 0.55) 100%);
+  background: radial-gradient(ellipse at 35% 25%, rgba(255,200,100,0.07) 0%, transparent 55%);
 }
 .desk {
   position: relative;
@@ -885,7 +888,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   font-size: 13px;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: rgba(31, 26, 22, 0.6);
+  color: rgba(240, 230, 210, 0.6);
   line-height: 1.4;
 }
 .desk-head .marque b {
@@ -893,7 +896,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   font-weight: 700;
   font-size: clamp(22px, 2.6vw, 32px);
   letter-spacing: 0.06em;
-  color: var(--ink);
+  color: var(--cream);
   display: inline-block;
 }
 .desk-head .sub { display: none; }   /* legacy copy retired */
@@ -928,7 +931,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   margin-top: 6px;
   font-family: var(--hand);
   font-size: clamp(18px, 1.8vw, 24px);
-  color: rgba(31, 26, 22, 0.55);
+  color: rgba(240, 230, 210, 0.72);
   pointer-events: none;
   transition: opacity 0.6s;
 }
