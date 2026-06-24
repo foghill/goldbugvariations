@@ -1528,6 +1528,99 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   margin: 0 0 14px;
 }
 
+/* Sheet music — Aria from the Goldberg Variations (front), Cast
+   sheet (back). Added in v7.5 per director request. Restyled to
+   match the desk's paper aesthetic; back's CAST list uses the
+   established Courier Prime + EB Garamond italic pair. */
+.sheet {
+  width: 360px; height: 260px;
+  left: 38%; top: 440px;
+  transform: rotate(4deg);
+  z-index: 11;
+}
+.sheet .side {
+  background: #EFE3C7;
+  background-image:
+    radial-gradient(circle at 75% 30%, rgba(140, 80, 30, 0.15) 0%, transparent 30%),
+    radial-gradient(circle at 25% 80%, rgba(100, 60, 20, 0.10) 0%, transparent 35%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+  padding: 16px 18px;
+  color: #2A2520;
+}
+.sheet h4 {
+  font-family: 'EB Garamond', serif;
+  font-style: italic; font-weight: 500;
+  font-size: 16px;
+  margin: 0 0 2px;
+  text-align: center;
+  color: #2A2520;
+}
+.sheet .composer {
+  font-family: 'EB Garamond', serif;
+  font-size: 11px;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #4a3f30;
+  letter-spacing: 1px;
+}
+.sheet .ink-stain {
+  position: absolute;
+  width: 68px; height: 38px;
+  background: radial-gradient(ellipse, rgba(20, 30, 60, 0.55), rgba(20, 30, 60, 0.25) 50%, transparent 75%);
+  border-radius: 50%;
+  top: 56px; right: 24px;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+.sheet .back {
+  background: #EFE3C7;
+  padding: 22px 22px 30px;
+  color: #2A2520;
+}
+.sheet .back h4 {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  margin: 0 0 12px;
+  border-bottom: 1px solid #2A2520;
+  padding-bottom: 6px;
+  text-align: left;
+  font-style: normal;
+  color: #2A2520;
+}
+.sheet .back .cast-row {
+  font-family: 'EB Garamond', serif;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.sheet .back .cast-row > div {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.sheet .back .cast-role {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #6B1410;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.sheet .back em {
+  font-style: italic;
+  font-size: 13px;
+  color: #2A2520;
+}
+.sheet .back .ann {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #6B1410;
+  margin-top: 16px;
+  border-top: 1px dashed #6B1410;
+  padding-top: 8px;
+}
+
 .punch-card {
   width: 380px; height: 280px;
   left: 49%; top: 60px;
@@ -3778,6 +3871,90 @@ top: -40px; left: 8px;
            four story cards (notebook · canister · punch · catalog)
            on every layout pass. The director's v6 brief was four
            cards only; sticking to that means no overlaps. -->
+
+      <!-- 5 · Sheet music — Aria opening (front), CAST sheet (back).
+           Added in v7.5 per director feedback. Single staff system,
+           treble + bass, six notes per bar, a "dolce" margin hint,
+           a blue ink-stain in the upper right. -->
+      <div class="artifact sheet" data-art="sheet">
+        <div class="face">
+          <div class="side front">
+            <h4>Aria — from the Goldberg Variations, BWV 988</h4>
+            <div class="composer">J. S. BACH · 1741</div>
+            <div class="ink-stain"></div>
+            <svg viewBox="0 0 300 150" style="width:100%;height:auto;display:block;" aria-hidden="true">
+              <g stroke="#2A2520" stroke-width="0.7" fill="none">
+                <!-- treble staff -->
+                <line x1="10" y1="30" x2="290" y2="30"/>
+                <line x1="10" y1="38" x2="290" y2="38"/>
+                <line x1="10" y1="46" x2="290" y2="46"/>
+                <line x1="10" y1="54" x2="290" y2="54"/>
+                <line x1="10" y1="62" x2="290" y2="62"/>
+                <!-- bass staff -->
+                <line x1="10" y1="92"  x2="290" y2="92"/>
+                <line x1="10" y1="100" x2="290" y2="100"/>
+                <line x1="10" y1="108" x2="290" y2="108"/>
+                <line x1="10" y1="116" x2="290" y2="116"/>
+                <line x1="10" y1="124" x2="290" y2="124"/>
+                <!-- bar lines -->
+                <line x1="10"  y1="30" x2="10"  y2="124" stroke-width="1.5"/>
+                <line x1="100" y1="30" x2="100" y2="124"/>
+                <line x1="190" y1="30" x2="190" y2="124"/>
+                <line x1="290" y1="30" x2="290" y2="124" stroke-width="1.5"/>
+              </g>
+              <!-- clefs -->
+              <text x="14" y="58"  font-family="'Bravura Text','Apple Symbols','Noto Music','Segoe UI Symbol',serif" font-size="32" fill="#2A2520">&#x1D11E;</text>
+              <text x="14" y="116" font-family="'Bravura Text','Apple Symbols','Noto Music','Segoe UI Symbol',serif" font-size="28" fill="#2A2520">&#x1D122;</text>
+              <!-- time signature 3/4 -->
+              <text x="38" y="48"  font-family="'EB Garamond',serif" font-size="14" fill="#2A2520" font-weight="700">3</text>
+              <text x="38" y="62"  font-family="'EB Garamond',serif" font-size="14" fill="#2A2520" font-weight="700">4</text>
+              <text x="38" y="108" font-family="'EB Garamond',serif" font-size="14" fill="#2A2520" font-weight="700">3</text>
+              <text x="38" y="122" font-family="'EB Garamond',serif" font-size="14" fill="#2A2520" font-weight="700">4</text>
+              <!-- treble notes -->
+              <g fill="#2A2520" stroke="#2A2520" stroke-width="1">
+                <ellipse cx="58"  cy="46" rx="4" ry="3" transform="rotate(-20 58 46)"/>
+                <line x1="62"  y1="46" x2="62"  y2="22"/>
+                <ellipse cx="78"  cy="42" rx="4" ry="3" transform="rotate(-20 78 42)"/>
+                <line x1="82"  y1="42" x2="82"  y2="20"/>
+                <ellipse cx="120" cy="50" rx="4" ry="3" transform="rotate(-20 120 50)"/>
+                <line x1="124" y1="50" x2="124" y2="26"/>
+                <ellipse cx="142" cy="46" rx="4" ry="3" transform="rotate(-20 142 46)"/>
+                <line x1="146" y1="46" x2="146" y2="22"/>
+                <ellipse cx="164" cy="50" rx="4" ry="3" transform="rotate(-20 164 50)"/>
+                <line x1="168" y1="50" x2="168" y2="26"/>
+                <ellipse cx="210" cy="42" rx="4" ry="3" transform="rotate(-20 210 42)"/>
+                <line x1="214" y1="42" x2="214" y2="20"/>
+                <ellipse cx="232" cy="46" rx="4" ry="3" transform="rotate(-20 232 46)"/>
+                <line x1="236" y1="46" x2="236" y2="22"/>
+                <ellipse cx="254" cy="50" rx="4" ry="3" transform="rotate(-20 254 50)"/>
+                <line x1="258" y1="50" x2="258" y2="26"/>
+              </g>
+              <!-- bass notes -->
+              <g fill="#2A2520" stroke="#2A2520" stroke-width="1">
+                <ellipse cx="58"  cy="116" rx="4" ry="3" transform="rotate(-20 58 116)"/>
+                <line x1="54"  y1="116" x2="54"  y2="138"/>
+                <ellipse cx="120" cy="112" rx="4" ry="3" transform="rotate(-20 120 112)"/>
+                <line x1="116" y1="112" x2="116" y2="134"/>
+                <ellipse cx="210" cy="108" rx="4" ry="3" transform="rotate(-20 210 108)"/>
+                <line x1="206" y1="108" x2="206" y2="130"/>
+              </g>
+              <!-- handwritten "dolce" margin note -->
+              <text x="60" y="18" font-family="'Caveat',cursive" font-size="13" fill="#1F3A5F" font-style="italic">dolce</text>
+            </svg>
+          </div>
+          <div class="side back">
+            <h4>CAST — CONFIDENTIAL</h4>
+            <div class="cast-row">
+              <div><span class="cast-role">Stuart Ressler (1957)</span><em>casting in progress</em></div>
+              <div><span class="cast-role">Stuart Ressler (1985)</span><em>casting in progress</em></div>
+              <div><span class="cast-role">Jan O'Deigh</span><em>casting in progress</em></div>
+              <div><span class="cast-role">Franklin Todd</span><em>casting in progress</em></div>
+              <div><span class="cast-role">Dr. Jeanette Koss</span><em>casting in progress</em></div>
+            </div>
+            <div class="ann">ANNOUNCEMENTS — FALL 2026</div>
+          </div>
+        </div>
+      </div>
 
       <!-- 4 · Library catalog card — The Gold Bug Variations · Powers · 1991 -->
       <div class="artifact catalog" data-art="catalog">
