@@ -898,30 +898,9 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
     inset 0 0 200px rgba(0,0,0,0.6),
     inset 0 0 60px rgba(0,0,0,0.4);
 }
-/* Decorative red string across the top of the case-board — pure
-   ornament now (the v5 cork-board removed the functional red-thread
-   mechanic). Faint, low-saturation, gentle catenary curve. */
-.case-board::before {
-  content: "";
-  position: absolute;
-  top: -34px;
-  left: -2%;
-  right: -2%;
-  height: 2px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(140, 36, 28, 0.55) 12%,
-    rgba(170, 50, 38, 0.7) 50%,
-    rgba(140, 36, 28, 0.55) 88%,
-    transparent 100%);
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
-  pointer-events: none;
-  z-index: 2;
-  /* Tiny catenary — a 2 px high arc by transforming a wide flat bar. */
-  transform: translateY(-6px) scaleX(1.02);
-  transform-origin: center top;
-  border-radius: 50% / 100%;
-}
+/* Decorative red string + bottom-left "LAST UPDATED" dot removed
+   in v7.1 per director feedback. Both were atmospheric but read as
+   noise against the dark wood. */
 .desk {
   position: relative;
   z-index: 2;
@@ -1144,7 +1123,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 
 .case-board {
   position: relative;
-  height: 720px;
+  height: 760px;
   max-width: 1560px;
   margin: 0 auto;
 }
@@ -1373,7 +1352,7 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
    commit). */
 
 /* 3) Catalog card */
-.catalog { width: 360px; height: 260px; left: 50%; top: 380px; transform: rotate(3deg); }
+.catalog { width: 480px; height: 340px; left: 50%; top: 380px; transform: rotate(3deg); }
 .catalog .side {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)),
@@ -3942,8 +3921,7 @@ top: -40px; left: 8px;
          model means cards don't move, so there's nothing to reset). -->
     <div class="desk-footnotes" aria-hidden="true">
       <div class="df-left">
-        <span class="df-dot"></span>
-        LAST UPDATED &nbsp;·&nbsp; FOLLOW THE BEETLE
+        FOLLOW THE BEETLE
       </div>
       <div class="df-right">↺ RESET DESK</div>
     </div>
@@ -5270,7 +5248,18 @@ function setupCards(){
     });
     a.addEventListener('click', (e) => {
       if (e.target.closest('input, button, .play-indicator')) return;
+      // v7.1 — bulletproof scroll lock. Mousedown preventDefault stops
+      // focus-driven scroll-into-view, but some browsers still
+      // auto-scroll after the click in certain ::target / overflow
+      // contexts. Snapshot the page scroll position right before flip
+      // and restore it on the next two frames if anything tried to
+      // change it.
+      const sx = window.scrollX, sy = window.scrollY;
       flipCard(a);
+      a.blur();
+      const lock = () => { if (window.scrollX !== sx || window.scrollY !== sy) window.scrollTo(sx, sy); };
+      requestAnimationFrame(lock);
+      requestAnimationFrame(() => requestAnimationFrame(lock));
     });
   });
 
