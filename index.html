@@ -837,32 +837,39 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   overflow: hidden;
 }
 .investigation::before {
-  /* Wood-plank grain dialed way back. The reference's grain reads
-     as ALMOST INVISIBLE up close — only the warm areas hint at the
-     plank lines. Single SVG turbulence layer at low opacity. */
+  /* v6.5 — wood grain bumped UP from v6.4 (which had it too subtle).
+     Two layers now: clean uniform 8 px plank bands (the v3 reference
+     has visible plank shadows) + stretched-Y turbulence for organic
+     variation. Composite reads as real walnut planks under low light. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.30;
+  opacity: 0.50;
   mix-blend-mode: soft-light;
   background:
-    /* Subtle vertical streaks only — no more uniform 7 px bands. */
+    /* Uniform plank shadows every 8 px — gives the desk the visible
+       vertical stripes seen in the reference. */
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, 0.18) 0px,
+      rgba(0, 0, 0, 0.18) 1px,
+      transparent 1px,
+      transparent 8px),
+    /* Organic streaks on top */
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='600'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.7 0.006' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
-  background-size: 400px 600px;
+  background-size: auto, 400px 600px;
 }
 .investigation::after {
-  /* Softer spotlight + stronger vignette so the centre breathes
-     while the corners fall almost to true black, like the reference.
-     A faint horizontal red string also drawn here, ~70 px from the
-     top — picks up on the v3 detective-thread motif. */
+  /* v6.5 — dramatic lighting per reference: tighter warm halo near
+     top-centre + much darker corner vignette so the cards sit in
+     a clear pool of light. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(ellipse 55% 38% at 50% 22%, rgba(255, 200, 130, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 105% 88% at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.55) 100%);
+    radial-gradient(ellipse 45% 32% at 50% 20%, rgba(255, 195, 125, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 95% 80% at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.7) 100%);
 }
 /* Decorative red string across the top of the case-board — pure
    ornament now (the v5 cork-board removed the functional red-thread
@@ -903,6 +910,44 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   align-items: start;
   padding: 0 var(--rail-inset);
   max-width: 1560px;
+}
+
+/* Bottom-corner desk labels (v3 reference). LAST UPDATED / FOLLOW
+   THE BEETLE on the bottom-left; ↺ RESET DESK on the bottom-right.
+   Decorative — the gold beetle is real (it scurries via setupBeetle);
+   the reset is a visual cue to the v3 detective-desk vibe. */
+.desk-footnotes {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(20px, 3vh, 32px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--rail-inset);
+  max-width: 1560px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(240, 230, 210, 0.42);
+}
+.desk-footnotes .df-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.desk-footnotes .df-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--stamp-red);
+  box-shadow: 0 0 6px rgba(170, 50, 38, 0.55);
+}
+.desk-footnotes .df-right {
+  border: 1px solid rgba(240, 230, 210, 0.28);
+  padding: 8px 14px;
+  border-radius: 2px;
 }
 
 /* Upper-right typeset case-file marque (per the v3 reference). */
@@ -3721,6 +3766,19 @@ top: -40px; left: 8px;
         </div>
       </div>
 
+    </div>
+
+    <!-- Bottom-corner desk labels (per v3 reference). Bottom-left
+         carries the "FOLLOW THE BEETLE" cue that points at the gold
+         beetle scurrying around the page; bottom-right is the
+         "RESET DESK" affordance (decorative — the v5.7 click-to-flip
+         model means cards don't move, so there's nothing to reset). -->
+    <div class="desk-footnotes" aria-hidden="true">
+      <div class="df-left">
+        <span class="df-dot"></span>
+        LAST UPDATED &nbsp;·&nbsp; FOLLOW THE BEETLE
+      </div>
+      <div class="df-right">↺ RESET DESK</div>
     </div>
   </div>
 
