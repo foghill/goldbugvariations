@@ -837,27 +837,28 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
   overflow: hidden;
 }
 .investigation::before {
-  /* Wood-grain noise — fine fractal turbulence, dark warm tint,
-     overlay-blended so it dims into the walnut rather than sitting
-     on top of it as a layer. */
+  /* v6.2 — vertical wood-grain striations (per the v3 reference),
+     not random fractal noise. Stretched-Y turbulence reads as
+     long, soft vertical streaks running down the surface. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.36;
+  opacity: 0.55;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0 0.05  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
-  background-size: 240px 240px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='480'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.85 0.012' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.04  0 0 0 0.65 0'/></filter><rect width='100%25' height='100%25' filter='url(%23w)'/></svg>");
+  background-size: 320px 480px;
 }
 .investigation::after {
-  /* Warm desk-lamp spotlight from the upper-left, low intensity so
-     the cards read first and the lighting reads second. Sits above
-     the grain so the lamp highlight catches the noise. */
+  /* Warm desk-lamp spotlight from the upper-left — slightly bigger
+     and warmer than v6.1 to match the v3 reference. */
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(ellipse at 35% 25%, rgba(255,200,100,0.07) 0%, transparent 55%);
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 18%, rgba(255,210,140,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.18) 0%, transparent 60%);
 }
 .desk {
   position: relative;
@@ -867,14 +868,29 @@ body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
 .desk-head {
   position: relative;
   z-index: 3;
-  margin-bottom: clamp(40px, 6vh, 80px);
+  margin-bottom: clamp(30px, 5vh, 60px);
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 24px;
-  align-items: end;
-  padding-left: var(--rail-inset);
-  max-width: 1400px;
+  align-items: start;
+  padding: 0 var(--rail-inset);
+  max-width: 1560px;
 }
+
+/* Upper-right typeset case-file marque (per the v3 reference). */
+.desk-tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.85;
+  color: rgba(240, 230, 210, 0.55);
+}
+.desk-tag .tag-line { display: block; }
+.desk-tag .tag-line span { color: var(--gold-bright); }
+.desk-tag .tag-line.accent { color: var(--stamp-red); opacity: 0.85; }
+.desk-tag .tag-line.muted  { color: rgba(240, 230, 210, 0.42); }
 /* Cork board head — single short label in ink-leaning brown stencil.
    The verbose "§ 04 · Brooklyn Public Library · 1985 · Three readers"
    copy was design-doc shorthand; replaced with "Jan O'Deigh's Case File." */
@@ -3574,9 +3590,13 @@ top: -40px; left: 8px;
         </div>
         <div class="hint" id="hint">click on any card to flip for more information</div>
       </div>
-      <!-- Reset button removed in v5.7 along with the drag-to-rearrange
-           mechanic. Cards are click-to-flip only now; their positions
-           never change, so there's nothing to reset. -->
+      <!-- Top-right typeset marque — mirrors the v3 detective desk
+           label in the upper-right corner of the board. -->
+      <div class="desk-tag" aria-hidden="true">
+        <div class="tag-line"><span>JAN O'DEIGH</span> — PERSONAL DESK</div>
+        <div class="tag-line accent">CASE : RESSLER, S.</div>
+        <div class="tag-line muted">BROOKLYN PUBLIC LIBRARY</div>
+      </div>
     </div>
 
     <div class="case-board" id="caseBoard">
@@ -3614,7 +3634,7 @@ top: -40px; left: 8px;
 
       <!-- 2 · Goldberg Aria record — the v3 vinyl disc with a paper
            label. Click the play disc to start the Aria. -->
-      <div class="artifact canister" data-art="canister">
+      <div class="artifact canister pin-red" data-art="canister">
         <div class="face">
           <div class="side front">
             <div class="ring"></div>
