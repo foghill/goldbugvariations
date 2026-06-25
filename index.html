@@ -4761,7 +4761,7 @@ function bridgeMorph(opts){
   const STRANDS = 5;
   const STAFF_GAP = 26;            // distance between adjacent staff lines
   const HALF_GAP  = STAFF_GAP / 2; // distance between line and adjacent space (= one slot)
-  const SAMPLES = 220;             // strand resolution
+  const SAMPLES = opts.samples || 220; // strand resolution (mobile drops to ~100)
   const HELIX_AMP  = opts.helixAmp  || 64;  // helix half-width (viewBox px)
   const HELIX_FREQ = opts.helixFreq || 5.5; // full waves down the SVG
   const STEM_LEN  = 70;            // viewBox units — standard 3.5 × staff gap
@@ -5197,15 +5197,12 @@ function setupHelixMorph(){
   const morphSvg = document.getElementById('morph');
   if (!morphSvg) return;
 
-  const morph = bridgeMorph();
-
-  function getT(){
-    const r = lane.getBoundingClientRect();
-    const total = lane.offsetHeight - window.innerHeight;
-    if (total <= 0) return 0;
-    const scrolled = -r.top;
-    return Math.max(0, Math.min(1, scrolled / total));
-  }
+  // Mobile Safari struggles with high-resolution strand regeneration on every
+  // scroll frame. Halve the strand sample count on small viewports — at the
+  // 60vh display height the visual difference is imperceptible.
+  const isSmall = window.matchMedia &&
+                  window.matchMedia('(max-width: 820px)').matches;
+  const morph = bridgeMorph({ samples: isSmall ? 100 : 220 });
 
   function tintBridge(t){
     // The morph lives on dusk-teal end-to-end now, so the foreground
@@ -5226,7 +5223,14 @@ function setupHelixMorph(){
     raf = true;
     requestAnimationFrame(() => {
       raf = false;
-      const sT = getT();
+      // Single rect read per frame; gate the heavy render on visibility so
+      // we don't burn cycles regenerating strand paths while the user is
+      // miles away (in the hero, the desk, or the footer).
+      const r = lane.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (r.bottom < -vh || r.top > 2 * vh) return;
+      const total = lane.offsetHeight - vh;
+      const sT = total > 0 ? Math.max(0, Math.min(1, -r.top / total)) : 0;
       morph.render(sT);
       tintBridge(sT);
     });
@@ -6164,7 +6168,35 @@ function setupParallax(){
   update();
 }
 
+// ===== Mobile painterly-cloud tuner =====
+// The site-wide .sky-clouds SVG renders 6 painterly filter chains
+// (feTurbulence numOctaves=3 + feDisplacementMap scale=55–75 + feGaussianBlur
+// stdDeviation=7–10) across ~30 cloud groups over a 1440×9000 viewBox spanning
+// the entire page. Beautiful on desktop; mobile Safari pays a big GPU bill on
+// the first paint. On small viewports we drop octaves 3→2 and halve both the
+// displacement and blur — the painterly look survives, the cost roughly halves.
+function tuneSkyForMobile(){
+  if (!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches)) return;
+  for (let i = 1; i <= 6; i++){
+    const f = document.getElementById('painterly-' + i);
+    if (!f) continue;
+    const turb = f.querySelector('feTurbulence');
+    if (turb) turb.setAttribute('numOctaves', '2');
+    const disp = f.querySelector('feDisplacementMap');
+    if (disp){
+      const s = parseFloat(disp.getAttribute('scale') || '50');
+      disp.setAttribute('scale', String(Math.max(18, Math.round(s * 0.5))));
+    }
+    const blur = f.querySelector('feGaussianBlur');
+    if (blur){
+      const s = parseFloat(blur.getAttribute('stdDeviation') || '8');
+      blur.setAttribute('stdDeviation', String(Math.max(3, Math.round(s * 0.55))));
+    }
+  }
+}
+
 function boot(){
+  tuneSkyForMobile();
   initCipherTargets();
   setupDecryptObserver();
   buildFooterCipher();
