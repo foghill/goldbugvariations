@@ -2095,16 +2095,26 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   color: inherit; opacity: 0.85; font-weight: 600;
 }
 .cipher-key .key-decoder .key-mode {
-  background: transparent; border: 1px solid currentColor;
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.28em;
-  text-transform: uppercase; font-weight: 600;
-  padding: 4px 9px; cursor: pointer;
-  color: inherit; opacity: 0.85;
-  transition: background 200ms ease, opacity 200ms ease;
+  display: inline-flex;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(127,127,127,0.05);
+}
+.cipher-key .key-decoder .key-mode-opt {
+  background: transparent; border: 0; color: inherit;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em;
+  text-transform: uppercase; font-weight: 700;
+  padding: 4px 11px; cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 180ms ease, background 180ms ease, color 180ms ease;
   white-space: nowrap;
 }
-.cipher-key .key-decoder .key-mode:hover { opacity: 1; background: rgba(127,127,127,0.12); }
-.cipher-key .key-decoder .key-mode::before { content: "↻ "; opacity: 0.7; }
+.cipher-key .key-decoder .key-mode-opt:hover { opacity: 0.85; }
+.cipher-key .key-decoder .key-mode-opt.is-active {
+  opacity: 1; background: var(--gold); color: var(--ink);
+}
+.cipher-key .key-decoder .key-mode-opt.is-active:hover { opacity: 1; }
 .cipher-key .key-decoder input {
   width: 100%;
   background: transparent;
@@ -4568,9 +4578,10 @@ function buildKey(){
       <div class="key-decoder" data-mode="encode">
         <div class="key-mode-row">
           <label for="keyDecode">Try it — <span class="key-mode-label">encode a message</span></label>
-          <button type="button" class="key-mode" aria-label="Toggle encode / decode">
-            <span class="key-mode-text">DECODE</span>
-          </button>
+          <div class="key-mode" role="group" aria-label="Encode or decode">
+            <button type="button" class="key-mode-opt is-active" data-mode="encode">ENCODE</button>
+            <button type="button" class="key-mode-opt" data-mode="decode">DECODE</button>
+          </div>
         </div>
         <input id="keyDecode" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="your message">
         <output class="key-output" aria-live="polite"></output>
@@ -4586,9 +4597,8 @@ function buildKey(){
     const input    = key.querySelector('#keyDecode');
     const output   = key.querySelector('.key-output');
     const hint     = key.querySelector('.key-hint');
-    const modeBtn  = key.querySelector('.key-mode');
-    const modeText = key.querySelector('.key-mode-text');
     const modeLbl  = key.querySelector('.key-mode-label');
+    const modeOpts = key.querySelectorAll('.key-mode-opt');
 
     const renderOutput = () => {
       const text = input.value;
@@ -4608,22 +4618,28 @@ function buildKey(){
       }
     };
 
-    const toggleMode = () => {
-      const isEncode = decoder.dataset.mode === 'encode';
-      decoder.dataset.mode = isEncode ? 'decode' : 'encode';
-      modeText.textContent = isEncode ? 'ENCODE' : 'DECODE';
-      modeLbl.textContent  = isEncode ? 'decode a message' : 'encode a message';
-      input.placeholder    = isEncode ? 'paste glyphs (‡ † ¶ …)' : 'your message';
-      input.value = '';
-      output.textContent = '';
+    // Round-trip mode switch: instead of clearing, carry the current
+    // output into the input so encode → decode shows the plaintext that
+    // produced those glyphs (and vice versa). Same-mode clicks no-op.
+    const setMode = (newMode) => {
+      if (decoder.dataset.mode === newMode) return;
+      decoder.dataset.mode = newMode;
+      modeOpts.forEach(o => o.classList.toggle('is-active', o.dataset.mode === newMode));
+      modeLbl.textContent = newMode === 'encode' ? 'encode a message' : 'decode a message';
+      input.placeholder   = newMode === 'encode' ? 'your message' : 'paste glyphs (‡ † ¶ …)';
+      const carried = output.textContent;
+      if (carried) input.value = carried;
       hint.classList.remove('show');
+      renderOutput();
       input.focus();
     };
 
-    modeBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMode(); });
-    ['click','pointerdown','keydown'].forEach(ev =>
-      modeBtn.addEventListener(ev, e => e.stopPropagation())
-    );
+    modeOpts.forEach(opt => {
+      opt.addEventListener('click', (e) => { e.stopPropagation(); setMode(opt.dataset.mode); });
+      ['pointerdown','keydown'].forEach(ev =>
+        opt.addEventListener(ev, e => e.stopPropagation())
+      );
+    });
     input.addEventListener('input', renderOutput);
     // Stop bubbling so the panel's outer click-to-collapse handler doesn't
     // fire when interacting with the input.
@@ -4659,8 +4675,14 @@ function buildKey(){
     key.classList.remove('expanded'); key.classList.add('collapsed');
     key.innerHTML = '';
   }
-  key.addEventListener('click', () => key.classList.contains('collapsed') ? expand() : collapse());
+  // The panel only expands from a collapsed click — once it's open the
+  // only thing that collapses it is the × button. (Dead-space clicks
+  // inside the expanded panel used to wipe in-progress text.)
+  key.addEventListener('click', () => {
+    if (key.classList.contains('collapsed')) expand();
+  });
   key.addEventListener('keydown', e => {
+    if (!key.classList.contains('collapsed')) return;
     if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); key.click(); }
   });
 }
