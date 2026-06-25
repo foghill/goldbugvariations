@@ -4952,18 +4952,81 @@ function bridgeMorph(opts){
   const rungs = [];
   for (let i = 0; i < BASE_COUNT; i++){
     const ln = document.createElementNS(SVGNS, 'line');
+    // Rungs are the helix end-state — per-rung geometry/depth/opacity/
+    // stroke-width DON'T depend on t. Position them once at init so
+    // render() doesn't redo 7 setAttribute × 14 rungs per scroll frame.
+    const u = (i + 0.5) / BASE_COUNT;
+    const y = u * H;
+    const wave  = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + 0);
+    const wave2 = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI);
+    const x1 = CX + wave  * HELIX_AMP;
+    const x2 = CX + wave2 * HELIX_AMP;
+    ln.setAttribute('x1', x1.toFixed(2));
+    ln.setAttribute('y1', y.toFixed(2));
+    ln.setAttribute('x2', x2.toFixed(2));
+    ln.setAttribute('y2', y.toFixed(2));
+    ln.setAttribute('stroke', 'currentColor');
+    const sep   = Math.abs(x1 - x2);
+    const norm  = sep / (HELIX_AMP * 2);
+    const depth = 0.18 + 0.82 * norm;
+    ln.setAttribute('opacity', depth.toFixed(3));
+    ln.setAttribute('stroke-width', (0.7 + 0.7 * norm).toFixed(2));
     rungsG.appendChild(ln);
     rungs.push(ln);
+  }
+
+  // ---- Optional pre-bake (mobile + tablet) ----
+  // Per-frame work is dominated by 5 strand path-d regenerations
+  // (100-220 sin/cos + interp + string concat each) and 9 note-position
+  // calcs. On mobile Safari this lands at 8-16 ms per scroll frame even
+  // with rAF gating, which drops touch-scroll frames.
+  // Pre-bake the strand strings + note positions at FRAMES discrete
+  // t-steps; render() snaps to the nearest cached frame and idx-memoizes
+  // (skips entirely if the snapped idx didn't change). Most scroll
+  // events on a slow drag become no-ops, busy ones just write strings.
+  const PREBAKE = !!opts.prebake;
+  const FRAMES = 41; // 2.5% step — imperceptibly granular at typical scroll heights
+  let frameCache = null;
+  let lastFrameIdx = -1;
+  function buildFrameCache(){
+    const fc = new Array(FRAMES);
+    for (let f = 0; f < FRAMES; f++){
+      const t = f / (FRAMES - 1);
+      const strands = new Array(STRANDS);
+      for (let k = 0; k < STRANDS; k++) strands[k] = strandPath(k, t);
+      const notes = new Array(MUSIC_BAR.length);
+      for (let i = 0; i < MUSIC_BAR.length; i++) notes[i] = notePos(i, t);
+      fc[f] = { strands, notes };
+    }
+    frameCache = fc;
+  }
+  if (PREBAKE){
+    // Defer past first paint — at 5 × 41 × 100 samples that's ~20k
+    // sin/cos at boot, we don't want to block TTI with it. render()
+    // falls back to dynamic computation until the cache is ready.
+    setTimeout(buildFrameCache, 0);
   }
 
   // ---- Render. Call render(t) with t ∈ [0, 1]. ----
   function render(t){
     const clampedT = Math.max(0, Math.min(1, t));
 
+    // Pre-bake fast path: snap to nearest cached frame. Same idx since
+    // last call → nothing to draw, return before any setAttribute
+    // touches the SVG. Single biggest mobile win — most scroll events
+    // on a slow drag land on the same idx and become free.
+    let frame = null;
+    if (PREBAKE && frameCache){
+      const idx = Math.round(clampedT * (FRAMES - 1));
+      if (idx === lastFrameIdx) return;
+      lastFrameIdx = idx;
+      frame = frameCache[idx];
+    }
+
     // ---- Strands ----
     for (let k = 0; k < STRANDS; k++){
       const p = strandPaths[k];
-      p.setAttribute('d', strandPath(k, clampedT));
+      p.setAttribute('d', frame ? frame.strands[k] : strandPath(k, clampedT));
       let op;
       if (k === 0){
         // Front strand — stays full opacity throughout.
@@ -4982,7 +5045,7 @@ function bridgeMorph(opts){
     // 0.55 max opacity so it visually recedes behind the front strand.
     // Same cream colour as the front strand; depth = thinner stroke
     // (1.8 vs front 2.6) + lower opacity.
-    goldPath.setAttribute('d', strandPath(STRANDS - 1, clampedT));
+    goldPath.setAttribute('d', frame ? frame.strands[STRANDS - 1] : strandPath(STRANDS - 1, clampedT));
     const backFadeIn = Math.max(0, Math.min(1, (clampedT - 0.40) / 0.40));
     const backOp = backFadeIn * 0.55;
     goldG.setAttribute('opacity', backOp.toFixed(3));
@@ -5012,7 +5075,7 @@ function bridgeMorph(opts){
     notesG.setAttribute('opacity', headOp.toFixed(3));
 
     // Cache head positions (needed for beam endpoints).
-    const positions = MUSIC_BAR.map((_, i) => notePos(i, clampedT));
+    const positions = frame ? frame.notes : MUSIC_BAR.map((_, i) => notePos(i, clampedT));
 
     // Stem geometry helper. Returns the head-attachment x and the stem-tip y
     // for a note at position p with the group-shared stem direction.
@@ -5161,31 +5224,11 @@ function bridgeMorph(opts){
     // reads bold; narrow separation (where the strands cross at the
     // back) fades out. This gives the helix a believable rotational
     // depth without any 3D maths. All cream — no gold/warm-dark.
+    // Per-rung geometry/depth/opacity/stroke-width were hoisted to
+    // init — they're static (helix end-state). Only the group opacity
+    // varies with t. Saves ~70 setAttribute calls per scroll frame.
     const rungOp = Math.max(0, Math.min(1, (clampedT - 0.65) / 0.30));
     rungsG.setAttribute('opacity', rungOp.toFixed(3));
-    for (let i = 0; i < BASE_COUNT; i++){
-      const u = (i + 0.5) / BASE_COUNT;
-      const y = u * H;
-      const wave  = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + 0);
-      const wave2 = Math.sin((y / H) * HELIX_FREQ * Math.PI * 2 + Math.PI);
-      const x1 = CX + wave  * HELIX_AMP;
-      const x2 = CX + wave2 * HELIX_AMP;
-      const ln = rungs[i];
-      ln.setAttribute('x1', x1.toFixed(2));
-      ln.setAttribute('y1', y.toFixed(2));
-      ln.setAttribute('x2', x2.toFixed(2));
-      ln.setAttribute('y2', y.toFixed(2));
-      ln.setAttribute('stroke', 'currentColor');
-      // Depth taper: |Δx| / (2·HELIX_AMP) ∈ [0,1].
-      // Wide rung → bold (1.0); crossed rung → faded (0.18).
-      const sep   = Math.abs(x1 - x2);
-      const norm  = sep / (HELIX_AMP * 2);
-      const depth = 0.18 + 0.82 * norm;
-      ln.setAttribute('opacity', depth.toFixed(3));
-      // Front rungs slightly thicker than crossed ones — visible but
-      // not heavy. Range 0.7 → 1.4 stroke-width.
-      ln.setAttribute('stroke-width', (0.7 + 0.7 * norm).toFixed(2));
-    }
   }
 
   return { render };
@@ -5202,12 +5245,25 @@ function setupHelixMorph(){
   const morphSvg = document.getElementById('morph');
   if (!morphSvg) return;
 
-  // Mobile Safari struggles with high-resolution strand regeneration on every
-  // scroll frame. Halve the strand sample count on small viewports — at the
-  // 60vh display height the visual difference is imperceptible.
+  // Mobile + tablet performance — two switches:
+  //
+  // 1. Sample count: 100 vs 220 strand-segment samples. At the 60vh
+  //    display height the visual difference is imperceptible.
+  // 2. Pre-bake: cache strand path strings + note positions at 41
+  //    discrete t-steps. render() snaps to the nearest cached frame
+  //    and idx-memoizes (skips entirely if the snapped index didn't
+  //    change). Single biggest mobile Safari win — most scroll events
+  //    on a slow drag land on the same idx and become free.
+  //
+  // Both kick in at ≤1180 px so iPad landscape gets them too. Desktop
+  // CPUs handle the dynamic version without dropping frames; skipping
+  // the cache there saves ~250 KB of cached path strings.
   const isSmall = window.matchMedia &&
-                  window.matchMedia('(max-width: 820px)').matches;
-  const morph = bridgeMorph({ samples: isSmall ? 100 : 220 });
+                  window.matchMedia('(max-width: 1180px)').matches;
+  const morph = bridgeMorph({
+    samples: isSmall ? 100 : 220,
+    prebake: isSmall,
+  });
 
   function tintBridge(t){
     // The morph lives on dusk-teal end-to-end now, so the foreground
