@@ -2078,11 +2078,26 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
 .cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
 .cipher-key .key-foot { margin-top: 12px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; line-height: 1.6; }
 .cipher-key .key-decoder { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid currentColor; opacity: 0.95; }
-.cipher-key .key-decoder label {
-  display: block; font-family: var(--mono);
-  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--cream); font-weight: 600; margin-bottom: 6px;
+.cipher-key .key-decoder .key-mode-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 10px; margin-bottom: 6px;
 }
+.cipher-key .key-decoder label {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: inherit; opacity: 0.85; font-weight: 600;
+}
+.cipher-key .key-decoder .key-mode {
+  background: transparent; border: 1px solid currentColor;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.28em;
+  text-transform: uppercase; font-weight: 600;
+  padding: 4px 9px; cursor: pointer;
+  color: inherit; opacity: 0.85;
+  transition: background 200ms ease, opacity 200ms ease;
+  white-space: nowrap;
+}
+.cipher-key .key-decoder .key-mode:hover { opacity: 1; background: rgba(127,127,127,0.12); }
+.cipher-key .key-decoder .key-mode::before { content: "↻ "; opacity: 0.7; }
 .cipher-key .key-decoder input {
   width: 100%;
   background: transparent;
@@ -2091,14 +2106,43 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   padding: 6px 0;
   font-family: var(--mono); font-size: 14px; font-weight: 500;
   color: inherit;
-  caret-color: var(--cream);
+  caret-color: var(--gold);
 }
 .cipher-key .key-decoder input::placeholder { color: currentColor; opacity: 0.45; font-style: italic; }
 .cipher-key .key-decoder .key-output {
-  display: block; margin-top: 8px; min-height: 22px;
-  font-family: var(--mono); font-size: 15px; font-weight: 700;
-  color: var(--cream); letter-spacing: 0.04em; word-break: break-word;
+  display: block; margin-top: 12px; min-height: 56px;
+  padding: 14px 10px;
+  font-family: var(--mono); font-size: 26px; font-weight: 700; line-height: 1.25;
+  color: inherit; letter-spacing: 0.14em; word-break: break-word;
+  text-align: center;
+  border: 1px dashed currentColor;
+  opacity: 0.95;
 }
+.cipher-key .key-decoder .key-output:empty::before {
+  content: "—";
+  opacity: 0.30; font-size: 20px; letter-spacing: 0; font-weight: 400;
+}
+.cipher-key .key-decoder .key-hint {
+  margin-top: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--gold);
+  background: rgba(201,169,97,0.12);
+  color: inherit;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  text-align: center; line-height: 1.5;
+  opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0;
+  border-width: 0;
+  overflow: hidden;
+  transition: opacity 360ms ease, max-height 360ms ease,
+              padding 360ms ease, border-width 200ms ease;
+  pointer-events: none;
+}
+.cipher-key .key-decoder .key-hint.show {
+  opacity: 1; max-height: 80px;
+  padding: 9px 10px; border-width: 1px;
+}
+.cipher-key .key-decoder .key-hint .gold { color: var(--gold); font-size: 13px; }
 
 /* ---------- §8 Footer — TYPESET MASTHEAD COLOPHON (Site Polish) ----------
    Replaces the prior 4-column WordPress-style grid with a single
@@ -4488,6 +4532,22 @@ function buildFooterCipher(){
 
 function buildKey(){
   const key = document.getElementById('cipherKey');
+  const REVERSE_CIPHER = Object.fromEntries(ALPHABET.map(L => [CIPHER[L], L]));
+  const decChar = (g) => REVERSE_CIPHER[g] || g;
+  // Trigger phrases (letters only, uppercased) that reveal the ‡ hunt.
+  const TRIGGERS = new Set([
+    'FOLLOWTHEBEETLE', 'GOLDBUG', 'GOLDENINSECT',
+    'GOLDBUGVARIATIONS', 'ATGC', 'GFED'
+  ]);
+  const normLetters = (s) => (s || '').toUpperCase().replace(/[^A-Z]/g, '');
+
+  function nudgeEggBadge(){
+    const badge = document.getElementById('eggProgress');
+    if (!badge) return;
+    badge.classList.add('visible');
+    badge.dataset.nudged = '1';
+  }
+
   function expand(){
     key.classList.remove('collapsed'); key.classList.add('expanded');
     const cells = ALPHABET.map(L =>
@@ -4498,20 +4558,65 @@ function buildKey(){
         <span>POE · <b>SUBSTITUTION KEY</b></span>
         <span class="x" aria-label="Close">×</span>
       </div>
-      <div class="key-decoder">
-        <label for="keyDecode">Try it — encode a message</label>
+      <div class="key-decoder" data-mode="encode">
+        <div class="key-mode-row">
+          <label for="keyDecode">Try it — <span class="key-mode-label">encode a message</span></label>
+          <button type="button" class="key-mode" aria-label="Toggle encode / decode">
+            <span class="key-mode-text">DECODE</span>
+          </button>
+        </div>
         <input id="keyDecode" type="text" autocomplete="off" spellcheck="false" maxlength="80" placeholder="your message">
         <output class="key-output" aria-live="polite"></output>
+        <div class="key-hint" aria-live="polite">
+          <span class="gold">‡</span> &nbsp;Five glyphs hidden in the typography &nbsp;<span class="gold">‡</span>
+        </div>
       </div>
       <div class="key-grid">${cells}</div>
       <div class="key-foot">After E. A. Poe — "The Gold-Bug" — Dollar Newspaper, Philadelphia, 21 June 1843. Twenty-six glyphs · twenty-six letters · one buried thing.</div>`;
     key.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); collapse(); });
-    const input = key.querySelector('#keyDecode');
-    const output = key.querySelector('.key-output');
+
+    const decoder  = key.querySelector('.key-decoder');
+    const input    = key.querySelector('#keyDecode');
+    const output   = key.querySelector('.key-output');
+    const hint     = key.querySelector('.key-hint');
+    const modeBtn  = key.querySelector('.key-mode');
+    const modeText = key.querySelector('.key-mode-text');
+    const modeLbl  = key.querySelector('.key-mode-label');
+
     const renderOutput = () => {
       const text = input.value;
-      output.textContent = [...text].map(c => c === ' ' ? ' ' : encChar(c)).join('');
+      if (decoder.dataset.mode === 'encode'){
+        output.textContent = [...text].map(c => c === ' ' ? ' ' : encChar(c)).join('');
+        const norm = normLetters(text);
+        if (norm.length >= 4 && TRIGGERS.has(norm)){
+          hint.classList.add('show');
+          nudgeEggBadge();
+        } else {
+          hint.classList.remove('show');
+        }
+      } else {
+        // Decode: glyphs → plaintext. Untranslatable chars pass through.
+        output.textContent = [...text].map(c => c === ' ' ? ' ' : decChar(c)).join('');
+        hint.classList.remove('show');
+      }
     };
+
+    const toggleMode = () => {
+      const isEncode = decoder.dataset.mode === 'encode';
+      decoder.dataset.mode = isEncode ? 'decode' : 'encode';
+      modeText.textContent = isEncode ? 'ENCODE' : 'DECODE';
+      modeLbl.textContent  = isEncode ? 'decode a message' : 'encode a message';
+      input.placeholder    = isEncode ? 'paste glyphs (‡ † ¶ …)' : 'your message';
+      input.value = '';
+      output.textContent = '';
+      hint.classList.remove('show');
+      input.focus();
+    };
+
+    modeBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMode(); });
+    ['click','pointerdown','keydown'].forEach(ev =>
+      modeBtn.addEventListener(ev, e => e.stopPropagation())
+    );
     input.addEventListener('input', renderOutput);
     // Stop bubbling so the panel's outer click-to-collapse handler doesn't
     // fire when interacting with the input.
