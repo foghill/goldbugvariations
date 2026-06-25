@@ -2073,7 +2073,14 @@ body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
   padding: 8px 4px;
   border: 1px solid currentColor;
   opacity: 0.85;
+  cursor: pointer;
+  user-select: none;
+  transition: background 150ms ease, opacity 150ms ease, transform 150ms ease;
 }
+.cipher-key .key-cell:hover {
+  opacity: 1; background: rgba(201,169,97,0.18);
+}
+.cipher-key .key-cell:active { transform: scale(0.96); }
 .cipher-key .key-cell .sym { color: var(--cream); font-weight: 700; font-size: 14px; line-height: 1; }
 .cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
 .cipher-key .key-foot { margin-top: 12px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; line-height: 1.6; }
@@ -4623,6 +4630,29 @@ function buildKey(){
     ['click','pointerdown','keydown'].forEach(ev =>
       input.addEventListener(ev, e => e.stopPropagation())
     );
+
+    // Click the alphabet grid as a typeable keyboard. Encode mode types
+    // the letter (output renders its glyph); decode mode types the glyph
+    // (output renders the letter). Inserted at the caret position.
+    const keyGrid = key.querySelector('.key-grid');
+    keyGrid.addEventListener('pointerdown', e => e.stopPropagation());
+    keyGrid.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cell = e.target.closest('.key-cell');
+      if (!cell) return;
+      const letter = cell.querySelector('.let').textContent;
+      const glyph  = cell.querySelector('.sym').textContent;
+      const ch = decoder.dataset.mode === 'encode' ? letter : glyph;
+      const start = input.selectionStart ?? input.value.length;
+      const end   = input.selectionEnd   ?? input.value.length;
+      const v = input.value;
+      input.value = v.slice(0, start) + ch + v.slice(end);
+      const pos = start + ch.length;
+      input.focus();
+      try { input.setSelectionRange(pos, pos); } catch(_) {}
+      renderOutput();
+    });
+
     setTimeout(() => input.focus(), 50);
   }
   function collapse(){
