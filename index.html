@@ -333,8 +333,13 @@ input[type="email"], input[type="text"], textarea {
   text-shadow:
     0 1px 0 var(--title-gold-2),
     0 2px 8px rgba(20, 14, 0, 0.18);
-  white-space: nowrap;
-  width: max-content;
+  /* Title used `white-space: nowrap; width: max-content;` for the
+     one-line treatment — that overflows iPad landscape (1024–1180 px)
+     where the clamp sits around 70 px and "THE GOLD BUG VARIATIONS"
+     runs ~1000 px wide against ~942 px of content area, clipping the
+     final "S". Letting it wrap naturally keeps the title on one line
+     at real desktop widths (where it fits comfortably) and breaks
+     BUG / VARIATIONS on tablet when the text would otherwise clip. */
 }
 .tagline {
   /* Bumped beyond Postcard Noon spec — tagline now sits visibly
