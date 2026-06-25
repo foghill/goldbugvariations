@@ -3188,9 +3188,19 @@ top: -40px; left: 8px;
   .topbar .doc { gap: 14px; font-size: 12px; }
   .hero-grid { grid-template-columns: repeat(6, 1fr); }
   .tagline { grid-column: 1 / -1; }
-  .title { font-size: 68px; }
-  .title .row.r2 { padding-left: 0; }
-  .title .row.r3 { text-align: left; }
+  /* The desktop title is `white-space: nowrap` + clamp(48px, 7vw, 96px).
+     At the 48 px floor "THE GOLD BUG VARIATIONS" runs ~600 px wide and
+     gets cropped on every phone. Drop nowrap on mobile so it wraps on
+     the natural space between BUG and VARIATIONS, and scale the font
+     down to fit comfortably from a 320 px floor up through tablet. */
+  .title {
+    font-size: clamp(36px, 11vw, 56px);
+    white-space: normal;
+    width: auto;
+    max-width: 100%;
+    line-height: 0.96;
+  }
+  .hero-zone { width: auto; }
   /* §2 transition desk handles its own mobile reflow via its own
      820px media query inside the .transition-desk block above. */
   .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
