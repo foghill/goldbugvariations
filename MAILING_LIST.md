@@ -56,7 +56,7 @@ land in your sheet within a couple seconds of submit.
 
 ## 4 · Paste the URL into the site
 
-In `goldbug-variations.html`, find the `<head>` line:
+In `src/app.html`, find the `<head>` line:
 
 ```html
 <meta name="signup-endpoint" content="">
