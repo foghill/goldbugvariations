@@ -1,0 +1,3153 @@
+/* ============================================================
+   GOLD BUG VARIATIONS — combined site
+   Tokens & globals (paper / ink palettes)
+   Cipher cursor + cursor trail
+   §1  Hero (paper)
+   §2  Bridge (music staff → DNA double-helix scroll morph)
+   §3  Thematic cards (four / four / two)
+   §4  Mystery hook
+   §5  Detective board (walnut desk + cards + beetle)
+   §6  Tools (director, partners, production note, pull quote)
+   §7  Signup (Join the search)
+   §8  Footer
+   Cipher key, mobile
+   ============================================================ */
+
+/* ---------- Tokens ----------
+   Site Polish v5 — gold-budget enforced. Gold appears on EXACTLY two
+   things site-wide: the Gold Bug character (.beetle gradient) and the
+   vinyl record label (.canister .label-strip). Every other "gold" UI
+   accent — section labels, link hovers, footer column heads, cipher-key
+   widget, easter-egg badge, focus outlines — uses cream or dusk-teal.
+
+   Palette swatches taken verbatim from Site Polish Brief.md. */
+:root {
+  /* Sky / atmosphere (hero + return-to-sky panel) */
+  --sky-top:      #a3c2cb;   /* dusty pale teal */
+  --sky-bottom:   #7a9faa;   /* denser teal */
+  --dusk-teal:    #2a4458;   /* below-the-sky dark — replaces near-black */
+
+  /* Paper / ink / cream */
+  --cloud-body:   #f0e8d6;   /* warm cream highlight, also the "cream" UI token */
+  --cream:        #f0e8d6;   /* alias — explicit name for non-cloud uses */
+  --cloud-shadow: #b3c3c9;
+  --paper:        #ede4cd;   /* warm cream for desk artifacts */
+  --paper-2:      #E8DEC0;
+  --paper-rule:   #C8B98C;
+  --ink:          #1f1a16;   /* warm near-black for display type */
+  --ink-2:        #3a3128;
+  --ink-rule:     #2A3A55;
+  --bone:         #F0E6D2;
+
+  /* Desk surface (case-file) — kept warm walnut, lamp-light added in §6 */
+  --walnut:       #2B2620;
+  --walnut-2:     #1B1814;
+  --walnut-rule:  #4a3d2a;
+
+  /* Gold — RESERVED for bug + vinyl ONLY (see comment above). */
+  --gold:         #c9a961;
+  --gold-warm:    #C9A227;
+  --gold-bright:  #D4AF37;
+
+  /* Title gold — deep antique embossed-foil tone for the hero title and
+     a handful of book-cover accents. Sits warm against the dusty-teal
+     sky, harmonises with the brass push-pins in the case-file board. */
+  --title-gold:   #a07c1e;
+  --title-gold-2: #8a6618;     /* shadow tint for letter depth */
+
+  /* Cork — bulletin-board surface in §4 (replaces walnut). Warm tan
+     with a slight grain. */
+  --cork:         #c8975a;     /* v6: warmer + brighter (was #b88a4a) */
+  --cork-2:       #a87740;     /* v6: warmer (was #9a6f33) */
+  --cork-shadow:  #6a4520;
+
+  /* v7 — full token set from the reference style guide. Walnut tones,
+     paper variants, ink hues, gold accents, and the two reds (red
+     string for the detective yarn, confidential for stamps + STOP). */
+  --walnut-deep:  #1F1B16;
+  --walnut-warm:  #3A322A;
+  --paper-dim:    #E8DCC0;
+  --paper-yellow: #E5D4A8;
+  --paper-ink:    #2A2520;
+  --ink-blue:     #1F3A5F;
+  --ink-faded:    #4A3F30;
+  --red-string:   #8B2418;
+  --confidential: #6B1410;
+
+  /* Stamps & grain */
+  --stamp-red:    #b34a3a;
+  --grain-tint:   rgb(242,230,199);
+
+  /* EB Garamond — warm Italian serif, italic-friendly. Stardos Stencil
+     is the display face (titles); Allerta Stencil is the micro-label
+     face (credits, eyebrows). Archivo & JetBrains Mono retained for
+     legacy detective-board pieces. */
+  --serif:   "EB Garamond", "Charter", "Source Serif Pro", Georgia, serif;
+  --stencil: "Stardos Stencil", "Stencil Std", "Arial Black", sans-serif;
+  --label:   "Allerta Stencil", "Stardos Stencil", "Arial Narrow", sans-serif;
+  --grot:    "Archivo", "Söhne", Inter, system-ui, sans-serif;
+  --mono:    "JetBrains Mono", "Courier Prime", ui-monospace, Menlo, monospace;
+  --hand:    "Caveat", cursive;
+
+  --col-gap: 24px;
+  --margin: clamp(20px, 4vw, 80px);
+  --rail-inset: clamp(16px, 2.4vw, 44px);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; background: var(--sky-top); }
+body {
+  /* SUBTLE sky breathing — only 3 stops, only the existing
+     sky-top + sky-bottom palette tokens. No deeper-middle.
+     sky-bottom IS the "darker blue" the user asked for; pushing
+     past it into deeper teals introduced perceptible color steps
+     that read as bands inside the clouds (mix-blend-mode: screen
+     amplifies any underlying gradient shift). 3-stop gradient is
+     the smoothest possible interpolation: sky-top → sky-bottom →
+     sky-top, no kinks anywhere. */
+  background: linear-gradient(180deg,
+    var(--sky-top)     0%,
+    var(--sky-bottom) 50%,
+    var(--sky-top)   100%);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  position: relative;     /* anchors body::before clouds across the whole document */
+}
+::selection { background: var(--ink); color: var(--cloud-body); }
+
+/* ---------- Cipher cursor + trail (warm-ink on the new sky) ---------- */
+body, .hero, .bridge {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%231f1a16'>%E2%80%A1</text></svg>") 14 14, auto;
+}
+a, button, .toggle, .key, .word, summary, [role="button"], input[type="submit"], .audio-btn {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><text x='14' y='20' text-anchor='middle' font-family='monospace' font-weight='700' font-size='22' fill='%231f1a16'>%E2%80%A0</text></svg>") 14 14, pointer;
+}
+input[type="email"], input[type="text"], textarea {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='28' viewBox='0 0 12 28'><line x1='6' y1='2' x2='6' y2='26' stroke='%231f1a16' stroke-width='2'/></svg>") 6 14, text;
+}
+.investigation, .investigation * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%23F0E6D2' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(240,230,210,0.08)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%23F0E6D2' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+}
+.trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 40;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.55;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* ---------- Cipher rendering ---------- */
+.cipher {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.ch { display: inline-block; transition: color 220ms ease; }
+.ch.solved { color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit; }
+.word { display: inline-block; }
+.word.solved:hover .ch { color: var(--ink); font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; opacity: 0.75; }
+.sp { display: inline-block; width: 0.32em; }
+
+/* Card-back decoded state: keep the mono cipher typography (font / weight /
+   letter-spacing) but swap the color from gold to the surrounding body
+   colour, so the decoded text doesn't shrink back to small serif. */
+.decoded-mono { font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em; }
+.decoded-mono .ch.solved {
+  color: inherit; font-family: inherit; font-weight: inherit; letter-spacing: inherit;
+}
+
+/* ---------- §1 Hero — Postcard-Noon painterly-cloud composition ----------
+   Layer stack (bottom → top, all full-bleed, absolutely positioned):
+     1. Sky gradient    (linear: --sky-top → --sky-bottom)
+     2. Cloud SVG       (4 painterly groups, each ovals passed through
+                         feTurbulence + feDisplacementMap + feGaussianBlur)
+     3. Film grain      (low-opacity overlay-blended noise)
+     4. Vignette        (corner-darken radial gradient)
+     5. Type stack      (centred title + EB Garamond italic subtitle +
+                         Allerta Stencil credit) */
+.hero {
+  /* Background removed — body gradient now provides the sky. The hero
+     keeps its painterly cloud SVG (.sky-clouds) on top of the body
+     clouds for the feature-cloud composition at the top of the page.
+     Height tightened from 100vh → 78vh so the polaroid triptych below
+     sits visibly closer to the title without losing the cloud-float
+     reading zone. */
+  position: relative;
+  min-height: 78vh;
+  background: transparent;
+  color: var(--ink);
+  z-index: 2;
+  overflow: hidden;
+}
+/* Site-wide painterly cloud SVG — moved out of .hero to body level so
+   the same painterly clouds drift across every section, not just the
+   hero. Position absolute on body, full document height; viewBox
+   stretches via preserveAspectRatio="none" so the cloud distribution
+   maps proportionally to body height. */
+.sky-clouds {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero .grain {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+.hero::after {
+  /* Vignette disabled — was rgba(20,32,42,0.32) at the hero's bottom
+     edge; the body gradient continues without that darkening below
+     the hero, producing a visible band. The Postcard Noon spec calls
+     for a vignette only when the hero is its own canvas; in this
+     site, the hero blends into the body gradient end-to-end. */
+  content: none;
+}
+.topbar {
+  position: relative; z-index: 4;
+  padding: 22px var(--margin) 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.75;
+}
+.topbar .doc { display: flex; gap: 28px; flex-wrap: wrap; }
+
+.hero-zone {
+  /* Type-reading zone — moved up from 54% to 42% so the title sits
+     in the upper-third of the hero (matching the brochure cover) and
+     the polaroids below feel adjacent rather than far below. */
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--margin));
+  text-align: center;
+}
+.title {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(48px, 7vw, 96px);
+  letter-spacing: 0.04em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  margin: 0;
+  /* Deep antique gold reads as embossed book-cover foil on the dusty
+     teal sky. Subtle dark gold inset shadow gives the letters a touch
+     of depth without going metallic-chrome. */
+  color: var(--title-gold);
+  text-shadow:
+    0 1px 0 var(--title-gold-2),
+    0 2px 8px rgba(20, 14, 0, 0.18);
+  /* Title used `white-space: nowrap; width: max-content;` for the
+     one-line treatment — that overflows iPad landscape (1024–1180 px)
+     where the clamp sits around 70 px and "THE GOLD BUG VARIATIONS"
+     runs ~1000 px wide against ~942 px of content area, clipping the
+     final "S". Letting it wrap naturally keeps the title on one line
+     at real desktop widths (where it fits comfortably) and breaks
+     BUG / VARIATIONS on tablet when the text would otherwise clip. */
+}
+.tagline {
+  /* Bumped beyond Postcard Noon spec — tagline now sits visibly
+     larger than the directed-by credit beneath it (clamp 18px →
+     32px italic Garamond vs the credit's stencil clamp 15–18px).
+     Italic delicate type can read smaller than blockier stencil
+     caps at the same px, so we push tagline up a notch to win
+     the comparison. */
+  margin: 18px auto 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.35;
+  color: var(--ink);
+  opacity: 0.92;
+  max-width: 56ch;
+}
+.tagline em { font-style: italic; }
+.credit {
+  /* Bumped from 12px / opacity 0.7 to a more present 18px clamp /
+     opacity 0.85 since the topbar's "A Film by Mark A. Levinson"
+     line was removed — the directed-by credit now does that work
+     under the title. */
+  margin-top: 38px;
+  font-family: var(--label);
+  font-size: clamp(15px, 1.5vw, 18px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.85;
+}
+/* Hero entrance — title fades up; the subtitle and credit each ride
+   in on their own painterly cloud puff, drifting from offscreen left
+   and settling under the title. The puff is a soft cream radial
+   gradient layered behind the text via the ::before pseudo. Drift
+   in, then HOLD — Movement III's clouds drift more actively. */
+.title, .topbar, .scroll-cue {
+  opacity: 0;
+  animation: heroFadeIn 900ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+.title   { animation-delay: 160ms; }
+.topbar  { animation-delay: 200ms; }
+.scroll-cue { animation-delay: 1700ms; }
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-zone .title { transform: translateY(8px); }
+
+/* Each cloud-borne line sits inside its own positioning context so the
+   ::before puff can float behind the text. Display block + margin auto
+   so they stack vertically + centre under the title; padding gives the
+   cloud puff room to breathe behind the type. */
+.tagline, .credit {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: calc(100vw - 4 * var(--margin));
+  margin-left: auto;
+  margin-right: auto;
+  padding: 14px 36px;
+  opacity: 0;
+  transform: translateX(-32vw);
+  animation: cloudFloatIn 1500ms cubic-bezier(.16,.7,.22,1) forwards;
+}
+.tagline { animation-delay: 600ms; }
+.credit  { animation-delay: 1100ms; }
+
+.tagline::before, .credit::before {
+  content: "";
+  position: absolute;
+  inset: -18% -18%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 60% 70% at 38% 42%,
+      rgba(240, 232, 214, 0.78),
+      rgba(240, 232, 214, 0.55) 45%,
+      rgba(240, 232, 214, 0.0) 75%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+@keyframes cloudFloatIn {
+  0%   { opacity: 0; transform: translateX(-32vw); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title, .tagline, .credit, .topbar, .scroll-cue {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.6;
+  z-index: 4;
+  text-align: center;
+  animation: cueBlink 2.4s ease-in-out infinite;
+}
+.scroll-cue .arrow { display: block; margin-top: 8px; font-size: 14px; }
+@keyframes cueBlink { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+/* ---------- §2 Bridge / Transition desk: section now transparent;
+   body gradient + cloud layer provide the sky beneath the polaroids. */
+.bridge {
+  position: relative;
+  height: 180vh;          /* tall scroll lane: t = 0 → 1 across this section */
+  background: transparent;
+  z-index: 2;
+}
+.bridge::before {
+  /* Disabled — section-bound cloud-puff highlights created visible
+     rectangle edges at the bridge boundaries. The body-level
+     .sky-clouds SVG already provides clouds across the entire page. */
+  content: none;
+}
+/* ---------- §2 Transition desk (the new bridge) ----------
+   Sky → dusk-teal vertical floor; three polaroid photos tilted across
+   the seam, each carrying one beat of the threefold theme; a Bach
+   blurb on a tracing-paper slip below the polaroids. The .bridge-aria
+   audio button keeps its old fixed-position spot (defined further
+   down the file). The .bridge-caption span is reused as the tracing-
+   paper slip so the third easter-egg ‡ glyph anchor still resolves. */
+.transition-desk {
+  /* Override .bridge's tall sticky-scroll lane — no morph anymore.
+     Tightened in v5.3: dropped the tall min-height (cards drive
+     the section height) and trimmed vertical padding so the
+     polaroids sit closer to the hero above + the music-morph below. */
+  height: auto;
+  padding: clamp(36px, 5vh, 70px) var(--margin) clamp(36px, 5vh, 70px);
+  display: block;
+  isolation: isolate;
+}
+.transition-desk .td-head {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto clamp(40px, 5vh, 60px);
+  color: var(--cloud-body);
+}
+.transition-desk .td-eyebrow {
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--cloud-body);
+  opacity: 0.92;
+}
+.transition-desk .td-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--cloud-body);
+  opacity: 0.72;
+  margin-top: 6px;
+}
+
+.td-polaroids {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 2vw, 36px);
+  align-items: center;
+  justify-items: center;
+}
+
+.td-polaroid {
+  --polaroid-w: clamp(220px, 24vw, 320px);
+  width: var(--polaroid-w);
+  margin: 0;
+  padding: 16px 16px 56px;       /* tall bottom strip — real polaroid proportions */
+  background: var(--cloud-body);
+  box-shadow:
+    0 18px 36px rgba(8,14,22,0.55),
+    0 3px 6px rgba(8,14,22,0.35);
+  display: flex; flex-direction: column;
+  position: relative;
+  transition: transform 220ms ease;
+  will-change: transform;
+}
+.td-polaroid .td-photo {
+  /* Portrait photo area on a slightly warmer cream than the polaroid
+     body, with an inset hairline rectangle — matches the artboards. */
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: var(--paper);
+  overflow: hidden;
+  display: block;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+}
+.td-polaroid .td-photo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.td-polaroid .td-photo .td-photo-sub {
+  /* Italic Garamond subtitle that sits INSIDE the photo (below the
+     illustration), e.g. "— Aria · BWV 988 —", "A · T · G · C".
+     Bumped scale per reference — was clamp(11–14), now 16–20px. */
+  position: absolute;
+  left: 0; right: 0; bottom: 10%;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.5vw, 20px);
+  color: var(--ink);
+  opacity: 0.92;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+.td-polaroid .td-cap {
+  margin: 14px 0 0;
+  text-align: center;
+  font-family: var(--label);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.td-polaroid .td-cap-num { display: block; }
+.td-polaroid .td-cap-sub {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  opacity: 0.72;
+}
+/* Per-polaroid tilts — A leans left, B nearly flat, C leans right.
+   Each card uses a custom property --p-rot for its resting tilt so
+   the staggered-arrival transition can drift from offset+0deg to
+   landed+tilt without fighting the resting transform. */
+.td-pa { --p-rot: -5deg;  --p-ty: 8px;   }
+.td-pb { --p-rot: 2.5deg; --p-ty: -12px; }
+.td-pc { --p-rot: 6deg;   --p-ty: 0px;   }
+.td-polaroid {
+  transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+}
+
+/* Sequential arrival — each card drifts up + fades in. The .td-arrive
+   class is added by an IntersectionObserver in setupPolaroidArrival()
+   once the triptych enters the viewport; staggered delays make the
+   cards appear "in order of arrival". */
+.td-polaroid {
+  opacity: 0;
+  transform:
+    translate(var(--p-tx-from, 0), calc(var(--p-ty, 0px) + 36px))
+    rotate(0deg);
+  transition:
+    opacity 700ms cubic-bezier(.2,.7,.2,1),
+    transform 900ms cubic-bezier(.2,.7,.2,1);
+}
+.td-pa { --p-tx-from: -28vw; }
+.td-pb { --p-tx-from: 0; }
+.td-pc { --p-tx-from: 28vw; }
+
+.td-polaroid.td-arrive {
+  opacity: 1;
+  transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+}
+.td-pa.td-arrive { transition-delay: 0ms,   0ms; }
+.td-pb.td-arrive { transition-delay: 260ms, 260ms; }
+.td-pc.td-arrive { transition-delay: 520ms, 520ms; }
+
+.td-polaroid:hover {
+  transform: translateY(-4px) rotate(0deg) scale(1.02);
+  z-index: 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-polaroid {
+    opacity: 1;
+    transition: none;
+    transform: translateY(var(--p-ty, 0px)) rotate(var(--p-rot, 0deg));
+  }
+}
+
+/* The Bach blurb tracing-paper slip — sits below the polaroids. */
+.transition-desk .bridge-caption.td-blurb {
+  /* Override the legacy sticky bridge-caption layout entirely. */
+  position: relative;
+  top: auto; left: auto;
+  grid-column: auto;
+  justify-self: auto;
+  align-self: auto;
+  text-align: left;
+  max-width: 720px;
+  margin: clamp(48px, 7vh, 80px) auto 0;
+  padding: 22px 28px;
+  background: rgba(240, 232, 214, 0.86);
+  box-shadow: 0 8px 22px rgba(8,14,22,0.45);
+  transform: rotate(-1.5deg);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.transition-desk .bridge-caption.td-blurb .cap-body { margin: 0; }
+
+@media (max-width: 820px) {
+  .td-polaroids {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .td-pa { --p-rot: -2deg; --p-ty: 0; }
+  .td-pb { --p-rot: 2deg;  --p-ty: 0; }
+  .td-pc { --p-rot: -1deg; --p-ty: 0; }
+  .td-pa, .td-pb, .td-pc { --p-tx-from: 0; }
+}
+
+/* ---------- §2b Music → DNA helix morph (restored) ----------
+   Standalone scroll lane between the transition desk and the thematic
+   section. Sits on dusk-teal (continuous with the desk above and the
+   thematic floor below). The renderer (bridgeMorph + setupHelixMorph,
+   §B in the script) reactivates the moment #morph is back in the DOM. */
+.music-morph {
+  /* Section transparent — body gradient is darkest at this y-position
+     (the morph lives in the dusk-teal middle band, ~30–45% of body
+     height), so the cream helix pops naturally against it.
+     Scroll lane trimmed from 160vh → 120vh in v5.3 — was generating
+     ~700px of empty sky between the polaroids and the helix. */
+  position: relative;
+  height: 120vh;          /* scroll lane: t = 0 → 1 */
+  background: transparent;
+  color: var(--cloud-body);
+  z-index: 2;
+  isolation: isolate;
+}
+.mm-stage {
+  position: sticky;
+  top: 0;
+  height: 88vh;
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 380px) 1fr;
+  align-items: start;
+  padding-top: clamp(20px, 3vh, 50px);
+  pointer-events: none;
+}
+.mm-caption {
+  position: sticky;
+  top: 24vh;
+  grid-column: 1;
+  justify-self: end;
+  align-self: start;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 1.7vw, 24px);
+  line-height: 1.45;
+  color: var(--cloud-body);
+  opacity: 0.92;
+  max-width: 320px;
+  padding: 0 var(--margin) 0 0;
+  margin: 0;
+  text-align: right;
+}
+.mm-cap-body { margin: 0; }
+.mm-svg-wrap {
+  grid-column: 2;
+  height: 78vh;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+  position: relative;
+  color: var(--cloud-body);
+}
+#morph {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+#morph .clef-glyph {
+  font-family: 'Bravura Text', 'Apple Symbols', 'Noto Music', 'Segoe UI Symbol',
+               'STIX Two Math', 'Cambria Math', serif;
+  font-weight: 400;
+  font-size: 200px;
+  fill: currentColor;
+  dominant-baseline: alphabetic;
+  text-anchor: start;
+}
+@media (max-width: 820px) {
+  .music-morph { height: 140vh; }
+  .mm-stage { grid-template-columns: 1fr; padding: 0 24px; }
+  .mm-caption {
+    grid-column: 1;
+    justify-self: center;
+    text-align: center;
+    max-width: 100%;
+    padding: 12vh 0 0;
+    position: relative; top: auto;
+  }
+  .mm-svg-wrap { grid-column: 1; height: 60vh; }
+}
+
+.bridge-aria {
+  position: fixed;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 55;
+  pointer-events: auto;
+  transition: opacity 0.4s ease;
+}
+body.is-music-morph .bridge-aria {
+  /* Music morph IS the music, visually — a live "AUDIO ON" pill
+     overlaid on the helix would be redundant + obtrusive. */
+  opacity: 0;
+  pointer-events: none;
+}
+body.is-footer .bridge-aria {
+  /* Footer is the page's typeset colophon — don't overlap the
+     © MMXXVI / Site No. 0001 legal line with the audio pill. */
+  opacity: 0;
+  pointer-events: none;
+}
+/* Hero / investigation / closing / signup all KEEP the audio pill
+   visible — the user reported "I don't see the audio pill anywhere"
+   because v5 had been hiding it on those four contexts too. */
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(240,232,214,0.94);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 10px 18px;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+body.is-investigation .audio-btn {
+  background: var(--walnut-2);
+  color: var(--cloud-body);
+  border-color: var(--cloud-body);
+}
+.audio-btn .audio-label {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  gap: 3px; line-height: 1.1;
+}
+.audio-btn .audio-meta {
+  font-size: 10px; font-weight: 400;
+  letter-spacing: 0.36em;
+  color: var(--ink);
+  opacity: 0.75;
+}
+.audio-btn .audio-status {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.18em;
+  color: inherit;
+}
+body.is-investigation .audio-btn .audio-meta { color: var(--cloud-body); opacity: 0.85; }
+.audio-btn .glyph {
+  display: inline-flex; align-items: end; gap: 2px;
+  height: 14px;
+}
+.audio-btn .bar {
+  display: inline-block;
+  width: 3px;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: bottom;
+  transform: scaleY(.4);
+}
+body.is-investigation .audio-btn .bar { background: var(--cloud-body); }
+.audio-btn.playing .bar { animation: eq 1s ease-in-out infinite; }
+.audio-btn.playing .b1 { animation-delay: 0s; }
+.audio-btn.playing .b2 { animation-delay: .15s; }
+.audio-btn.playing .b3 { animation-delay: .35s; }
+.audio-btn.playing .b4 { animation-delay: .25s; }
+@keyframes eq { 0%,100% { transform: scaleY(.4); } 50% { transform: scaleY(1.2); } }
+
+/* ---------- §5 Case file: cork BULLETIN BOARD + paper artifact cards
+   Movement II is the deliberate visual "variation" the director called
+   for. We swap the dusk-teal surface for a warm cork board so the
+   middle section reads as a distinct chapter from the sky in I + III.
+   Cards are now PINNED to the cork via brass dome push-pins (see
+   .artifact::before). The red string / desk-vignette mechanics are
+   retired here. */
+.investigation {
+  /* v7 — desk surface lifted DIRECTLY from the reference. Four layers
+     composited in this order (top → bottom):
+       1. Warm corner vignette
+       2. Wood-grain streaks #1  (91° angle, narrow gold + dark bands)
+       3. Wood-grain streaks #2  (89° angle, hairline dark bands every 23 px)
+       4. Three radial knot/blotch shadows
+       5. Linear-gradient base (walnut-warm → walnut → walnut-deep)
+     ::before adds an SVG fractal-noise overlay at mix-blend-mode: overlay.
+     ::after adds an inset 200 px box-shadow for the desk-edge falloff. */
+  position: relative;
+  background:
+    /* 1) warm vignette */
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%),
+    /* 2) wood grain — long faint streaks */
+    repeating-linear-gradient(91deg,
+      rgba(255,220,170,0.018) 0px,
+      rgba(255,220,170,0.018) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(0,0,0,0.04) 7px,
+      rgba(0,0,0,0.04) 9px,
+      transparent 9px,
+      transparent 19px),
+    /* 3) hairline planks every 23 px */
+    repeating-linear-gradient(89deg,
+      rgba(40,20,10,0.10) 0px,
+      rgba(40,20,10,0.10) 1px,
+      transparent 1px,
+      transparent 23px),
+    /* 4) knots / blotches */
+    radial-gradient(ellipse 120px 40px at 22% 30%, rgba(20,10,5,0.25), transparent 70%),
+    radial-gradient(ellipse 180px 50px at 78% 65%, rgba(20,10,5,0.22), transparent 70%),
+    radial-gradient(ellipse 90px 30px at 45% 85%, rgba(20,10,5,0.18), transparent 70%),
+    /* 5) base */
+    linear-gradient(135deg, var(--walnut-warm) 0%, var(--walnut) 50%, var(--walnut-deep) 100%);
+  color: var(--paper);
+  z-index: 2;
+  overflow: hidden;
+}
+.investigation::before {
+  /* Fractal-noise overlay — same SVG turbulence as the reference,
+     mix-blend-mode: overlay at 0.35 opacity. */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.08  0 0 0 0 0.05  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.investigation::after {
+  /* Desk-edge inner shadow — heavy inset box-shadow so the cards
+     in the centre sit in a clear pool of light against dark edges. */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 200px rgba(0,0,0,0.6),
+    inset 0 0 60px rgba(0,0,0,0.4);
+}
+/* Decorative red string + bottom-left "LAST UPDATED" dot removed
+   in v7.1 per director feedback. Both were atmospheric but read as
+   noise against the dark wood. */
+.desk {
+  position: relative;
+  z-index: 2;
+  padding: clamp(60px, 10vh, 100px) var(--margin) clamp(40px, 6vh, 80px);
+}
+.desk-head {
+  position: relative;
+  z-index: 3;
+  margin-bottom: clamp(30px, 5vh, 60px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding: 0 var(--rail-inset);
+  max-width: 1560px;
+}
+
+/* .deco-telegram + .deco-envelope CSS removed in v7.4 with the DOM. */
+
+/* Bottom-corner desk labels (v3 reference). LAST UPDATED / FOLLOW
+   THE BEETLE on the bottom-left; ↺ RESET DESK on the bottom-right.
+   Decorative — the gold beetle is real (it scurries via setupBeetle);
+   the reset is a visual cue to the v3 detective-desk vibe. */
+.desk-footnotes {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(20px, 3vh, 32px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--rail-inset);
+  max-width: 1560px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(240, 230, 210, 0.42);
+}
+.desk-footnotes .df-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.desk-footnotes .df-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--stamp-red);
+  box-shadow: 0 0 6px rgba(170, 50, 38, 0.55);
+}
+.desk-footnotes .df-right {
+  border: 1px solid rgba(240, 230, 210, 0.28);
+  padding: 8px 14px;
+  border-radius: 2px;
+}
+
+/* Upper-right typeset case-file marque (per the v3 reference). */
+.desk-tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.85;
+  color: rgba(240, 230, 210, 0.55);
+}
+.desk-tag .tag-line { display: block; }
+.desk-tag .tag-line span { color: var(--gold-bright); }
+.desk-tag .tag-line.accent { color: var(--stamp-red); opacity: 0.85; }
+.desk-tag .tag-line.muted  { color: rgba(240, 230, 210, 0.42); }
+/* Cork board head — single short label in ink-leaning brown stencil.
+   The verbose "§ 04 · Brooklyn Public Library · 1985 · Three readers"
+   copy was design-doc shorthand; replaced with "Jan O'Deigh's Case File." */
+.desk-head {
+  /* Override the legacy grid alignment to a simple inline row so the
+     reset button sits to the right of the label. */
+  z-index: 3;
+}
+.desk-head .marque {
+  font-family: var(--label);
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(240, 230, 210, 0.6);
+  line-height: 1.4;
+}
+.desk-head .marque b {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 32px);
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  display: inline-block;
+}
+.desk-head .sub { display: none; }   /* legacy copy retired */
+.desk-head .reset-btn {
+  background: transparent;
+  border: 1px solid rgba(31, 26, 22, 0.45);
+  color: rgba(31, 26, 22, 0.75);
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  padding: 9px 14px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.desk-head .reset-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: rgba(255, 250, 230, 0.35);
+}
+
+.case-board {
+  position: relative;
+  height: 760px;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+/* Hint lives inside .desk-head now (above the case-board) so cards
+   in the board can't cover it. Was previously position: absolute at
+   top: 26 / right: 40% with z-index 5 — artifact cards (z 10+)
+   overlapped it. */
+.hint {
+  margin-top: 6px;
+  font-family: var(--hand);
+  font-size: clamp(18px, 1.8vw, 24px);
+  color: rgba(240, 230, 210, 0.72);
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+.hint.fade { opacity: 0; }
+
+.red-string-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.85;
+}
+
+/* Scattered ghost cipher symbols on the desk wood — only visible inside the
+   magnifying-glass cursor's radius. Z-index 1 so cards (10+) sit on top. */
+.desk-cipher {
+  /* Hidden on cork — the ghost-cipher mechanic belonged to the
+     walnut-desk magnifying-glass cursor. On the bulletin board the
+     paper artifacts speak for themselves. Kept the rule (display:
+     none) so legacy JS that queries .desk-cipher remains a no-op. */
+  display: none;
+}
+.desk-cipher .ghost-ch { display: none; }
+
+/* ---------- Generic artifact ---------- */
+.artifact {
+  position: absolute;
+  perspective: 1200px;
+  z-index: 10;
+  transition: transform 0.3s cubic-bezier(.4,.1,.4,1), filter 0.3s;
+  /* Shadow tightened up — cards are now PINNED to cork at close range,
+     not hovering over a deep walnut field. Closer = softer + smaller. */
+  filter: drop-shadow(0 6px 12px rgba(40, 26, 8, 0.42))
+          drop-shadow(0 1px 2px rgba(40, 26, 8, 0.32));
+}
+
+/* Brass dome push-pin centred at the top of each card. Pure CSS — a
+   small radial gradient produces the "lit metal dome" highlight, an
+   inset dark crescent provides the underside shadow. The two paper-clip
+   variants (.pin-clip, .pin-clip-red) replace the pin on the journal +
+   newspaper cards for variety. */
+.artifact::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%,
+      #ffe7a0 0%,
+      #d3a04a 38%,
+      #8a5e1a 80%,
+      #5a3a0a 100%);
+  box-shadow:
+    0 2px 4px rgba(40, 26, 8, 0.55),
+    inset 0 -2px 3px rgba(40, 18, 0, 0.5),
+    inset 1px 1px 2px rgba(255, 240, 200, 0.45);
+  z-index: 12;
+  pointer-events: none;
+}
+/* A second pin variant — red-headed thumbtack — used to highlight one
+   or two cards (the encrypted message + the Pulitzer note read as
+   "look at me" pieces). */
+.artifact.pin-red::before {
+  background:
+    radial-gradient(circle at 35% 30%,
+      #f7b6a8 0%,
+      #c84a3a 38%,
+      #7c1b14 80%,
+      #4a0a06 100%);
+  box-shadow:
+    0 2px 4px rgba(40, 6, 4, 0.55),
+    inset 0 -2px 3px rgba(20, 0, 0, 0.55),
+    inset 1px 1px 2px rgba(255, 220, 210, 0.42);
+}
+/* v7.2 — flip mechanic switched from 3D rotateY to a scaleX
+   shrink-swap. The 3D version (transform-style: preserve-3d +
+   rotateY on .face + rotateY on .side.back) was leaking back-face
+   overflow outside the card box in Chromium when the back content
+   was taller than the card (the punch card's "A quarter century
+   later…" paragraph specifically). Style guide confirms the
+   reference uses scaleX shrink-swap for exactly this reason: it
+   "keeps the back a normal block so native scrolling works."
+
+   How it works:
+   - .face is a plain 2D box (no preserve-3d).
+   - During flip, .artifact.flipping → .face animates scaleX(1)→0
+     over 220ms.
+   - At ~mid-anim, JS toggles .flipped, which display:none's the
+     front and display:block's the back.
+   - .flipping is removed → .face animates scaleX(0)→1.
+   - Result: card flips in place, back is a normal block flow, any
+     overflow is naturally clipped by the .side's overflow:hidden. */
+.artifact .face {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform 0.22s cubic-bezier(.4,.1,.4,1);
+  transform-origin: center center;
+}
+.artifact.flipping .face { transform: scaleX(0); }
+
+.artifact .side {
+  position: absolute; inset: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.artifact .side.front { display: block; }
+.artifact .side.back  { display: none; overflow-y: auto; overflow-x: hidden; }
+.artifact.flipped .side.front { display: none; }
+.artifact.flipped .side.back  {
+  display: block;
+  /* v7.3 — smooth fade-in on the back so the narrative text doesn't
+     pop in. Pairs with the scaleX shrink-swap timing on .face: the
+     back becomes visible at the midpoint of the flip, then fades
+     from 0 → 1 opacity over 200 ms as the .face scales back up. */
+  animation: artifactBackFade 280ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes artifactBackFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.artifact .side.back {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(31,26,22,0.35) transparent;
+}
+.artifact .side.back::-webkit-scrollbar { width: 6px; }
+.artifact .side.back::-webkit-scrollbar-thumb { background: rgba(31,26,22,0.35); border-radius: 3px; }
+.artifact .side.back::-webkit-scrollbar-track { background: transparent; }
+.artifact.dragging { transition: none !important; filter: drop-shadow(0 22px 32px rgba(0,0,0,0.7)); }
+
+.paper-tex {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.04) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.3 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #e8d9b0;
+}
+
+/* 1) Notebook */
+.notebook { width: 340px; height: 480px; left: 1%; top: 40px; transform: rotate(-3deg); }
+.notebook .side {
+  /* Lab-notebook paper: warmer cream with COOL BLUE horizontal rules.
+     Rule cadence bumped from 30px → 38px to match the larger body
+     line-height so each line still sits ON a blue rule. */
+  padding: 38px 36px;
+  font-family: var(--serif);
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 37px, rgba(122,159,170,0.32) 37px 38px),
+    var(--paper);
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.12);
+  display: flex;
+  flex-direction: column;
+}
+/* v6 — handwritten notebook front. Caveat replaces the typeset serif
+   on the title + body lines so the page reads as Ressler's actual
+   hand. Mono ATGC sequences keep their typewriter face for the
+   coded vs. handwritten contrast on the page. */
+.notebook .nb-head {
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 4px;
+  letter-spacing: 0;
+  transform: rotate(-1deg);
+}
+.notebook .nb-date {
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 24px;
+  font-weight: 400;
+  color: rgba(31,26,22,0.72);
+  margin-bottom: 26px;
+  transform: rotate(-1deg) translateX(2px);
+}
+.notebook .nb-line {
+  font-family: var(--hand), 'Caveat', cursive;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 38px;          /* matches the 37/38 px rule cadence
+                                  so each line sits ON a blue rule */
+  color: var(--ink);
+  margin: 0;
+}
+.notebook .nb-line.tilt   { transform: rotate(-1.4deg) translateX(-2px); }
+.notebook .nb-line.indent { padding-left: 36px; }
+.notebook .nb-line.italic { font-style: italic; }
+.notebook .nb-line u {
+  text-decoration: underline;
+  text-decoration-color: var(--ink);
+  text-underline-offset: 3px;
+}
+/* Mono ATGC strands — typewritten, NOT handwritten, so the difference
+   between "what's printed" and "what Ressler writes" is visible. */
+.notebook .nb-mono {
+  font-family: 'Special Elite', 'Courier Prime', ui-monospace, Menlo, monospace;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 38px;
+  color: var(--ink);
+  margin: 0;
+}
+.notebook .nb-mono.faded { color: rgba(31,26,22,0.6); }
+.notebook .nb-arrow { color: var(--stamp-red); font-style: normal; }
+
+/* Back face — single beat-line per card. Centred, breathing room. */
+.notebook .back  { padding: 40px 36px; overflow-y: auto; }
+.notebook .back .story,
+.canister .back  .story,
+.punch-card .back .story,
+.catalog .back   .story {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* 2) Polaroid (microscope) — taller so the director's note fits when
+   rendered as decoded mono on the back side. */
+/* .polaroid microscope CSS removed in v5-cleanup — the DOM node was
+   deleted in this same pass (was hidden by display:none in the v5
+   commit). */
+
+/* 3) Catalog card */
+.catalog { width: 480px; height: 340px; right: 2%; top: 380px; transform: rotate(3deg); }
+.catalog .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.32 0 0 0 0.20 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    var(--paper);
+  padding: 30px 36px;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.10);
+}
+.catalog .cat-num {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.22em; color: #6e5a32;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(31,26,22,0.32);
+  padding-bottom: 10px;
+}
+.catalog h4 {
+  font-family: var(--mono); font-size: 19px; font-weight: 700; letter-spacing: 0.06em;
+  color: #2a2218; margin: 22px 0 14px;
+}
+.catalog .cat-body {
+  font-family: var(--serif); font-size: 20px; line-height: 1.5; color: #3a2e1c;
+}
+.catalog .cat-body em { color: var(--stamp-red); font-style: italic; }
+.catalog .cat-stamp {
+  position: absolute;
+  right: 28px; bottom: 22px;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em;
+  color: rgba(140,40,30,0.55);
+  border: 1.5px solid rgba(140,40,30,0.55);
+  padding: 6px 12px;
+  transform: rotate(-8deg);
+}
+.catalog .back { padding: 34px 36px; font-family: var(--serif); font-size: 19px; line-height: 1.55; color: #2a2218; background: var(--paper); }
+.catalog .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.2em; color: #5a3a14; margin: 0 0 14px; }
+
+/* 5) Film canister + audio
+   Ring is a sibling of label-strip (was a parent) so it can spin on its own
+   while the label and play button stay put on top — like a record turning
+   under a fixed label. */
+/* Canister — spinning vinyl disc with a paper label dead-centre.
+   Click the play disc → the ring underneath spins (via .playing
+   class added by setupAriaAudio). Restored from v3/v4 in v5.5 after
+   the v5 torn-staff snippet lost the iconic record look. */
+.canister {
+  width: 320px; height: 320px;
+  left: 25%; top: 90px;
+  transform: rotate(2deg);
+  z-index: 11;
+}
+.canister .side {
+  background: radial-gradient(circle at 50% 50%,
+    #c8b88f 0%,
+    #b8a878 60%,
+    #9c8c5e 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+}
+.canister .ring {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  background:
+    /* Asymmetric light sweep — so the rotation is visible. */
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(240,232,214,0.18) 25deg,
+      rgba(240,232,214,0.32) 55deg,
+      rgba(240,232,214,0.18) 85deg,
+      transparent 130deg,
+      transparent 200deg,
+      rgba(240,232,214,0.10) 240deg,
+      transparent 280deg
+    ),
+    /* Concentric ink grooves on the cream disc body. */
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 6px, rgba(31,26,22,0.08) 6px 7px, transparent 7px 14px),
+    radial-gradient(circle, #b3a371 30%, #a39259 32%, #b3a371 34%, #a39259 36%, #b3a371 38%, #a39259 60%, #b3a371 62%);
+}
+.canister .label-strip {
+  /* Cream paper "label" stamped onto the disc centre. */
+  position: absolute;
+  inset: 22% 9%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--paper);
+  border-radius: 50%;
+  text-align: center;
+  padding: 20px;
+  z-index: 2;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.22);
+}
+.canister .label-strip .top {
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--ink); opacity: 0.72;
+  margin-bottom: 8px;
+}
+.canister .label-strip .mid {
+  font-family: var(--stencil); font-weight: 700;
+  font-size: 30px; line-height: 1;
+  text-transform: uppercase;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.canister .label-strip .bot {
+  font-family: var(--serif); font-style: italic;
+  font-size: 18px; color: var(--ink); opacity: 0.78;
+  margin-top: 8px;
+}
+.canister .play-indicator {
+  /* Ink outline + ink play arrow on cream paper — quiet but obvious. */
+  margin-top: 18px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+  pointer-events: auto;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.canister .play-indicator:hover {
+  background: rgba(31,26,22,0.08);
+  border-color: var(--ink);
+  transform: scale(1.08);
+}
+.canister .play-indicator svg { width: 24px; height: 24px; fill: var(--ink); }
+.canister.playing .ring { animation: spinSlow 6s linear infinite; }
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.canister .back {
+  background: radial-gradient(circle at 50% 50%,
+    #d8c89c 0%,
+    #c8b88f 60%,
+    #b3a371 100%);
+  border-radius: 50%;
+  padding: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  color: var(--ink);
+}
+.canister .back h4 {
+  font-family: var(--label); font-size: 14px;
+  letter-spacing: 0.32em; color: var(--ink);
+  margin: 0 0 16px; opacity: 0.72;
+}
+.canister .back p {
+  font-family: var(--serif); font-size: 18px;
+  font-style: italic; line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+/* 6) Cast list — DOM node removed in v5; CSS deleted in v5-cleanup. */
+
+/* 7) Leibniz quote — small paper note, tilted, ink stamp on the bottom.
+   Positioning lives in the v5-cleanup block further down; only the
+   visual styling (background, type, layout) is defined here. */
+.leibniz .side {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.03)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.32 0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>"),
+    var(--paper);
+  padding: 26px 30px;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.10);
+}
+.leibniz .eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(140,40,30,0.7);
+  margin-bottom: 8px;
+}
+.leibniz blockquote {
+  margin: 0;
+  font-family: var(--serif); font-style: italic;
+  font-size: 18px; line-height: 1.45;
+  color: #2a2218;
+}
+.leibniz cite {
+  display: block;
+  margin-top: 12px;
+  font-style: normal;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.18em;
+  color: #5a3a14;
+}
+.leibniz .back { padding: 28px 30px; font-family: var(--serif); font-size: 16px; color: #2a2218; background: var(--paper); line-height: 1.5; }
+
+/* 8) Tools card — DOM removed in v5; content moved to Movement III's
+   .cc-director cloud. CSS deleted in v5-cleanup. */
+
+/* ---------- v5.2 cork-board card layout ----------
+   Reference layout from the director. Two bands, no overlap:
+     Top    (y 30-660)    notebook L · leibniz M (high) · catalog R
+     Bottom (y 540-1040)  aria-snip L · news-clip M (tall) · punch-card R
+   Case-board height tightened below to remove dead cork. */
+.leibniz {
+  width: 320px; height: 240px;
+  left: 37%; top: 240px;
+  transform: rotate(-5deg);
+}
+
+.news-clip {
+  /* Centred between aria-snip (L) and punch-card (R). The tall card
+     anchors the bottom row; ~20px x-gaps on either side. */
+  width: 400px; height: 500px;
+  left: 41%; top: 540px;
+  transform: rotate(2deg);
+  z-index: 11;
+}
+.news-clip .side {
+  background:
+    linear-gradient(180deg, #e3d9bd 0%, #d5c9a6 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.32 0 0 0 0.32 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+  background-blend-mode: multiply;
+  padding: 24px 26px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+  /* Torn upper-left edge */
+  clip-path: polygon(
+    0% 6%, 4% 0%, 12% 4%, 22% 1%, 32% 5%, 40% 0%, 48% 6%, 58% 1%,
+    68% 4%, 78% 0%, 88% 5%, 100% 0%,
+    100% 100%, 0% 100%
+  );
+}
+.news-clip .np-masthead {
+  font-family: var(--label); font-size: 12px;
+  letter-spacing: 0.34em; text-transform: uppercase;
+  color: rgba(42,34,24,0.78);
+}
+.news-clip .np-rule {
+  height: 2px; background: rgba(42,34,24,0.7);
+  margin: 10px 0 18px;
+}
+.news-clip .np-headline {
+  font-family: 'Stardos Stencil', serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 0 16px;
+  color: #1f1a16;
+}
+.news-clip .np-byline {
+  font-family: var(--serif); font-style: italic;
+  font-size: 15px; opacity: 0.78;
+  margin: 0 0 14px;
+}
+.news-clip .np-body {
+  font-family: var(--serif); font-size: 17px; line-height: 1.5;
+  column-count: 1; margin: 0; color: #2a2218;
+}
+.news-clip .back {
+  background: #e0d5b3;
+  padding: 30px 30px;
+  color: #2a2218;
+  font-family: var(--serif); font-size: 18px; line-height: 1.55;
+}
+.news-clip .back h4 {
+  font-family: var(--label);
+  font-size: 13px; letter-spacing: 0.32em;
+  color: var(--ink); opacity: 0.78;
+  margin: 0 0 14px;
+}
+
+/* Sheet music — Aria from the Goldberg Variations (front), Cast
+   sheet (back). Added in v7.5 per director request. Restyled to
+   match the desk's paper aesthetic; back's CAST list uses the
+   established Courier Prime + EB Garamond italic pair. */
+.sheet {
+  width: 360px; height: 260px;
+  left: 38%; top: 440px;
+  transform: rotate(4deg);
+  z-index: 11;
+}
+.sheet .side {
+  background: #EFE3C7;
+  background-image:
+    radial-gradient(circle at 75% 30%, rgba(140, 80, 30, 0.15) 0%, transparent 30%),
+    radial-gradient(circle at 25% 80%, rgba(100, 60, 20, 0.10) 0%, transparent 35%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+  padding: 16px 18px;
+  color: #2A2520;
+}
+.sheet h4 {
+  font-family: 'EB Garamond', serif;
+  font-style: italic; font-weight: 500;
+  font-size: 16px;
+  margin: 0 0 2px;
+  text-align: center;
+  color: #2A2520;
+}
+.sheet .composer {
+  font-family: 'EB Garamond', serif;
+  font-size: 11px;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #4a3f30;
+  letter-spacing: 1px;
+}
+.sheet .ink-stain {
+  position: absolute;
+  width: 68px; height: 38px;
+  background: radial-gradient(ellipse, rgba(20, 30, 60, 0.55), rgba(20, 30, 60, 0.25) 50%, transparent 75%);
+  border-radius: 50%;
+  top: 56px; right: 24px;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+.sheet .back {
+  background: #EFE3C7;
+  padding: 22px 22px 30px;
+  color: #2A2520;
+}
+.sheet .back h4 {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  margin: 0 0 12px;
+  border-bottom: 1px solid #2A2520;
+  padding-bottom: 6px;
+  text-align: left;
+  font-style: normal;
+  color: #2A2520;
+}
+.sheet .back .cast-row {
+  font-family: 'EB Garamond', serif;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.sheet .back .cast-row > div {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.sheet .back .cast-role {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #6B1410;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.sheet .back em {
+  font-style: italic;
+  font-size: 13px;
+  color: #2A2520;
+}
+.sheet .back .ann {
+  font-family: 'Courier Prime', 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #6B1410;
+  margin-top: 16px;
+  border-top: 1px dashed #6B1410;
+  padding-top: 8px;
+}
+
+.punch-card {
+  width: 380px; height: 280px;
+  left: 49%; top: 60px;
+  transform: rotate(-2deg);
+  z-index: 11;
+}
+.punch-card .side {
+  background: #ddc798;
+  padding: 16px 22px;
+  color: #1f1a16;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.18);
+  position: relative;
+}
+.punch-card .pc-corner {
+  /* Cut-off top-left corner — the iconic IBM 5081 detail. */
+  position: absolute;
+  top: 0; left: 0;
+  width: 28px; height: 28px;
+  background: var(--cork);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.punch-card .pc-head {
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.22em;
+  color: rgba(31,26,22,0.78);
+  margin-bottom: 12px;
+  margin-left: 32px;
+}
+.punch-card .pc-grid {
+  /* Twelve rows × 80 columns — render as a dense field of tiny rect
+     "holes" with a CSS background. Two patterns: an empty bias-tone
+     and a punched-out sparse pattern. */
+  height: 110px;
+  background:
+    radial-gradient(circle, rgba(31,26,22,0.9) 0.8px, transparent 1.3px),
+    var(--paper);
+  background-size: 12px 9px;
+  background-position: 4px 4px;
+  border: 1px solid rgba(31,26,22,0.25);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(31,26,22,0.1);
+}
+.punch-card .pc-grid::after {
+  /* A handful of bigger "punches" — actual data holes — overlaid on
+     the dot field. */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle, rgba(31,26,22,0.95) 2.2px, transparent 2.8px);
+  background-size: 24px 18px;
+  background-position: 8px 8px;
+  opacity: 0.45;
+}
+.punch-card .pc-foot {
+  font-family: var(--serif); font-style: italic;
+  font-size: 15px;
+  color: rgba(31,26,22,0.78);
+  margin-top: 10px;
+  text-align: right;
+}
+.punch-card .back {
+  background: #d8c590;
+  padding: 26px 28px;
+  color: #1f1a16;
+  font-family: var(--serif); font-size: 17px; line-height: 1.55;
+}
+.punch-card .back h4 {
+  font-family: var(--label); font-size: 13px;
+  letter-spacing: 0.32em; color: var(--ink);
+  margin: 0 0 14px; opacity: 0.78;
+}
+
+/* .poe-card / .pulitzer-card / .enc-card CSS removed in v5.1 — DOM
+   nodes deleted in this same pass per director feedback. */
+
+/* 9) Current Leads card — DOM removed in v5; content moved to
+   Movement III's .cc-milestones cloud. CSS deleted in v5-cleanup. */
+
+/* 9) Envelope / signup — featured CTA, big and centered at the bottom of the desk */
+.envelope {
+  width: min(900px, 94vw);
+  height: 440px;
+  transform: rotate(-1.5deg);
+  z-index: 30;
+}
+.envelope .side {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,200,100,0.18) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.05)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.25 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #ddc99e;
+  padding: 52px 64px 46px;
+  color: #2a2218;
+  box-shadow: inset 0 0 0 1px rgba(120,90,40,0.25), 0 16px 28px rgba(0,0,0,0.4);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "eyebrow stamp"
+    "title   stamp"
+    "intro   intro"
+    "form    form";
+  column-gap: 36px;
+  row-gap: 6px;
+}
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(31,26,22,0.22);
+  pointer-events: none;
+}
+.envelope .eyebrow {
+  grid-area: eyebrow;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 500;
+}
+.envelope h2 {
+  grid-area: title;
+  font-family: var(--grot);
+  font-stretch: 125%;
+  font-weight: 700;
+  font-size: clamp(46px, 5.8vw, 68px);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: #2a2218;
+  margin: 10px 0 20px;
+  max-width: 14ch;
+}
+.envelope h2 em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: 100%;
+  text-transform: lowercase;
+  color: var(--ink);
+  letter-spacing: 0;
+}
+.envelope p.intro {
+  grid-area: intro;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.5;
+  margin: 0 0 28px;
+  max-width: 56ch;
+  color: #3a2e1c;
+}
+.envelope p.intro em { color: var(--ink); font-style: italic; }
+.envelope form {
+  grid-area: form;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #2a2218;
+  padding: 0;
+  gap: 0;
+}
+.envelope input {
+  flex: 1;
+  background: transparent;
+  border: 0; outline: 0;
+  font-family: var(--serif);
+  font-size: 24px;
+  padding: 14px 0;
+  color: #2a2218;
+}
+.envelope input::placeholder { color: rgba(42,34,24,0.45); font-style: italic; }
+.envelope button {
+  background: transparent; border: 0;
+  font-family: var(--mono); font-size: 14px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink);
+  padding: 14px 0 14px 24px;
+  cursor: pointer;
+}
+.envelope button:hover { color: #2a2218; }
+.envelope .stamp {
+  grid-area: stamp;
+  position: relative; top: auto; right: auto;
+  width: 108px; height: 132px;
+  background:
+    radial-gradient(circle at 50% 38%, #b48030 0%, #b48030 28%, transparent 30%),
+    repeating-linear-gradient(45deg, transparent 0 5px, rgba(120,90,40,0.4) 5px 6px),
+    #d4c193;
+  border: 2.5px dashed #5a3a14;
+  align-self: start;
+  display: block;
+}
+.envelope .stamp::after {
+  content: "‡";
+  position: absolute;
+  top: 38%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 44px;
+  color: #f4ecd6;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+.envelope .ok {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  display: none;
+  font-family: var(--hand);
+  font-size: 36px;
+  color: #5a3a14;
+  align-self: center;
+}
+.envelope.success form { display: none; }
+.envelope.success .ok { display: block; }
+.envelope .back {
+  padding: 50px 56px;
+  background: #d8c697;
+  color: #2a2218;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.envelope .back h4 { font-family: var(--mono); font-size: 14px; letter-spacing: 0.22em; color: #5a3a14; margin: 0 0 18px; }
+.envelope .back p { margin: 0 0 14px; }
+
+/* ---------- Beetle ---------- */
+.beetle {
+  position: fixed;
+  width: 30px; height: 40px;
+  z-index: 100;
+  pointer-events: none;
+  /* Position + rotation are driven per-frame in JS — no CSS transitions
+     here, otherwise small steps would visibly tween into a glide. */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.55));
+  will-change: left, top, transform;
+}
+.beetle.scurrying { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)) drop-shadow(0 0 6px rgba(212,175,55,0.35)); }
+
+/* ---------- §1b Simple-pair retired — its content (Music · Four,
+   Life · Four) is now carried by Polaroid A + Polaroid B of the
+   transition desk below (.transition-desk in §2). */
+
+/* ---------- §3 After-transition cards (love stories + the mystery logline)
+   Two cards, one above the other, asymmetric, sitting on the walnut
+   horizon left by the bridge. The second carries the magnifying-glass
+   reveal that used to live in the standalone hook. */
+.thematic {
+  /* Section transparent — sits on the body gradient's dark middle band
+     between the music-morph above and the case-file below. The
+     magnifier/lens reveal still reads cleanly on the dark sky. */
+  background: transparent;
+  color: var(--cloud-body);
+  padding: clamp(80px, 14vh, 160px) var(--margin);
+  position: relative;
+  overflow: hidden;
+}
+.thematic::before {
+  /* Disabled for the same reason as .bridge::before / .investigation::before
+     — body-level .sky-clouds already covers this region. */
+  content: none;
+}
+.thematic-stage {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(40px, 7vh, 80px);
+}
+.thematic-card {
+  position: relative;
+  padding: clamp(32px, 4.5vw, 56px) clamp(28px, 4vw, 56px);
+  background: var(--cloud-body);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+}
+.thematic-card .eyebrow {
+  display: block;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+.thematic-card .num {
+  display: block;
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(54px, 6.5vw, 88px);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.thematic-card h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.2vw, 32px);
+  line-height: 1.3;
+  margin: 0;
+  color: var(--ink);
+}
+/* Card A (.thematic-card.love) retired — moved to transition-desk
+   Polaroid C. */
+/* Card B — the mystery logline. Now standalone, centered. */
+.thematic-card.logline {
+  justify-self: center;
+  width: min(820px, 96%);
+  transform: rotate(0.5deg);
+  padding-top: clamp(40px, 6vw, 64px);
+}
+.hook-stage {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  cursor: none; /* Hide native cursor inside the stage; the lens IS the cursor. */
+}
+.hook-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 36px);
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+.hook-text .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.hook-text .ch {
+  display: inline-block;
+  position: relative;
+  transition: color 240ms ease-out;
+}
+.hook-text .ch.cipher {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(31,26,22,0.55);
+}
+.hook-text .ch.revealed {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink);
+}
+@media (max-width: 820px) {
+  .thematic-card.logline {
+    justify-self: center;
+    width: 100%;
+    transform: none;
+  }
+}
+
+/* The magnifying glass lens — single inline SVG drawn as one cohesive object.
+   The SVG viewBox is 280x280 with the rim center at (100, 100). The CSS
+   `transform: translate(-100px, -100px)` shifts the SVG so the rim center
+   sits exactly at the cursor coordinates set via left/top from JS. */
+.hook-lens {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  pointer-events: none;
+  transform: translate(-100px, -100px);
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  z-index: 2;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+}
+.hook-lens svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hook-stage.lens-active .hook-lens { opacity: 1; }
+
+/* Touch / no-hover fallback: auto-decrypted */
+@media (hover: none) {
+  .hook-stage { cursor: auto; }
+  .hook-lens { display: none; }
+}
+
+/* Reduced motion: skip the lens cursor; show plaintext immediately */
+@media (prefers-reduced-motion: reduce) {
+  .hook-stage { cursor: auto; }
+  .hook-lens { display: none; }
+}
+/* ---------- §7 Footer + cipher key + mobile ---------- */
+.cipher-key {
+  position: fixed;
+  right: calc(24px + env(safe-area-inset-right, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  background: rgba(240,232,214,0.96);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--mono);
+  backdrop-filter: blur(6px);
+  transition: all 300ms ease;
+}
+body.is-investigation .cipher-key {
+  background: var(--walnut-2);
+  color: var(--cloud-body);
+  border-color: var(--cloud-body);
+}
+.cipher-key.collapsed {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--ink);
+  font-weight: 700;
+}
+body.is-investigation .cipher-key.collapsed { color: var(--cloud-body); }
+.cipher-key.collapsed::after {
+  content: "‡";
+  animation: cueBlink 1.6s ease-in-out infinite;
+}
+.cipher-key.expanded {
+  width: min(420px, 90vw);
+  padding: 18px 20px 20px;
+}
+.cipher-key .key-head {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.cipher-key .key-head b { color: var(--cream); font-weight: 500; opacity: 1; }
+.cipher-key .key-head .x { padding: 2px 6px; }
+.cipher-key .key-head .x:hover { color: var(--cream); }
+.cipher-key .key-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  font-size: 12px;
+}
+.cipher-key .key-cell {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 4px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+  cursor: pointer;
+  user-select: none;
+  transition: background 150ms ease, opacity 150ms ease, transform 150ms ease;
+}
+.cipher-key .key-cell:hover {
+  opacity: 1; background: rgba(201,169,97,0.18);
+}
+.cipher-key .key-cell:active { transform: scale(0.96); }
+.cipher-key .key-cell .sym { color: var(--cream); font-weight: 700; font-size: 14px; line-height: 1; }
+.cipher-key .key-cell .let { font-size: 10px; margin-top: 6px; letter-spacing: 0.1em; }
+.cipher-key .key-foot { margin-top: 12px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; line-height: 1.6; }
+.cipher-key .key-decoder { margin: 0 0 14px; padding: 0 0 14px; border-bottom: 1px solid currentColor; opacity: 0.95; }
+.cipher-key .key-decoder .key-mode-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 10px; margin-bottom: 6px;
+}
+.cipher-key .key-decoder label {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: inherit; opacity: 0.85; font-weight: 600;
+}
+.cipher-key .key-decoder .key-mode {
+  display: inline-flex;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(127,127,127,0.05);
+}
+.cipher-key .key-decoder .key-mode-opt {
+  background: transparent; border: 0; color: inherit;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em;
+  text-transform: uppercase; font-weight: 700;
+  padding: 4px 11px; cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 180ms ease, background 180ms ease, color 180ms ease;
+  white-space: nowrap;
+}
+.cipher-key .key-decoder .key-mode-opt:hover { opacity: 0.85; }
+.cipher-key .key-decoder .key-mode-opt.is-active {
+  opacity: 1; background: var(--gold); color: var(--ink);
+}
+.cipher-key .key-decoder .key-mode-opt.is-active:hover { opacity: 1; }
+.cipher-key .key-decoder input {
+  width: 100%;
+  background: transparent;
+  border: 0; outline: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 6px 0;
+  font-family: var(--mono); font-size: 14px; font-weight: 500;
+  color: inherit;
+  caret-color: var(--gold);
+}
+.cipher-key .key-decoder input::placeholder { color: currentColor; opacity: 0.45; font-style: italic; }
+.cipher-key .key-decoder .key-output {
+  display: block; margin-top: 12px; min-height: 56px;
+  padding: 14px 10px;
+  font-family: var(--mono); font-size: 26px; font-weight: 700; line-height: 1.25;
+  color: inherit; letter-spacing: 0.14em; word-break: break-word;
+  text-align: center;
+  border: 1px dashed currentColor;
+  opacity: 0.95;
+}
+.cipher-key .key-decoder .key-output:empty::before {
+  content: "—";
+  opacity: 0.30; font-size: 20px; letter-spacing: 0; font-weight: 400;
+}
+.cipher-key .key-decoder .key-hint {
+  margin-top: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--gold);
+  background: rgba(201,169,97,0.12);
+  color: inherit;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  text-align: center; line-height: 1.5;
+  opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0;
+  border-width: 0;
+  overflow: hidden;
+  transition: opacity 360ms ease, max-height 360ms ease,
+              padding 360ms ease, border-width 200ms ease;
+  pointer-events: none;
+}
+.cipher-key .key-decoder .key-hint.show {
+  opacity: 1; max-height: 80px;
+  padding: 9px 10px; border-width: 1px;
+}
+.cipher-key .key-decoder .key-hint .gold { color: var(--gold); font-size: 13px; }
+
+/* ---------- §8 Footer — TYPESET MASTHEAD COLOPHON (Site Polish) ----------
+   Replaces the prior 4-column WordPress-style grid with a single
+   centered narrow column on dusk-teal. Reads like the back colophon
+   of a 1985 small-press paperback. Allerta Stencil micro-labels, EB
+   Garamond italic body, hairline rules between sections. The Poe
+   cipher row at the very bottom stays — recolored cream at 0.7
+   opacity per the gold-budget rule. */
+footer.masthead {
+  /* Background removed — footer sits on the body gradient's bright
+     bottom band (sky-bottom → sky-top). Text recolored cream → ink
+     throughout the masthead so it reads against the light sky. */
+  position: relative; z-index: 3;
+  background: transparent;
+  color: var(--ink);
+  padding: clamp(60px, 10vh, 100px) var(--margin) clamp(40px, 6vh, 70px);
+}
+.mast-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mast-rule {
+  border: 0;
+  height: 1px;
+  background: rgba(31,26,22,0.22);     /* ink hairline on light sky */
+  margin: clamp(28px, 4vh, 44px) auto;
+  width: 100%;
+}
+.mast-title {
+  margin: 0;
+}
+.mast-eyebrow {
+  font-family: var(--label);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.78;
+}
+.mast-h {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(36px, 4.2vw, 52px);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 14px 0 10px;
+}
+.mast-h em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-stretch: 100%;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+.mast-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(19px, 1.7vw, 23px);
+  color: var(--ink);
+  opacity: 0.82;
+}
+
+.mast-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.mast-row {
+  width: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  padding: 18px 0;
+}
+.mast-lbl {
+  font-family: var(--label);
+  font-size: 14px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.78;
+}
+.mast-val {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 1.7vw, 25px);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(31,26,22,0.32);
+  padding-bottom: 3px;
+  transition: border-color 180ms ease, opacity 180ms ease;
+}
+.mast-val:hover { border-bottom-color: var(--ink); opacity: 0.92; }
+.mast-divider {
+  height: 1px;
+  width: 36px;
+  background: rgba(31,26,22,0.18);
+  margin: 4px auto;
+}
+
+.mast-sitemap {
+  display: flex; flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  font-family: var(--label);
+  font-size: 14px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.72;
+}
+.mast-sitemap a {
+  color: var(--ink);
+  text-decoration: none;
+  transition: opacity 180ms ease;
+}
+.mast-sitemap a:hover { opacity: 1; }
+.mast-sitemap span { opacity: 0.6; }
+
+.foot-cipher {
+  /* Mockup 04 — typewriter face for the cipher row. Special Elite first;
+     JetBrains Mono / Courier Prime fallbacks keep it stable across
+     Firefox + Safari where Special Elite occasionally hiccups.
+     Recoloured ink-on-sky now that the footer sits on the bright body
+     gradient bottom band. */
+  font-family: "Special Elite", "JetBrains Mono", "Courier Prime", "Courier New", ui-monospace, Menlo, monospace;
+  color: var(--ink);
+  opacity: 0.62;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  font-size: clamp(13px, 1.1vw, 16px);
+  text-align: center;
+  line-height: 1.75;
+  word-break: break-word;
+  user-select: none;
+  padding: 0 clamp(20px, 6vw, 80px);
+  margin: 0;
+  /* Magnifying-glass cursor over the buried message — invites probing. */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='15' cy='15' r='10' fill='none' stroke='%231f1a16' stroke-width='2'/><circle cx='15' cy='15' r='10' fill='rgba(31,26,22,0.10)'/><line x1='23' y1='23' x2='34' y2='34' stroke='%231f1a16' stroke-width='3' stroke-linecap='round'/></svg>") 15 15, zoom-in;
+}
+.foot-cipher::before, .foot-cipher::after {
+  content: "————————";
+  display: block;
+  color: rgba(31,26,22,0.32);
+  margin: 14px 0;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+}
+.foot-cipher .ch { transition: color 220ms ease; }
+.foot-cipher .ch.peek { color: var(--ink); opacity: 1; }
+
+.mast-legal {
+  margin-top: clamp(20px, 3vh, 32px);
+  display: flex; justify-content: space-between;
+  gap: 12px;
+  font-family: var(--label);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.45;
+}
+@media (max-width: 600px) {
+  .mast-legal {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .mast-sitemap { font-size: 13px; gap: 10px 12px; }
+}
+
+/* ====================================================================
+   TYPOGRAPHY ROUND 2 — readability pass for older audience.
+   Lora replaces Cormorant as the body serif (sturdier on screen at body
+   sizes). Floor: body text 18 px / weight 500, labels 13 px / weight
+   600. Card backs and small details bumped specifically below.
+   ==================================================================== */
+
+body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height: 1.55; }
+
+/* ---------- Hero ---------- */
+.topbar { font-size: 14px; font-weight: 500; color: rgba(20,32,46,0.78); }
+.scroll-cue { font-size: 14px; font-weight: 600; }
+
+/* ---------- Bridge ---------- */
+.bridge-caption {
+  font-size: clamp(20px, 1.7vw, 26px);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.audio-btn { font-size: 13px; font-weight: 600; padding: 14px 22px; }
+.audio-btn .audio-meta { font-size: 12px; font-weight: 600; letter-spacing: 0.3em; }
+.audio-btn .audio-status { font-size: 14px; font-weight: 600; }
+
+/* ---------- Investigation desk header ---------- */
+.desk-head .marque { font-size: 14px; font-weight: 500; line-height: 2; color: rgba(240,230,210,0.78); }
+.desk-head .marque b { color: var(--cream); font-weight: 600; }
+.desk-head .sub { font-size: clamp(20px, 1.7vw, 26px); font-weight: 500; }
+.desk-head .reset-btn { font-size: 13px; font-weight: 600; }
+.hint { font-size: 28px; }
+
+/* ---------- Cards (fronts + backs) — uniform readable sizes ----------
+   Notebook front is now header + helix illustration + footer caption
+   (.nb-head / .nb-helix / .nb-foot) — typography defined alongside
+   the layout above. The synopsis lives on the back. */
+.notebook .back { font-size: 19px; line-height: 1.6; font-weight: 500; }
+.notebook .back h3 { font-size: 17px; font-weight: 700; }
+
+.catalog .cat-num { font-size: 14px; font-weight: 600; }
+.catalog h4 { font-size: 19px; font-weight: 700; }
+.catalog .cat-body { font-size: clamp(19px, 1.4vw, 22px); font-weight: 500; line-height: 1.55; }
+.catalog .cat-stamp { font-size: 12px; font-weight: 600; }
+.catalog .back { font-size: 19px; line-height: 1.6; font-weight: 500; }
+.catalog .back h4 { font-size: 14px; font-weight: 600; }
+
+/* Leibniz quote — readable floor */
+.leibniz .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.22em; }
+.leibniz blockquote { font-size: 19px; font-weight: 500; line-height: 1.35; }
+.leibniz cite { font-size: 13px; font-weight: 600; letter-spacing: 0.22em; }
+.leibniz .back { font-size: 18px; line-height: 1.5; font-weight: 500; }
+
+/* ---------- Signup envelope ---------- */
+.signup .envelope .eyebrow { font-size: 13px; font-weight: 600; }
+.signup .envelope p.intro { font-size: clamp(20px, 1.6vw, 24px); font-weight: 500; line-height: 1.5; }
+.signup .envelope input { font-size: clamp(20px, 1.5vw, 24px); font-weight: 500; }
+.signup .envelope button { font-size: 14px; font-weight: 600; }
+
+/* ---------- Footer ---------- */
+/* The 4-column .foot-col / .foot-press-item / .foot-meta layout was
+   retired in Site Polish §8 in favour of the typeset masthead
+   colophon (.masthead .mast-*). Typography for the new layout is
+   defined alongside its layout rules above. */
+
+/* ====================================================================
+   TYPOGRAPHY ROUND 3 — second readability pass for older audience.
+   Round 2 set a 17–22 px floor on cards. Card real estate was still
+   under-used and several blocks (polaroid captions, tools-card body,
+   leibniz back, leads list) were on the hairy edge of readable.
+   This pass bumps body text to 19–22 px, headers to 26–32 px, label
+   captions to 14 px, and bumps weight to 500/600 wherever the mid-grey
+   text sat too thin against cream. Captions inside the photo frame
+   on the transition-desk polaroids also bumped.
+   ==================================================================== */
+
+/* Transition-desk polaroid captions (MUSIC · FOUR / LIFE · FOUR / AND · TWO)
+   — Bumped per the Music · Four reference. Caption now reads at
+   real polaroid-handwriting scale (~22 px stencil), with the italic
+   sub-line slightly smaller. */
+.td-polaroid .td-cap          { font-size: 22px; letter-spacing: 0.32em; margin-top: 22px; }
+.td-polaroid .td-cap-num      { font-weight: 500; }
+.td-polaroid .td-cap-sub      { font-size: 18px; opacity: 0.82; margin-top: 8px; font-weight: 500; }
+.td-polaroid .td-photo-sub    { font-size: clamp(15px, 1.4vw, 19px); opacity: 0.92; }
+
+/* Notebook (front body) — fill the card; readable lab-journal text */
+.notebook .nb-head            { font-size: 22px; }
+.notebook .nb-line            { font-size: 25px; line-height: 38px; font-weight: 500; }
+.notebook .nb-mono            { font-size: 20px; line-height: 38px; }
+
+/* Catalog — Powers library card */
+.catalog .cat-num             { font-size: 15px; font-weight: 600; }
+.catalog h4                   { font-size: 21px; }
+.catalog .cat-body            { font-size: clamp(20px, 1.5vw, 23px); line-height: 1.55; }
+.catalog .cat-stamp           { font-size: 13px; }
+
+/* Leibniz epigraph — small note, but the body should still read clean */
+.leibniz .eyebrow             { font-size: 14px; font-weight: 600; }
+.leibniz blockquote           { font-size: 21px; line-height: 1.4; font-weight: 500; }
+.leibniz cite                 { font-size: 14px; font-weight: 600; }
+.leibniz .back                { font-size: 19px; line-height: 1.55; }
+
+/* Canister vinyl label (legacy — superseded by .canister.aria-snip;
+   block-shaped rules below were no-ops for the new torn-slip layout
+   but kept as a safety net should the legacy .label-strip markup
+   ever return). */
+.canister .label-strip .top   { font-size: 15px; }
+.canister .label-strip .mid   { font-size: 34px; }
+.canister .label-strip .bot   { font-size: 20px; }
+.canister .back               { font-size: 20px; line-height: 1.55; }
+.canister .back p             { font-size: 20px; }
+
+/* Investigation desk header */
+.desk-head .marque            { font-size: 15px; }
+.desk-head .sub               { font-size: clamp(21px, 1.8vw, 28px); }
+
+/* Signup return-to-sky panel */
+.signup .envelope p.intro     { font-size: clamp(21px, 1.8vw, 26px); line-height: 1.55; }
+.signup .envelope input       { font-size: clamp(20px, 1.6vw, 22px); }
+.signup .folio .folio-tag     { font-size: 13px; letter-spacing: 0.42em; }
+.signup .folio .folio-sub     { font-size: clamp(18px, 1.7vw, 22px); }
+.signup .disclaimer           { font-size: 13px; letter-spacing: 0.42em; }
+
+/* News clipping — Urbana Chronicle headline + byline + body */
+.news-clip .np-masthead       { font-size: 14px; opacity: 0.82; }
+.news-clip .np-headline       { font-size: 28px; line-height: 1.2; }
+.news-clip .np-byline         { font-size: 16px; opacity: 0.8; }
+.news-clip .np-body           { font-size: 19px; line-height: 1.55; }
+.news-clip .back              { font-size: 19px; line-height: 1.6; }
+.news-clip .back h4           { font-size: 14px; opacity: 0.82; }
+
+/* Punch card — IBM 5081 head + foot + back description */
+.punch-card .pc-head          { font-size: 14px; }
+.punch-card .pc-foot          { font-size: 17px; }
+.punch-card .back             { font-size: 18px; line-height: 1.6; }
+.punch-card .back h4          { font-size: 14px; opacity: 0.82; }
+
+/* Aria score snippet — eyebrow + bottom title */
+.canister.aria-snip .as-eyebrow { font-size: 19px; }
+.canister.aria-snip .as-title   { font-size: 19px; letter-spacing: 0.14em; }
+
+/* Footer masthead — bumped substantially in v5.4 for older-audience
+   legibility. Labels go to 14 px (from 11-12), the title to 36-52 px
+   (from 28-38), body to 19-23 px (from 15-18), action links to
+   20-25 px (from 16-19), sitemap row to 14 px (from 11). */
+.mast-eyebrow                 { font-size: 14px; }
+.mast-h                       { font-size: clamp(36px, 4.2vw, 52px); }
+.mast-sub                     { font-size: clamp(19px, 1.7vw, 23px); }
+.mast-lbl                     { font-size: 14px; }
+.mast-val                     { font-size: clamp(20px, 1.7vw, 25px); }
+.mast-sitemap                 { font-size: 14px; opacity: 0.72; }
+
+/* ---------- Cipher key + glyphs progress (small fixed widgets) ---------- */
+.cipher-key.collapsed { font-size: 24px; }
+.cipher-key .key-head { font-size: 13px; font-weight: 600; }
+.cipher-key .key-cell .sym { font-size: 18px; font-weight: 700; }
+.cipher-key .key-cell .let { font-size: 13px; font-weight: 600; }
+.cipher-key .key-foot { font-size: 13px; font-weight: 500; line-height: 1.6; }
+.egg-progress { font-size: 14px; font-weight: 600; letter-spacing: 0.22em; }
+
+/* ---------- §7 Signup — RETURN TO THE SKY (Site Polish) ----------
+   The newsletter signup now lives on a return-to-sky panel just above
+   the footer. The film is Aria → 30 Variations → Aria; the page
+   should rhyme, ending where it began. Background is the same dusty
+   teal gradient + painterly cloud composition as the hero, with a
+   FOLIO IV · DA CAPO eyebrow above the envelope. Bottom of the
+   section transitions to dusk-teal so the footer below picks up
+   cleanly. The envelope CTA stays — cream paper card on ink border —
+   but loses the walnut backdrop. */
+/* ---------- §5b Closing clouds — Movement III ----------
+   Cork → sky transition with notes dispersing into cloud puffs above
+   three cloud-borne content blocks: director, synopsis, milestones.
+   Bookends the hero's cloud-text idea. */
+.closing {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(255, 248, 220, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse at 78% 60%, rgba(255, 248, 220, 0.30) 0%, transparent 60%),
+    linear-gradient(180deg, var(--sky-bottom) 0%, var(--sky-top) 90%, var(--sky-top) 100%);
+  padding: 0 var(--margin) clamp(80px, 12vh, 140px);
+  overflow: hidden;
+}
+.close-transition {
+  position: relative;
+  width: 100%;
+  height: clamp(110px, 14vh, 180px);
+  display: block;
+  z-index: 2;
+  margin-bottom: clamp(40px, 6vh, 80px);
+}
+.close-transition svg {
+  display: block;
+  width: 100%; height: 100%;
+}
+.closing-zone {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(48px, 8vh, 96px);
+}
+.cloud-card {
+  position: relative;
+  padding: clamp(28px, 4vw, 52px) clamp(32px, 5vw, 64px);
+  color: var(--ink);
+  text-align: center;
+  max-width: 720px;
+}
+.cloud-card::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 65% 75% at 38% 42%,
+      rgba(240, 232, 214, 0.92),
+      rgba(240, 232, 214, 0.68) 45%,
+      rgba(240, 232, 214, 0.0) 78%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+.cc-eyebrow {
+  font-family: var(--label);
+  font-size: 14px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.78;
+  margin: 0 0 16px;
+}
+.cloud-card h3 {
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: clamp(34px, 3.8vw, 50px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 22px;
+  color: var(--title-gold);
+  text-shadow: 0 1px 0 var(--title-gold-2);
+}
+.cloud-card p {
+  font-family: var(--serif);
+  font-size: clamp(20px, 1.6vw, 24px);
+  line-height: 1.6;
+  margin: 0 0 18px;
+  color: var(--ink);
+}
+.cloud-card p em { font-style: italic; color: var(--title-gold-2); }
+.cloud-card h3 a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(160, 124, 30, 0.32);
+  transition: border-color 180ms ease;
+}
+.cloud-card h3 a:hover { border-bottom-color: var(--title-gold); }
+.cloud-card blockquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(21px, 1.7vw, 26px);
+  line-height: 1.5;
+  color: var(--ink);
+  border-left: 2px solid var(--title-gold);
+  padding-left: 22px;
+  margin: 24px auto 0;
+  max-width: 36ch;
+  text-align: left;
+}
+.cc-tag {
+  font-style: italic;
+  font-size: clamp(18px, 1.4vw, 22px);
+  color: var(--ink);
+  opacity: 0.88;
+  margin-top: 18px;
+}
+.cc-tag span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--label);
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+.cc-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 24px;
+  font-family: var(--serif);
+  text-align: left;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cc-list li {
+  padding: 14px 0;
+  border-bottom: 1px dashed rgba(31,26,22,0.25);
+  font-size: clamp(20px, 1.5vw, 23px);
+  line-height: 1.45;
+}
+.cc-list li:last-child { border-bottom: 0; }
+.cc-list b { display: block; font-weight: 600; color: var(--ink); }
+.cc-list span { font-style: italic; color: rgba(31,26,22,0.78); font-size: 0.85em; }
+.cc-foot {
+  font-style: italic;
+  font-size: clamp(18px, 1.4vw, 22px);
+  margin-top: 18px;
+}
+
+/* Asymmetric layout — each cloud sits in a different lane so the
+   composition reads as scattered, not stacked. */
+.cc-director  { justify-self: start; }
+.cc-powers    { justify-self: center; max-width: 780px; }
+.cc-synopsis  { justify-self: center; max-width: 780px; }
+.cc-milestones{ justify-self: end; }
+
+/* Cloud-drift entrance — each card slides in from offscreen and
+   settles. The IntersectionObserver in setupClosingClouds() adds the
+   .cc-arrive class, triggering the staggered transition. */
+.cloud-card {
+  opacity: 0;
+  transform: translateX(var(--cc-tx-from, -30vw));
+  transition:
+    opacity 1000ms cubic-bezier(.16,.7,.22,1),
+    transform 1400ms cubic-bezier(.16,.7,.22,1);
+}
+.cc-director  { --cc-tx-from: -30vw; }
+.cc-powers    { --cc-tx-from:  30vw; }
+.cc-synopsis  { --cc-tx-from:  30vw; }
+.cc-milestones{ --cc-tx-from: -30vw; }
+
+.cloud-card.cc-arrive {
+  opacity: 1;
+  transform: translateX(0);
+}
+.cc-director.cc-arrive  { transition-delay: 0ms; }
+.cc-powers.cc-arrive    { transition-delay: 320ms; }
+.cc-synopsis.cc-arrive  { transition-delay: 320ms; }
+.cc-milestones.cc-arrive{ transition-delay: 640ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .cc-director, .cc-synopsis, .cc-milestones { justify-self: center; }
+  .cloud-card { --cc-tx-from: 0; }
+  .cloud-card { transform: translateY(20px); }
+}
+
+.signup {
+  /* Section transparent — the body gradient at this y-position is in
+     its "returning-to-sky" upswing, going from mid-teal back through
+     sky-bottom toward sky-top. The signup naturally lands in the
+     bright lower band of the page. */
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  padding: clamp(110px, 14vh, 170px) var(--margin) clamp(110px, 14vh, 170px);
+  overflow: hidden;
+  isolation: isolate;
+}
+.signup::before {
+  /* Cloud overlay removed — body::before clouds now cover the entire
+     page including the signup. Empty rule kept as a hook for future
+     section-specific tinting. */
+  content: none;
+}
+/* Tiny gold bug top-right — sole authorized gold per gold-budget rule.
+   Pure decoration; pointer-events:none so it doesn't block clicks. */
+.signup .sky-bug {
+  position: absolute;
+  top: clamp(110px, 16vh, 180px);
+  right: clamp(80px, 14vw, 200px);
+  width: 28px; height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  transform: rotate(18deg);
+  opacity: 0.85;
+}
+.signup .sky-bug svg { width: 100%; height: 100%; display: block; }
+.signup .folio {
+  /* Sits on the LIGHT sky band of the body gradient — every text
+     element uses ink for legibility on light blue. */
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto clamp(40px, 6vh, 70px);
+}
+.signup .folio .folio-tag {
+  display: inline-block;
+  font-family: var(--label);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  padding: 6px 0;
+  opacity: 0.78;
+}
+.signup .folio .folio-sub {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.6vw, 21px);
+  color: var(--ink);
+  opacity: 0.72;
+}
+/* Disclaimer beneath the email pill — also on light sky, ink for contrast. */
+.signup .disclaimer {
+  display: block;
+  position: relative;
+  z-index: 2;
+  margin: clamp(28px, 4vh, 44px) auto 0;
+  max-width: 720px;
+  text-align: center;
+  font-family: var(--label);
+  font-size: 14px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--ink);
+  opacity: 0.82;
+}
+.signup .financing-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1.5px solid rgba(31,26,22,0.4);
+  padding-bottom: 4px;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.signup .financing-link:hover {
+  border-bottom-color: var(--title-gold);
+  color: var(--title-gold-2);
+}
+/* ----------------------------------------------------------------
+   §7 RETURN-TO-SKY — full mockup-fidelity rebuild.
+   The envelope's grid + stamp + inner frame chrome was decorative
+   for the desk-card era. The mockup wants a clean centered stack
+   on the sky: huge JOIN / search headline, italic subhead, a single
+   cream pill form with the SEND button INSIDE the rectangle, and a
+   small disclaimer beneath. Achieved by neutralising the envelope's
+   grid layout and the bottom-border form rule, then layering the
+   pill styling on top — no markup change so the form binding +
+   easter-egg anchor stay intact.
+   ---------------------------------------------------------------- */
+.signup .envelope {
+  position: relative;
+  left: auto; top: auto;
+  width: min(820px, 94vw);
+  height: auto;
+  margin: 0 auto;
+  transform: none;          /* mockup is dead-centred, no tilt */
+  perspective: none;
+  z-index: 2;
+  filter: none;
+}
+/* Strip the envelope's 1px inset frame — the new design has no frame */
+.signup .envelope::before { display: none; }
+.signup .envelope .side {
+  position: relative;
+  inset: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;  /* envelope no longer reads as paper card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0;
+  box-shadow: none;
+  grid-template-areas: none;
+  grid-template-columns: none;
+}
+/* Mockup hides the inner eyebrow ("Folio II · in the post") and the
+   stamp graphic — the .folio header above the envelope already
+   carries the "FOLIO IV · DA CAPO" marker. The eyebrow span is kept
+   in the DOM (z. small + non-block) because it anchors the 5th
+   easter-egg ‡ glyph. */
+.signup .envelope .eyebrow {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  /* visually hidden but the egg button stays clickable: it's
+     inline-block inside this span and we restore its layout below */
+}
+.signup .envelope .eyebrow .egg {
+  position: fixed;
+  /* park the egg in the top-right corner of the signup section so it's
+     still discoverable but doesn't disturb the headline composition */
+  width: auto; height: auto;
+  clip: auto;
+  overflow: visible;
+}
+.signup .envelope .stamp { display: none; }
+
+/* Headline — two-line stack, big stencil over big italic Garamond */
+.signup .envelope h2 {
+  font-family: var(--stencil);
+  font-stretch: 100%;
+  font-weight: 700;
+  font-size: clamp(64px, 9vw, 124px);
+  letter-spacing: 0.04em;
+  line-height: 0.96;
+  color: var(--ink);
+  margin: 0 0 14px;
+  max-width: none;
+}
+.signup .envelope h2 em {
+  display: block;            /* force "search." onto its own line */
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-stretch: 100%;
+  text-transform: lowercase;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  font-size: 0.95em;         /* slightly smaller than JOIN THE so the
+                                stencil weight wins, but still big */
+  margin-top: 4px;
+}
+
+/* Subhead */
+.signup .envelope p.intro {
+  max-width: 56ch;
+  margin: 18px auto 36px;
+  font-style: italic;
+}
+
+/* Pill form — cream rectangle holding input + ink SEND button */
+.signup .envelope form {
+  display: inline-flex;
+  align-items: stretch;
+  width: min(560px, 100%);
+  max-width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);   /* override the legacy 2px rule */
+  padding: 4px;
+  gap: 0;
+  box-shadow: 0 14px 28px rgba(8,14,22,0.35);
+}
+.signup .envelope input {
+  flex: 1;
+  background: transparent;
+  border: 0; outline: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.6vw, 20px);
+  padding: 14px 18px;
+  color: var(--ink);
+  min-width: 0;
+}
+.signup .envelope input::placeholder {
+  color: rgba(31,26,22,0.55);
+  font-style: italic;
+}
+
+/* SEND ↗ button INSIDE the cream rectangle */
+.signup .envelope button[type="submit"] {
+  background: var(--ink);
+  border: 0;
+  font-family: var(--label);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--cream);
+  padding: 14px 26px;
+  margin-left: 0;            /* sits flush inside the pill */
+  cursor: pointer;
+  transition: opacity 180ms ease;
+  white-space: nowrap;
+}
+.signup .envelope button[type="submit"]:hover { color: var(--cream); opacity: 0.82; }
+.signup .envelope .ok {
+  margin-top: 18px;
+  font-style: italic;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+/* ---------- Easter-egg ‡ glyphs scattered through the page ----------
+   Was gold; now cream-on-context. Reads the same on walnut / dusk-teal,
+   and on paper sections we use --ink so the glyph is visible on cream. */
+.egg {
+  display: inline-block;
+  font-family: var(--mono); font-weight: 700;
+  color: currentColor;
+  font-size: 14px;
+  background: transparent;
+  border: 0;
+  padding: 4px 6px;
+  margin: 0 2px;
+  vertical-align: baseline;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 240ms ease, color 240ms ease, text-shadow 240ms ease;
+  /* Gentle pulse so unfound glyphs catch the eye occasionally without
+     announcing themselves. Found glyphs override this animation. */
+  animation: eggPulse 3.6s ease-in-out infinite;
+}
+@keyframes eggPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.9; }
+}
+.egg:hover { opacity: 1 !important; transform: translateY(-1px) scale(1.2); animation-play-state: paused; }
+.egg:focus-visible { opacity: 1 !important; outline: 1px solid currentColor; outline-offset: 2px; animation-play-state: paused; }
+.egg.found {
+  color: currentColor;
+  opacity: 1;
+  cursor: default;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(240,232,214,0.55);
+  animation: eggFlash 800ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes eggFlash {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.9); text-shadow: 0 0 22px rgba(240,232,214,0.85); }
+  100% { transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg { animation: none; opacity: 0.7; }
+}
+
+/* Beetle shower — fires alongside the egg-modal when all 5 ‡ glyphs are
+   found. ~28 gold beetles fall from above with random timing, rotation,
+   horizontal drift, and scale. Auto-cleans after ~7 s. */
+.beetle-rain {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 8500;
+  overflow: hidden;
+}
+.rain-beetle {
+  --rot-start: 0deg;
+  --rot-end: 540deg;
+  --drift: 0px;
+  --scale: 1;
+  position: absolute;
+  top: -60px;
+  width: 28px; height: 38px;
+  animation: beetleFall var(--dur, 4s) cubic-bezier(.4,.05,.55,1) var(--delay, 0s) forwards;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.55));
+}
+.rain-beetle svg { width: 100%; height: 100%; display: block; }
+@keyframes beetleFall {
+  0%   { transform: translate(0, -60px) rotate(var(--rot-start)) scale(var(--scale)); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translate(var(--drift), 108vh) rotate(var(--rot-end)) scale(var(--scale)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .beetle-rain { display: none; }
+}
+
+.egg-modal {
+  position: fixed; inset: 0;
+  z-index: 9000;
+  display: none;
+  align-items: center; justify-content: center;
+  background: rgba(11, 11, 14, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: var(--margin);
+}
+.egg-modal.show { display: flex; animation: eggModalIn 700ms cubic-bezier(.2,.7,.2,1); }
+@keyframes eggModalIn { from { opacity: 0; } to { opacity: 1; } }
+.egg-modal .panel {
+  position: relative;
+  max-width: 640px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(48px, 6vw, 72px) clamp(32px, 5vw, 64px);
+  border: 1px solid var(--ink);
+  text-align: center;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.6);
+}
+.egg-modal .panel::before, .egg-modal .panel::after {
+  content: ""; display: block; width: 60px; height: 1px;
+  background: var(--ink); margin: 0 auto 28px;
+}
+.egg-modal .panel::after { margin: 28px auto 0; }
+.egg-modal .panel .label {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 18px;
+}
+.egg-modal .panel blockquote {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 500; line-height: 1.35;
+  margin: 0;
+}
+.egg-modal .panel cite {
+  display: block; margin-top: 24px;
+  font-family: var(--mono); font-style: normal;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--ink);
+}
+.egg-modal .panel .close {
+  position: absolute; top: 14px; right: 16px;
+  background: transparent; border: 0;
+  font-family: var(--mono); font-size: 28px;
+  color: var(--ink); cursor: pointer; padding: 4px 10px;
+}
+.egg-modal .panel .close:hover { opacity: 0.6; }
+.egg-progress {
+  /* Bottom-left so it doesn't collide with the topbar on the right
+     ("SHOOTING · Q3 2026") or the audio pill / cipher key at the bottom.
+     Cream-on-ink badge, no gold per gold-budget rule. */
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left:   calc(24px + env(safe-area-inset-left,   0px));
+  z-index: 9001;
+  display: flex; gap: 6px; align-items: baseline;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink);
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 320ms ease, background 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+body.is-investigation .egg-progress {
+  /* Desk is now dusk-teal — match the badge to that, not walnut. */
+  background: rgba(15, 28, 40, 0.85);
+  color: var(--cream);
+  border-color: rgba(240,232,214,0.4);
+}
+.egg-progress.visible { opacity: 1; }
+
+/* ---------- Color contrast pass: scoped --gold override on paper sections ----------
+ The default --gold (#B08D2E) sits at ~2.5:1 against paper, well below the
+   WCAG AA threshold of 4.5:1 for small text. Reassign --gold inside paper
+   contexts to a darker gold (#7C5F18, ~4.9:1). Blue and walnut sections
+   keep the original / bright gold which already has good contrast there. */
+.thematic-card,
+.notebook .side, .catalog .side,
+.envelope .side, .leibniz .side,
+.canister.aria-snip .side,
+.punch-card .side, .news-clip .side,
+.poe-card .side, .pulitzer-card .side, .enc-card .side {
+  --gold: #7C5F18;
+}
+
+/* ---------- Accessibility — skip link + focus rings ---------- */
+.skip-link {
+position: absolute;
+top: -40px; left: 8px;
+  background: var(--cloud-body);
+  color: var(--ink);
+  font-family: var(--label);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 14px;
+  border: 2px solid var(--ink);
+  z-index: 9999;
+  transition: top 160ms ease;
+}
+.skip-link:focus { top: 8px; outline: none; }
+:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+.artifact:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 6px;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55))
+          drop-shadow(0 0 14px rgba(240,232,214,0.35));
+}
+
+/* ---------- §7 Cinematic atmosphere ----------
+   Two layers that sell the "this is film" framing:
+     1. film-grain — fixed-position SVG fractal-noise overlay, low opacity,
+                     staccato CSS animation (steps()), respects rm-motion.
+     2. parallax   — body::before cloud layer drifts at 0.3× scroll via
+                     a --scroll-y custom property updated by JS.
+*/
+
+.film-grain {
+  /* Site Polish §2 — document-level continuity grain.
+     Fixed-position warm-cream noise tile that sits above every section
+     at low opacity. Single layer = every section now shares one paper
+     texture, killing most of the seam between sky / dusk / walnut. */
+  position: fixed;
+  inset: -10%;            /* slight overscan so the transform animation
+                             never reveals the page edges */
+  pointer-events: none;
+  z-index: 9990;          /* above content, below the focused skip-link */
+  opacity: 0.07;          /* per brief: 0.06–0.08 floor */
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.9  0 0 0 0 0.78  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  animation: filmGrainShift 0.6s steps(8) infinite;
+  will-change: transform;
+}
+@keyframes filmGrainShift {
+  0%   { transform: translate(0px, 0px); }
+  12%  { transform: translate(-3px, 1px); }
+  25%  { transform: translate(2px, -2px); }
+  37%  { transform: translate(-1px, 3px); }
+  50%  { transform: translate(3px, 2px); }
+  62%  { transform: translate(-2px, -3px); }
+  75%  { transform: translate(1px, -1px); }
+  87%  { transform: translate(-3px, 0px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+/* The radial-gradient cloud-blob layer was deleted — those puffs
+   read as cheap soft circles, not painterly clouds. Painterly clouds
+   are now the .sky-clouds SVG that lives at the body level (above)
+   and uses the same feTurbulence + feDisplacementMap + feGaussianBlur
+   chain the hero originally used, with cloud groups distributed
+   across the entire document. */
+
+@media (prefers-reduced-motion: reduce) {
+  .film-grain { animation: none; opacity: 0.07; }
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 820px) {
+  :root { --margin: 18px; --col-gap: 14px; }
+  body { font-size: 17px; cursor: auto; }
+  .topbar .doc { gap: 14px; font-size: 12px; }
+  .hero-grid { grid-template-columns: repeat(6, 1fr); }
+  .tagline { grid-column: 1 / -1; }
+  /* The desktop title is `white-space: nowrap` + clamp(48px, 7vw, 96px).
+     At the 48 px floor "THE GOLD BUG VARIATIONS" runs ~600 px wide and
+     gets cropped on every phone. Drop nowrap on mobile so it wraps on
+     the natural space between BUG and VARIATIONS, and scale the font
+     down to fit comfortably from a 320 px floor up through tablet. */
+  .title {
+    font-size: clamp(36px, 11vw, 56px);
+    white-space: normal;
+    width: auto;
+    max-width: 100%;
+    line-height: 0.96;
+  }
+  .hero-zone { width: auto; }
+  /* §2 transition desk handles its own mobile reflow via its own
+     820px media query inside the .transition-desk block above. */
+  .case-board { height: auto; display: flex; flex-direction: column; gap: 24px; padding: 0; }
+  .case-board .artifact {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important; right: auto !important; top: auto !important;
+    margin: 0 auto;
+    width: min(360px, 92vw);
+  }
+  .red-string-svg, .beetle, .hint { display: none; }
+  .cipher-key { right: 12px; bottom: 12px; }
+}

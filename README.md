@@ -9,30 +9,55 @@ Pulitzer Prize-winning novel.
 
 ## Stack
 
-Single self-contained HTML file — no build step, no framework. Inline CSS
-+ vanilla JS, served as a static asset by Netlify.
+[SvelteKit](https://svelte.dev/docs/kit) (Svelte 5), fully **prerendered** to
+static HTML via `@sveltejs/adapter-netlify`. The site is a faithful port of
+the original single-file build: the CSS lives as one global stylesheet, the
+markup is split into per-section Svelte components, and the original vanilla-JS
+behaviour (cipher engine, scroll-driven helix morph, cork-board interactions,
+Aria audio, easter eggs) runs verbatim from `onMount`.
 
 ```
 .
-├── index.html         ← the entire site
-├── press-kit.pdf      ← linked from the footer
-├── netlify.toml       ← cache + security headers
-├── CHANGELOG.md       ← versioned feature history
-├── MAILING_LIST.md    ← Google Sheet signup setup
+├── src/
+│   ├── app.html                  ← document shell: SEO meta, JSON-LD, fonts, favicon
+│   ├── app.css                   ← the entire stylesheet (design tokens → mobile pass)
+│   ├── lib/
+│   │   ├── site.js               ← all behaviour, exposed as initSite()
+│   │   └── components/           ← one component per page section
+│   │       ├── SkyClouds.svelte  ← site-wide painterly-cloud SVG
+│   │       ├── Hero.svelte
+│   │       ├── Bridge.svelte     ← three theme cards / transition desk
+│   │       ├── MusicMorph.svelte ← music staff → DNA helix
+│   │       ├── Thematic.svelte   ← connected-by logline
+│   │       ├── Investigation.svelte ← Jan O'Deigh's cork case file
+│   │       ├── Closing.svelte    ← director · synopsis · partners
+│   │       ├── Signup.svelte
+│   │       └── Masthead.svelte   ← typeset colophon footer
+│   └── routes/
+│       ├── +layout.svelte        ← imports app.css
+│       ├── +layout.js            ← prerender = true
+│       └── +page.svelte          ← composes the sections, boots site.js
+├── static/press-kit.pdf          ← served at /press-kit.pdf
+├── svelte.config.js              ← adapter-netlify
+├── netlify.toml                  ← build command + cache / security headers
+├── CHANGELOG.md                  ← versioned feature history
+├── MAILING_LIST.md               ← Google Sheet signup setup
 └── README.md
 ```
 
 ## Working on it locally
 
-Just open `index.html` in a browser. Edits are live on save / refresh.
-
-For Netlify-style serving (correct headers, etc.), the easiest path is:
-
 ```bash
-npx serve .          # quick local server on port 3000
+npm install
+npm run dev          # dev server with HMR on http://localhost:5173
 ```
 
-…or any static server you prefer.
+To verify a production-identical (prerendered) build:
+
+```bash
+npm run build        # outputs the static site to build/
+npm run preview      # serves build/ on http://localhost:4173
+```
 
 ## Visual framework — three movements
 
@@ -133,7 +158,7 @@ forced-download filename for the press kit.
 
 Signup on the page POSTs to a Google Apps Script that appends rows to a
 Google Sheet. URL is configured via the `<meta name="signup-endpoint">`
-tag in `index.html`. Full setup walkthrough in
+tag in `src/app.html`. Full setup walkthrough in
 [`MAILING_LIST.md`](./MAILING_LIST.md).
 
 ## Adding new features

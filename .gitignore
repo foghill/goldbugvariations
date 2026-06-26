@@ -10,8 +10,14 @@ Icon
 *.swp
 *~
 
-# node — in case a future build step needs it
+# node / SvelteKit build artifacts
 node_modules/
+/build
+/.svelte-kit
+/dist
+.env
+.env.*
+!.env.example
 
 # local-only experiments / scratch
 scratch/
