@@ -2,7 +2,7 @@
 
   <div class="envelope" id="envelopeArt">
     <div class="side front">
-      
+      <div class="eyebrow">Folio II · in the post</div>
       <div class="stamp" aria-hidden="true"></div>
       <h2>Receive <em>updates</em> on the project.</h2>
       <p class="intro">One letter per quarter — production notes and the occasional clue from the road.</p>
