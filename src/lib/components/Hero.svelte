@@ -15,7 +15,7 @@
   </svg>
 
   <div class="topbar">
-    <div class="doc"><span>FOLIO 01 / IV</span></div>
+    <div class="doc"><span></span></div>
   </div>
 
   <div class="hero-zone">
