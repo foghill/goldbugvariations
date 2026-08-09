@@ -2129,15 +2129,6 @@ footer.masthead {
 .mast-title {
   margin: 0;
 }
-.mast-eyebrow {
-  font-family: var(--label);
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.78;
-}
 .mast-h {
   font-family: var(--stencil);
   font-weight: 700;
@@ -2414,7 +2405,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    legibility. Labels go to 14 px (from 11-12), the title to 36-52 px
    (from 28-38), body to 19-23 px (from 15-18), action links to
    20-25 px (from 16-19), sitemap row to 14 px (from 11). */
-.mast-eyebrow                 { font-size: 14px; }
 .mast-h                       { font-size: clamp(36px, 4.2vw, 52px); }
 .mast-sub                     { font-size: clamp(19px, 1.7vw, 23px); }
 .mast-lbl                     { font-size: 14px; }
