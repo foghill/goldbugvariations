@@ -2390,8 +2390,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
 /* Signup return-to-sky panel */
 .signup .envelope p.intro     { font-size: clamp(21px, 1.8vw, 26px); line-height: 1.55; }
 .signup .envelope input       { font-size: clamp(20px, 1.6vw, 22px); }
-.signup .folio .folio-tag     { font-size: 13px; letter-spacing: 0.42em; }
-.signup .folio .folio-sub     { font-size: clamp(18px, 1.7vw, 22px); }
 .signup .disclaimer           { font-size: 13px; letter-spacing: 0.42em; }
 
 /* News clipping — Urbana Chronicle headline + byline + body */
@@ -2435,9 +2433,8 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    The newsletter signup now lives on a return-to-sky panel just above
    the footer. The film is Aria → 30 Variations → Aria; the page
    should rhyme, ending where it began. Background is the same dusty
-   teal gradient + painterly cloud composition as the hero, with a
-    · DA CAPO eyebrow above the envelope. Bottom of the
-   section transitions to dusk-teal so the footer below picks up
+   teal gradient + painterly cloud composition as the hero. Bottom of
+   the section transitions to dusk-teal so the footer below picks up
    cleanly. The envelope CTA stays — cream paper card on ink border —
    but loses the walnut backdrop. */
 /* ---------- §5b Closing clouds — Movement III ----------
@@ -2658,35 +2655,6 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   opacity: 0.85;
 }
 .signup .sky-bug svg { width: 100%; height: 100%; display: block; }
-.signup .folio {
-  /* Sits on the LIGHT sky band of the body gradient — every text
-     element uses ink for legibility on light blue. */
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto clamp(40px, 6vh, 70px);
-}
-.signup .folio .folio-tag {
-  display: inline-block;
-  font-family: var(--label);
-  font-size: 12px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--ink);
-  background: transparent;
-  padding: 6px 0;
-  opacity: 0.78;
-}
-.signup .folio .folio-sub {
-  display: block;
-  margin-top: 10px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(17px, 1.6vw, 21px);
-  color: var(--ink);
-  opacity: 0.72;
-}
 /* Disclaimer beneath the email pill — also on light sky, ink for contrast. */
 .signup .disclaimer {
   display: block;
@@ -2754,10 +2722,8 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   grid-template-columns: none;
 }
 /* Mockup hides the inner eyebrow (" · in the post") and the
-   stamp graphic — the .folio header above the envelope already
-   carries the " · DA CAPO" marker. The eyebrow span is kept
-   in the DOM (z. small + non-block) because it anchors the 5th
-   easter-egg ‡ glyph. */
+   stamp graphic. The eyebrow span is kept in the DOM (z. small +
+   non-block) because it anchors the 5th easter-egg ‡ glyph. */
 .signup .envelope .eyebrow {
   position: absolute;
   width: 1px; height: 1px;
