@@ -258,7 +258,7 @@ function decryptCardBack(back){
 }
 
 function buildFooterCipher(){
-  const msg = "THE TREASURE WAS NEVER WHAT WE WERE LOOKING FOR. WE WERE LOOKING FOR A WAY TO STAY UP LATE TOGETHER, READING.";
+  const msg = "LIFE CONSISTS OF PROPOSITIONS ABOUT LIFE";
   const el = document.getElementById('footCipher');
   el.innerHTML = '';
   [...msg].forEach(c => {
