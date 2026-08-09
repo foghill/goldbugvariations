@@ -1,10 +1,5 @@
 <section class="signup" id="signup" aria-label="Join the search">
 
-  <header class="folio">
-    <span class="folio-tag">Folio IV · Da Capo</span>
-    <span class="folio-sub">— the aria returns —</span>
-  </header>
-
   <div class="envelope" id="envelopeArt">
     <div class="side front">
       <div class="eyebrow">Folio II · in the post</div>
