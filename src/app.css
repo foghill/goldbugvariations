@@ -2436,7 +2436,7 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
    the footer. The film is Aria → 30 Variations → Aria; the page
    should rhyme, ending where it began. Background is the same dusty
    teal gradient + painterly cloud composition as the hero, with a
-    · DA CAPO eyebrow above the envelope. Bottom of the
+   FOLIO IV · DA CAPO eyebrow above the envelope. Bottom of the
    section transitions to dusk-teal so the footer below picks up
    cleanly. The envelope CTA stays — cream paper card on ink border —
    but loses the walnut backdrop. */
@@ -2753,9 +2753,9 @@ body { font-family: var(--serif); font-weight: 500; font-size: 21px; line-height
   grid-template-areas: none;
   grid-template-columns: none;
 }
-/* Mockup hides the inner eyebrow (" · in the post") and the
+/* Mockup hides the inner eyebrow ("Folio II · in the post") and the
    stamp graphic — the .folio header above the envelope already
-   carries the " · DA CAPO" marker. The eyebrow span is kept
+   carries the "FOLIO IV · DA CAPO" marker. The eyebrow span is kept
    in the DOM (z. small + non-block) because it anchors the 5th
    easter-egg ‡ glyph. */
 .signup .envelope .eyebrow {
