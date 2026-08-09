@@ -3000,7 +3000,7 @@ body.is-investigation .egg-progress {
 /* ---------- Accessibility — skip link + focus rings ---------- */
 .skip-link {
 position: absolute;
-top: -40px; left: 8px;
+top: -100px; left: 8px;
   background: var(--cloud-body);
   color: var(--ink);
   font-family: var(--label);
