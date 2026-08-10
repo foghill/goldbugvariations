@@ -257,59 +257,6 @@ function decryptCardBack(back){
   }, 240);
 }
 
-function buildFooterCipher(){
-  const msg = "LIFE CONSISTS OF PROPOSITIONS ABOUT LIFE";
-  const el = document.getElementById('footCipher');
-  el.innerHTML = '';
-  [...msg].forEach(c => {
-    if (c === ' '){
-      const sp = document.createElement('span');
-      sp.className = 'sp';
-      sp.textContent = ' ';
-      el.appendChild(sp);
-      return;
-    }
-    const span = document.createElement('span');
-    span.className = 'ch';
-    span.dataset.target = c;
-    span.textContent = encChar(c);
-    el.appendChild(span);
-  });
-
-  // Cursor-radius decode: chars within ~110 px of the pointer briefly resolve
-  // to plaintext, then re-scramble as the cursor leaves their orbit. The
-  // buried message is meant to be earned, not handed over — drag the cursor
-  // along it and the words appear under your hand.
-  const chars = el.querySelectorAll('.ch');
-  let raf = 0, cx = -1e6, cy = -1e6;
-  const update = () => {
-    raf = 0;
-    chars.forEach(ch => {
-      const r = ch.getBoundingClientRect();
-      const mx = r.left + r.width / 2;
-      const my = r.top  + r.height / 2;
-      const dist = Math.hypot(cx - mx, cy - my);
-      const peek = dist < 110;
-      const isPeek = ch.classList.contains('peek');
-      if (peek && !isPeek){
-        ch.textContent = ch.dataset.target;
-        ch.classList.add('peek');
-      } else if (!peek && isPeek){
-        ch.textContent = encChar(ch.dataset.target);
-        ch.classList.remove('peek');
-      }
-    });
-  };
-  el.addEventListener('mousemove', (e) => {
-    cx = e.clientX; cy = e.clientY;
-    if (!raf) raf = requestAnimationFrame(update);
-  });
-  el.addEventListener('mouseleave', () => {
-    cx = -1e6; cy = -1e6;
-    if (!raf) raf = requestAnimationFrame(update);
-  });
-}
-
 function buildKey(){
   const key = document.getElementById('cipherKey');
   const REVERSE_CIPHER = Object.fromEntries(ALPHABET.map(L => [CIPHER[L], L]));
@@ -1770,7 +1717,6 @@ function setupSectionObserver(){
   const musicMorph = document.getElementById('music-morph');
   const closing = document.getElementById('closing');
   const signup = document.getElementById('signup');
-  const footer = document.querySelector('footer.masthead');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.target === investigation){
@@ -1795,11 +1741,6 @@ function setupSectionObserver(){
       if (e.target === signup){
         document.body.classList.toggle('is-signup', e.isIntersecting && e.intersectionRatio > 0.15);
       }
-      if (e.target === footer){
-        // Hide as soon as the footer touches the viewport so the pill
-        // never overlaps the © MMXXVI / Site No. legal line.
-        document.body.classList.toggle('is-footer', e.isIntersecting && e.intersectionRatio > 0.05);
-      }
     });
   }, { threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.6] });
   if (investigation) io.observe(investigation);
@@ -1807,7 +1748,6 @@ function setupSectionObserver(){
   if (musicMorph)   io.observe(musicMorph);
   if (closing)      io.observe(closing);
   if (signup)       io.observe(signup);
-  if (footer)       io.observe(footer);
 }
 
 function setupHookReveal(){
@@ -2008,7 +1948,6 @@ function boot(){
   tuneSkyForMobile();
   initCipherTargets();
   setupDecryptObserver();
-  buildFooterCipher();
   buildKey();
   setupCursorTrail();
   setupHelixMorph();
