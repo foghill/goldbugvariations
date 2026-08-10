@@ -10,7 +10,6 @@
   import Investigation from '$lib/components/Investigation.svelte';
   import Closing from '$lib/components/Closing.svelte';
   import Signup from '$lib/components/Signup.svelte';
-  import Masthead from '$lib/components/Masthead.svelte';
 
   onMount(() => {
     // Run the ported behaviour (cipher, helix morph, cork board, …) now
@@ -41,7 +40,6 @@
 <Investigation />
 <Closing />
 <Signup />
-<Masthead />
 
 <!-- Floating cipher key (collapsible) -->
 <div class="cipher-key collapsed" id="cipherKey" role="button" aria-label="Open cipher key" tabindex="0"></div>
